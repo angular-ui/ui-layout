@@ -1,0 +1,44 @@
+
+/**
+  Demo CSS
+*************************************/
+.jumbotron{
+  margin-bottom: 0;
+  background-color: #009fd6;;
+}
+.jumbotron h1{
+font-size: 50px;
+line-height: 1;
+color: #fff;
+}
+h1, em {color: #009fd6;}
+
+.aSpace{
+  background: #e6f1fa;
+}
+
+.show-grid {
+  margin-bottom: 15px;
+}
+.show-grid [class^="col-"] {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  background-color: rgba(86,61,124,.15);
+  border: 1px solid rgba(86,61,124,.2);
+}
+
+.html-back{
+  background : #eee url("http://placehold.it/400x300/eee/666&text=HTML") no-repeat center;
+
+}
+.css-back{
+  background : #eee url("http://placehold.it/400x300/eee/666&text=CSS") no-repeat center;
+
+}
+.js-back{
+  background : #eee url("http://placehold.it/400x300/eee/666&text=JS") no-repeat center;
+
+}
+
