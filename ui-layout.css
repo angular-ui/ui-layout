@@ -20,12 +20,12 @@
   z-index: 99999;
 }
 
-.ui-layout[flow="row"] > .ui-splitbar{
+.ui-layout-row > .ui-splitbar{
   top: 25%;
   height: 8px; width: 100%;
   cursor: row-resize;
 }
-.ui-layout[flow="column"] > .ui-splitbar{
+.ui-layout-column > .ui-splitbar{
   left: 25%;
   width: 8px; height: 100%;
   cursor: col-resize;

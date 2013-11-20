@@ -38,19 +38,26 @@
  */
 angular.module('ui.layout', [])
 
-.directive('uiLayout', function(){
+.directive('uiLayout', ['$parse', function($parse){
 
   var splitBarElem_htmlTemplate = '<div class="stretch ui-splitbar"></div>';
 
   return {
-    restrict: 'C',
+    restrict: 'AE',
     compile: function compile(tElement, tAttrs) {
 
       var _i, _childens = tElement.children(), _child_len = _childens.length;
-      var isUsingColumnFlow = tAttrs.flow === 'column';
-      // Force the layout to fill the parent space
-      // fix no height layout...
-      tElement.addClass('stretch');
+
+      // Parse `ui-layout` or `options` attributes (with no scope...)
+      var opts = angular.extend({}, $parse(tAttrs.uiLayout)(), $parse(tAttrs.options)());
+      var isUsingColumnFlow = opts.flow === 'column';
+
+      tElement
+        // Force the layout to fill the parent space
+        // fix no height layout...
+        .addClass('stretch')
+        // set the layout css class
+        .addClass('ui-layout-' + opts.flow);
 
       // Stretch all the children by default
       for (_i = 0; _i < _child_len ; ++_i){
@@ -79,11 +86,14 @@ angular.module('ui.layout', [])
     },
     controller: ['$scope', '$attrs', '$element', function uiLayoutCtrl($scope, $attrs, $element){
       // Gives to the children directives the access to the parent layout.
-      return { flow : $attrs.flow, element : $element};
+      return {
+        opts : angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options)),
+        element : $element
+      };
     }]
   };
 
-})
+}])
 
 
 .directive('uiSplitbar', function(){
@@ -100,7 +110,7 @@ angular.module('ui.layout', [])
       var _cache = {};
 
       // Use relative mouse position
-      var isUsingColumnFlow = parentLayout.flow === 'column';
+      var isUsingColumnFlow = parentLayout.opts.flow === 'column';
       var mouseProperty = ( isUsingColumnFlow ? 'x' : 'y');
 
       // Use bounding box / css property names
