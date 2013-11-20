@@ -1,6 +1,9 @@
 
-// requestAnimationFrame polyfill by Erik MÃ¶ller. fixes from Paul Irish and Tino Zijdel
+'use strict';
 
+
+
+// requestAnimationFrame polyfill by Erik MÃ¶ller. fixes from Paul Irish and Tino Zijdel
 (function() {
   var lastTime = 0;
   var vendors = ['webkit', 'moz'];
@@ -11,7 +14,7 @@
   }
 
   if (!window.requestAnimationFrame)
-    window.requestAnimationFrame = function(callback, element) {
+    window.requestAnimationFrame = function(callback) {
       var currTime = new Date().getTime();
       var timeToCall = Math.max(0, 16 - (currTime - lastTime));
       var id = window.setTimeout(function() { callback(currTime + timeToCall); },
@@ -41,7 +44,7 @@ angular.module('ui.layout', [])
 
   return {
     restrict: 'C',
-    compile: function compile(tElement, tAttrs, transclude) {
+    compile: function compile(tElement, tAttrs) {
 
       var _i, _childens = tElement.children(), _child_len = _childens.length;
       var isUsingColumnFlow = tAttrs.flow === 'column';
@@ -57,7 +60,6 @@ angular.module('ui.layout', [])
       if (_child_len > 1){
         // Initialise the layout with equal sizes.
 
-        var layout_bb = tElement[0].getBoundingClientRect();
         var flowProperty = ( isUsingColumnFlow ? 'left' : 'top');
         var oppositeFlowProperty = ( isUsingColumnFlow ? 'right' : 'bottom');
 
@@ -136,9 +138,9 @@ angular.module('ui.layout', [])
           the_pos = Math.min(the_pos, parseInt(barElm.nextElementSibling.nextElementSibling.style[flowProperty],10));
 
         // change the position of the bar and the next area
-        barElm.style[flowProperty] = barElm.nextElementSibling.style[flowProperty] =  the_pos + "%";
+        barElm.style[flowProperty] = barElm.nextElementSibling.style[flowProperty] =  the_pos + '%';
         // change the size of the previous area
-        barElm.previousElementSibling.style[oppositeFlowProperty] =  (100 - the_pos) + "%";
+        barElm.previousElementSibling.style[oppositeFlowProperty] =  (100 - the_pos) + '%';
 
         // Enable a new animation frame
         animationFrameRequested = null;
@@ -149,20 +151,20 @@ angular.module('ui.layout', [])
         lastX = mouseEvent[mouseProperty];
 
         // Cancel previous rAF call
-        if (animationFrameRequested) cancelAnimationFrame(animationFrameRequested);
+        if (animationFrameRequested) window.cancelAnimationFrame(animationFrameRequested);
 
         if (!_cache.time ||  +new Date() > _cache.time + 1000 ){ // after ~60 frames
           _cached_layout_values();
         }
 
         // Animate the page outside the event
-        animationFrameRequested = requestAnimationFrame(_draw);
+        animationFrameRequested = window.requestAnimationFrame(_draw);
       }
 
 
       // Bind the click on the bar then you can move it all over the page.
-      iElement.bind("mousedown", function(e){ e.preventDefault(); e.stopPropagation();   htmlElement.bind("mousemove", _resize);  return false; });
-      htmlElement.bind("mouseup", function(e){ e.preventDefault(); e.stopPropagation();  htmlElement.unbind("mousemove");         return false; });
+      iElement.bind('mousedown', function(e){ e.preventDefault(); e.stopPropagation();   htmlElement.bind('mousemove', _resize);  return false; });
+      htmlElement.bind('mouseup', function(e){ e.preventDefault(); e.stopPropagation();  htmlElement.unbind('mousemove');         return false; });
     }
   };
 });
