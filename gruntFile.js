@@ -91,6 +91,14 @@ module.exports = function (grunt) {
           'dist/<%= mainFile %>.min.js': ['<%= mainFile %>.js']
         }
       }
+    },
+
+    // CHANGELOG
+    // =========
+    changelog: {
+      options: {
+        dest: 'CHANGELOG.md'
+      }
     }
   });
 
