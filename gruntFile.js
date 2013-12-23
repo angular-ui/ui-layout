@@ -68,18 +68,7 @@ module.exports = function (grunt) {
     // ============
     jshint: {
       all: ['<%= mainFileName %>.js', 'gruntFile.js', 'test/*.js', 'demo/*.js'],
-      options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        boss: true,
-        eqnull: true,
-        globals: {}
-      }
+      options: { jshintrc: '.jshintrc' }
     },
 
     // MINIFIER

@@ -1,9 +1,10 @@
+/* global jasmine:false, describe:false, beforeEach:false, module:false, inject:false, it:false, expect:false, afterEach:false */
+
 describe('uiLayout', function () {
   'use strict';
 
   // declare these up here to be global to all tests
   var scope, $compile, element;
-
 
   function appendTemplate(tpl) {
     element = angular.element(tpl);
@@ -16,7 +17,7 @@ describe('uiLayout', function () {
 
   // inject in angular constructs. Injector knows about leading/trailing underscores and does the right thing
   // otherwise, you would need to inject these into each test
-  beforeEach(inject(function (_$rootScope_, _$compile_, _$controller_) {
+  beforeEach(inject(function (_$rootScope_, _$compile_) {
     scope = _$rootScope_.$new();
     $compile = _$compile_;
   }));
