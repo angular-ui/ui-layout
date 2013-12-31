@@ -145,17 +145,14 @@ angular.module('ui.layout', [])
 
 
         // Bind the click on the bar then you can move it all over the page.
-        iElement.bind('mousedown', function (e) {
+        iElement.on('mousedown touchstart', function (e) {
           e.preventDefault();
           e.stopPropagation();
-          htmlElement.bind('mousemove', _resize);
+          htmlElement.on('mousemove touchmove', _resize);
           return false;
         });
-        htmlElement.bind('mouseup', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          htmlElement.unbind('mousemove');
-          return false;
+        htmlElement.on('mouseup touchend', function () {
+          htmlElement.off('mousemove touchmove');
         });
       }
     };

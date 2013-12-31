@@ -2,7 +2,7 @@
 
 /* global browserTrigger */
 
-//splitMoveTests('touch', 'touchstart', 'touchmove', 'touchend');
+splitMoveTests('touch', 'touchstart', 'touchmove', 'touchend');
 splitMoveTests('mouse', 'mousedown', 'mousemove', 'mouseup');
 
 // Wrapper to abstract over using touch events or mouse events.
