@@ -1,10 +1,13 @@
-/* global jasmine:false, describe:false, beforeEach:false, module:false, inject:false, it:false, expect:false, afterEach:false */
-
 'use strict';
+
 describe('uiLayout', function () {
 
   // declare these up here to be global to all tests
   var scope, $compile, element;
+
+  /**
+   * UTILS
+   */
 
   function appendTemplate(tpl) {
     element = angular.element(tpl);
@@ -12,6 +15,10 @@ describe('uiLayout', function () {
     $compile(element)(scope);
     scope.$digest();
   }
+
+  /**
+   * TESTS
+   */
 
   beforeEach(module('ui.layout'));
 
@@ -46,14 +53,11 @@ describe('uiLayout', function () {
     });
   });
 
+  afterEach(function () {
+    if (element) element.remove();
+  });
 
   describe('directive', function () {
-
-    afterEach(function () {
-      if (element) {
-        element.remove();
-      }
-    });
 
     it('should have a "stretch" class', function () {
       appendTemplate('<div ui-layout></div>');
