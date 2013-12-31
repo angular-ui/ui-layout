@@ -135,7 +135,7 @@ describe('uiLayout', function () {
 
       it('should initialise with equal width', function () {
         var firstElemWidth = element.children()[0].getBoundingClientRect().width;
-        for (var i = 0; i < element.children().length; i++) {
+        for (var i = 0; i < element.children().length; i+=2) {
           expect(element.children()[i].getBoundingClientRect().width, 'tagName').toEqual(firstElemWidth);
         }
       });
@@ -158,7 +158,7 @@ describe('uiLayout', function () {
 
       it('should initialise with equal height', function () {
         var firstElemHeight = element.children()[0].getBoundingClientRect().height;
-        for (var i = 0; i < element.children().length; i++) {
+        for (var i = 0; i < element.children().length; i+=2) {
           expect(element.children()[i].getBoundingClientRect().height, 'tagName').toEqual(firstElemHeight);
         }
       });
