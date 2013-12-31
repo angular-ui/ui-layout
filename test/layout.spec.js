@@ -105,6 +105,7 @@ describe('uiLayout', function () {
       expect(children[2].tagName).toEqual('SECTION');
 
       // Try with 4 elements
+      element.remove();
       appendTemplate('<div ui-layout><header></header><article></article><section></section><footer></footer></div>');
       children = element.children();
       expect(children.length).toEqual(4 + 3); // add three slide
