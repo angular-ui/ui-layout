@@ -110,6 +110,31 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
       });
 
 
+      it('should not follow the ' + description + ' before ' + startEvent, function () {
+        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(50); // Obvious...
+
+        // Move without clicking on it
+        browserTrigger($splitbar, moveEvent, { y: Math.random() * element_bb.width });
+        browserTrigger($splitbar, endEvent);
+        expect(window.requestAnimationFrame).not.toHaveBeenCalled();
+
+        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(50);
+      });
+
+      it('should not follow the ' + description + ' after ' + startEvent, function () {
+        browserTrigger($splitbar, startEvent, { y: splitbar_left_pos });
+        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
+        browserTrigger($splitbar, endEvent);
+        expect(window.requestAnimationFrame).toHaveBeenCalled();
+
+        // Move after the end event
+        browserTrigger($splitbar, moveEvent, { y: Math.random() * element_bb.width });
+        browserTrigger($splitbar, endEvent);
+
+        expect(window.requestAnimationFrame.callCount).toEqual(1);
+        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(25);
+      });
+
     });
 
 
