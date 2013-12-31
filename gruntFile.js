@@ -86,7 +86,7 @@ module.exports = function (grunt) {
           globals: {
             angular: false,
             inject: false,
-            jQuery: false,
+            _jQuery: false,
 
             jasmine: false,
             afterEach: false,

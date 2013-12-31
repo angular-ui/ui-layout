@@ -18,6 +18,7 @@ module.exports = function (config) {
     files: [
       'bower_components/jquery/jquery.js',
       'test/helpers/jquery_remove.js',
+      'test/helpers/browserTrigger.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'src/*',
