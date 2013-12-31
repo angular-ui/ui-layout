@@ -141,7 +141,7 @@ describe('uiLayout', function () {
       });
 
       it('should have a split bar at the middle', function () {
-        expect(element.children().eq(1).css('left')).toEqual('50%');
+        expect(element.children().eq(1)[0].style.left).toEqual('50%');
       });
     });
 
@@ -164,7 +164,7 @@ describe('uiLayout', function () {
       });
 
       it('should have a split bar at the middle', function () {
-        expect(element.children().eq(1).css('top')).toEqual('50%');
+        expect(element.children().eq(1)[0].style.top).toEqual('50%');
       });
     });
 
