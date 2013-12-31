@@ -128,7 +128,10 @@ angular.module('ui.layout', [])
 
         function _resize(mouseEvent) {
           // Store the mouse position for later
-          lastX = mouseEvent[mouseProperty];
+
+          // FIX :
+          // - with touch events, when using jQuery, the mouseEvent is in fact a jQueryEvent. So we use originalEvent here.
+          lastX = mouseEvent[mouseProperty] || mouseEvent.originalEvent[mouseProperty];
 
           // Cancel previous rAF call
           if (animationFrameRequested) {
