@@ -7,7 +7,7 @@ module.exports = function (grunt) {
   // Task.
   grunt.registerTask('default', ['jshint', 'karma:unit']);
   grunt.registerTask('serve', ['connect:continuous', 'karma:continuous', 'watch']);
-  grunt.registerTask('build-doc', ['uglify', 'copy']);
+  grunt.registerTask('dist', ['ngmin', 'uglify']);
 
 
   var testConfig = function (configFile, customOptions) {
@@ -53,13 +53,19 @@ module.exports = function (grunt) {
     // WATCHER
     // =======
     watch: {
+      src: {
+        files: ['src/*'],
+        tasks: ['jshint', 'karma:unit:run', 'dist'],
+        options: { livereload: true }
+      },
       test: {
-        files: ['<%= mainFileName %>.js', 'test/*.js'],
+        files: ['test/*.js'],
         tasks: ['jshint', 'karma:unit:run']
       },
       demo: {
         files: ['demo/*', '<%= mainFileName %>.js'],
-        tasks: ['uglify']
+        tasks: ['uglify'],
+        options: { livereload: true }
       }
     },
 
@@ -67,18 +73,31 @@ module.exports = function (grunt) {
     // CODE QUALITY
     // ============
     jshint: {
-      all: ['<%= mainFileName %>.js', 'gruntFile.js', 'test/*.js', 'demo/*.js'],
+      all: ['src/*.js', 'gruntFile.js', 'test/*.js', 'demo/*.js'],
       options: { jshintrc: '.jshintrc' }
     },
 
     // MINIFIER
     // ========
     uglify: {
-      //options: {banner: '<%= meta.banner %>'},
+      options: {banner: '<%= meta.banner %>'},
       build: {
-        files: {
-          'dist/<%= mainFile %>.min.js': ['<%= mainFile %>.js']
-        }
+        expand: true,
+        cwd: 'dist',
+        src: ['*.js'],
+        ext: '.min.js',
+        dest: 'dist'
+      }
+    },
+
+    // NGMIN
+    // =====
+    ngmin: {
+      main: {
+        expand: true,
+        cwd: 'src',
+        src: ['*.js'],
+        dest: 'dist'
       }
     },
 
