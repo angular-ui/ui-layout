@@ -54,17 +54,15 @@ module.exports = function (grunt) {
     // =======
     watch: {
       src: {
-        files: ['src/*'],
-        tasks: ['jshint', 'karma:unit:run', 'dist'],
-        options: { livereload: true }
+        files: ['src/*', 'demo/**/*.js'],
+        tasks: ['jshint:src', 'karma:unit:run', 'dist']
       },
       test: {
         files: ['test/*.js'],
-        tasks: ['jshint', 'karma:unit:run']
+        tasks: ['jshint:test', 'karma:unit:run']
       },
       demo: {
-        files: ['demo/*', '<%= mainFileName %>.js'],
-        tasks: ['uglify'],
+        files: ['demo/*', 'src/*'],
         options: { livereload: true }
       }
     },
@@ -73,8 +71,33 @@ module.exports = function (grunt) {
     // CODE QUALITY
     // ============
     jshint: {
-      all: ['src/*.js', 'gruntFile.js', 'test/*.js', 'demo/*.js'],
-      options: { jshintrc: '.jshintrc' }
+      src: {
+        files:{ src : ['src/*.js', 'demo/**/*.js'] },
+        options: { jshintrc: '.jshintrc' }
+      },
+      test: {
+        files:{ src : [ 'test/*.spec.js' ] },
+        options: grunt.util._.extend({}, grunt.file.readJSON('.jshintrc'), {
+          node: true,
+          globals: {
+            angular: false,
+            inject: false,
+            jQuery: false,
+
+            jasmine: false,
+            afterEach: false,
+            beforeEach: false,
+            ddescribe: false,
+            describe: false,
+            expect: false,
+            iit: false,
+            it: false,
+            spyOn: false,
+            xdescribe: false,
+            xit: false
+          }
+        })
+      }
     },
 
     // MINIFIER
