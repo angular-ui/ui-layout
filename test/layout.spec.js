@@ -1,7 +1,7 @@
 /* global jasmine:false, describe:false, beforeEach:false, module:false, inject:false, it:false, expect:false, afterEach:false */
 
+'use strict';
 describe('uiLayout', function () {
-  'use strict';
 
   // declare these up here to be global to all tests
   var scope, $compile, element;
