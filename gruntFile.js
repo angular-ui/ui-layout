@@ -9,6 +9,9 @@ module.exports = function (grunt) {
   grunt.registerTask('serve', ['connect:continuous', 'karma:continuous', 'watch']);
   grunt.registerTask('dist', ['ngmin', 'uglify']);
 
+  grunt.registerTask('karma:continuous', ['karma:wjqlite_bg', 'karma:wjquery_bg']);
+  grunt.registerTask('karma:unit', ['karma:wjqlite:unit', 'karma:wjquery:unit']);
+  grunt.registerTask('karma:unit:run', ['karma:wjqlite:unit:run', 'karma:wjquery:unit:run']);
 
   var testConfig = function (configFile, customOptions) {
     var options = { configFile: configFile, singleRun: true };
@@ -44,9 +47,10 @@ module.exports = function (grunt) {
     // TESTER
     // =======
     karma: {
-      unit: testConfig('test/karma.conf.js'),
-      server: {configFile: 'test/karma.conf.js'},
-      continuous: {configFile: 'test/karma.conf.js', background: true }
+      wjquery: testConfig('test/karma-jquery.conf.js'),
+      wjqlite: testConfig('test/karma-jqlite.conf.js'),
+      wjquery_bg: {configFile: 'test/karma-jquery.conf.js', background: true },
+      wjqlite_bg: {configFile: 'test/karma-jqlite.conf.js', background: true }
     },
 
 
@@ -58,7 +62,7 @@ module.exports = function (grunt) {
         tasks: ['jshint:src', 'karma:unit:run', 'dist']
       },
       test: {
-        files: ['test/*.js'],
+        files: ['test/*.spec.js'],
         tasks: ['jshint:test', 'karma:unit:run']
       },
       demo: {
