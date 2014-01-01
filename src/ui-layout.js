@@ -80,7 +80,7 @@ angular.module('ui.layout', [])
 
         // Use relative mouse position
         var isUsingColumnFlow = parentLayout.opts.flow === 'column';
-        var mouseProperty = ( isUsingColumnFlow ? 'pageX' : 'pageY');
+        var mouseProperty = ( isUsingColumnFlow ? 'clientX' : 'clientY');
 
         // Use bounding box / css property names
         var flowProperty = ( isUsingColumnFlow ? 'left' : 'top');
