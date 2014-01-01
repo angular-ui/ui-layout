@@ -6,23 +6,46 @@ module.exports = function (grunt) {
 
   // Task.
   grunt.registerTask('default', ['jshint', 'karma:unit']);
-  grunt.registerTask('serve', ['connect:continuous', 'karma:continuous', 'watch']);
-  grunt.registerTask('dist', ['ngmin', 'uglify']);
+  grunt.registerTask('serve', ['karma:continuous', 'dist', 'connect:continuous', 'build:gh-pages', 'watch']);
+  grunt.registerTask('dist', ['ngmin', 'copy', 'uglify']);
 
   grunt.registerTask('karma:continuous', ['karma:wjqlite_bg', 'karma:wjquery_bg']);
   grunt.registerTask('karma:unit', ['karma:wjqlite:unit', 'karma:wjquery:unit']);
   grunt.registerTask('karma:unit:run', ['karma:wjqlite:unit:run', 'karma:wjquery:unit:run']);
 
+
+  // HACK TO ACCESS TO THE COMPONENT-PUBLISHER
+  function fakeTargetTask(prefix){
+    return function(){
+
+      if (this.args.length !== 1) return grunt.log.fail('Just give the name of the ' + prefix + ' you want like :\ngrunt ' + prefix + ':bower');
+
+      var done = this.async();
+      var spawn = require('child_process').spawn;
+      spawn('./node_modules/.bin/gulp', [ prefix, '--branch='+this.args[0] ].concat(grunt.option.flags()), {
+        cwd : './node_modules/angular-ui-publisher',
+        stdio: 'inherit'
+      }).on('close', done);
+    };
+  }
+
+  grunt.registerTask('build', fakeTargetTask('build'));
+  grunt.registerTask('publish', fakeTargetTask('publish'));
+  //
+
+
+  // HACK TO MAKE TRAVIS WORK
   var testConfig = function (configFile, customOptions) {
     var options = { configFile: configFile, singleRun: true };
     var travisOptions = process.env.TRAVIS && { browsers: [ 'Firefox', 'PhantomJS'], reporters: ['dots'] };
     return grunt.util._.extend(options, customOptions, travisOptions);
   };
+  //
+
 
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    mainFileName: 'ui-layout',
     meta: {
       banner: ['/**',
         ' * <%= pkg.name %> - <%= pkg.description %>',
@@ -35,9 +58,8 @@ module.exports = function (grunt) {
 
     connect: {
       options: {
-        port: grunt.option('port') || '8000',
-        hostname: grunt.option('host') || 'localhost',
-        open: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>/demo',
+        base : 'out/built/gh-pages',
+        open: true,
         livereload: true
       },
       server: { options: { keepalive: true } },
@@ -58,15 +80,19 @@ module.exports = function (grunt) {
     // =======
     watch: {
       src: {
-        files: ['src/*', 'demo/**/*.js'],
-        tasks: ['jshint:src', 'karma:unit:run', 'dist']
+        files: ['src/*'],
+        tasks: ['jshint:src', 'karma:unit:run', 'dist', 'build:gh-pages']
       },
       test: {
         files: ['test/*.spec.js'],
         tasks: ['jshint:test', 'karma:unit:run']
       },
       demo: {
-        files: ['demo/*', 'src/*'],
+        files: ['demo/**', 'publish.js'],
+        tasks: ['build:gh-pages']
+      },
+      livereload: {
+        files: ['out/built/gh-pages/**/*'],
         options: { livereload: true }
       }
     },
@@ -125,6 +151,14 @@ module.exports = function (grunt) {
         cwd: 'src',
         src: ['*.js'],
         dest: 'dist'
+      }
+    },
+
+    copy: {
+      main: {
+        files: [
+          {src: ['src/ui-layout.css'], dest: 'dist/ui-layout.css', filter: 'isFile'}
+        ]
       }
     },
 
