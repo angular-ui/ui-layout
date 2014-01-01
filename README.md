@@ -77,8 +77,8 @@ grunt serve
 
 It's equal to run separately: 
 
-* `grunt connect:server` : giving you a development server at [http://localhost:8000/](http://localhost:8000/).
+* `grunt connect:server` : giving you a development server at [http://localhost:8000/](http://127.0.0.1:8000/).
 
-* `grunt karma:server` : giving you a Karma server to run tests (at [http://localhost:9876/](http://localhost:9876/) by default). You can force a test on this server with `grunt karma:unit:run`.
+* `grunt karma:unit` : giving you two Karma servers to run tests (at [http://localhost:9876/](http://localhost:9876/) for tests with jQlite and [http://localhost:5432/](http://localhost:5432/) for tests with jQuery). You can force tests on the servers with `grunt karma:unit:run`.
 
-* `grunt watch` : will automatically test your code and build your demo.  You can demo generation with `grunt build-doc`.
+* `grunt watch` : will automatically test your code and build your demo. You can force a demo generation with `grunt dist build:gh-pages`.
