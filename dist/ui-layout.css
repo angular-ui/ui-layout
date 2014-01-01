@@ -1,6 +1,6 @@
 
 /**
-  UI.Slider CSS
+  UI.Layout CSS
 *************************************/
 .stretch {
   position: absolute;
@@ -21,12 +21,10 @@
 }
 
 .ui-layout-row > .ui-splitbar{
-  top: 25%;
   height: 8px; width: 100%;
   cursor: row-resize;
 }
 .ui-layout-column > .ui-splitbar{
-  left: 25%;
   width: 8px; height: 100%;
   cursor: col-resize;
 }

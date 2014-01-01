@@ -1,0 +1,129 @@
+/* =Global rules
+-----------------------------------------------------------------------------*/
+[ng-app].ng-cloak,
+[ng-app][ng-cloak] {
+  display: block !important;
+  opacity: 0;
+}
+
+[ng-app] {
+  opacity: 1;
+  -webkit-transition: opacity 1s ease-out;
+  -moz-transition: opacity 1s ease-out;
+  transition: opacity 1s ease-out;
+}
+
+body{
+  padding-top: 50px;
+  min-width: 768px;
+}
+
+/* =TWBS Header
+-----------------------------------------------------------------------------*/
+
+/* Page headers */
+.bs-header {
+  padding: 30px 15px 40px; /* side padding builds on .container 15px, so 30px */
+  font-size: 16px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  color: #cdbfe3;
+  background-color: #563d7c;
+  background-image: url('../img/header.png');
+}
+.bs-header a {
+  color: #fff;
+  font-weight: normal;
+}
+.bs-header h1 {
+  color: #fff;
+}
+.bs-header p {
+  font-weight: 200;
+  line-height: 1.4;
+}
+.bs-header .container {
+  position: relative;
+}
+
+
+@media (min-width: 768px) {
+  .bs-header {
+    font-size: 21px;
+    text-align: left;
+  }
+  .bs-header h1 {
+    font-size: 60px;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 992px) {
+  .bs-header h1,
+  .bs-header p {
+    margin-right: 380px;
+  }
+}
+
+.bs-social {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+
+  .bs-social {
+    text-align: left;
+  }
+
+}
+
+
+/*
+ * Button Inverse
+ *
+ * Buttons in the masthead.
+ */
+
+ .btn-outline-inverse {
+  color: #fff;
+  background-color: transparent;
+  border-color: #cdbfe3;
+  margin: 10px;
+}
+
+@media (min-width: 768px) {
+
+  .btn-outline-inverse {
+    width: auto;
+    margin: 20px 5px 20px 0;
+    padding: 18px 24px;
+    font-size: 21px;
+  }
+
+}
+
+.btn-outline-inverse:hover, .btn-outline-inverse:focus, .btn-outline-inverse:active {
+  color: #563d7c;
+  text-shadow: none;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+/* =PRETTYPRINT TABS
+-----------------------------------------------------------------------------*/
+.nav-tabs > li {
+  float: left;
+  margin-bottom: -1px;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  background-color: #f8f8f8;
+}
+
+.prettyprint {
+  border-top: none;
+}

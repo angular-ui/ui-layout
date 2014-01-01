@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8"/>
+  <title>Angular UI ~ UI.Layout Doc</title>
+
+  <!-- Le css -->
+  <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/css/prettify.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+
+      <link rel="stylesheet" type="text/css" href="demo/demo.css"/>
+    <link rel="stylesheet" type="text/css" href="dist/ui-layout.css"/>
+
+
+</head>
+
+<body>
+
+<!-- Le navbar
+================================================== -->
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="navbar-header">
+      </div>
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="" class="navbar-brand">UI.Layout</a>
+        </li>
+        <li class="pull-right">
+          <a href="http://angular-ui.github.io">by AngularUI</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Le header
+================================================== -->
+<header class="bs-header">
+  <div class="container">
+
+    <h1>UI.Layout</h1>
+
+    <p>This directive allows you to split !</p>
+
+    <p>
+      <a class="btn btn-outline-inverse btn-lg" href="https://github.com/angular-ui/ui-layout">Code on Github</a>
+      <a class="btn btn-outline-inverse btn-lg" href="https://github.com/angular-ui/ui-layout/releases/tag/v0.0.0">
+        <i class="glyphicon glyphicon-download-alt"></i> Download <small>(0.0.0)</small>
+     </a>
+    </p>
+  </div>
+  <div class="bs-social container">
+      <ul class="bs-social-buttons list-inline list-unstyled">
+          <li>
+              <iframe
+            src="http://ghbtns.com/github-btn.html?user=angular-ui&amp;repo=ui-layout&amp;type=watch&amp;count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+          </li>
+          <li>
+             <iframe
+            src="http://ghbtns.com/github-btn.html?user=angular-ui&amp;repo=ui-layout&amp;type=fork&amp;count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
+          </li>
+          <li>
+              <a href="https://twitter.com/share" class="twitter-share-button"
+                 data-hashtags="angularjs">Tweet</a>
+              <script>!function (d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (!d.getElementById(id)) {
+                      js = d.createElement(s);
+                      js.id = id;
+                      js.src = "//platform.twitter.com/widgets.js";
+                      fjs.parentNode.insertBefore(js, fjs);
+                  }
+              }(document, "script", "twitter-wjs");</script>
+          </li>
+          <li>
+              <!-- Place this tag where you want the +1 button to render. -->
+              <div class="g-plusone" data-size="medium"></div>
+
+              <!-- Place this tag after the last +1 button tag. -->
+              <script type="text/javascript">
+                  (function () {
+                      var po = document.createElement('script');
+                      po.type = 'text/javascript';
+                      po.async = true;
+                      po.src = 'https://apis.google.com/js/plusone.js';
+                      var s = document.getElementsByTagName('script')[0];
+                      s.parentNode.insertBefore(po, s);
+                  })();
+              </script>
+          </li>
+      </ul>
+  </div>
+</header>
+
+<!-- Le main
+================================================== -->
+<div class="container">
+
+  <section id="layout" ng-app="doc.ui-layout">
+
+<!-- =Minimal code
+--------------------------------------------------------------------------- -->
+<div id="demo-mini">
+  <div class="page-header">
+    <h1>Minimal code</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+     <div style="position: relative; height: 220px;">
+        <div ui-layout class="layout-mock">
+         <div class="center-back"></div>
+       </div>
+     </div>
+    </div>
+
+    <div class="col-md-6" ng-controller="PlunkerCtrl"
+         ng-init="
+vendor_css=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.css'];
+vendor_js=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.js'];
+      "
+        >
+      <div class="pull-right">
+        <button class="btn btn-info" ng-click="edit('1.2.6', 'UI.Layout', 'ui-layout')">
+          <i class="glyphicon glyphicon-edit"></i> Edit in plunker
+        </button>
+      </div>
+
+      <tabset>
+        <tab heading="Markup">
+          <div plunker-content="markup">
+<pre class="prettyprint">&lt;div ui-layout class=&quot;layout-mock&quot;&gt;
+  &lt;div class=&quot;center-back&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+          </div>
+        </tab>
+        <tab heading="CSS">
+          <div plunker-content="css">
+<pre class="prettyprint">.layout-mock *:not(.ui-splitbar){
+  background : #eee no-repeat center;
+}
+
+.layout-mock .center-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=CENTER");
+}</pre>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- =Holy grail
+--------------------------------------------------------------------------- -->
+<div id="demo-mini">
+  <div class="page-header">
+    <h1>Holy grail demo</h1>
+  </div>
+
+  <div style="position: relative; height: 500px;">
+
+    <div ui-layout class="layout-mock">
+      <header class="north-back"></header>
+      <ui-layout options="{ flow : 'column' }">
+        <sidebar class="east-back"></sidebar>
+        <div class="center-back"></div>
+        <sidebar class="west-back"></sidebar>
+      </ui-layout>
+      <footer class="south-back"></footer>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <div ng-controller="PlunkerCtrl"
+       ng-init="
+vendor_css=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.css'];
+vendor_js=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.js'];
+    "
+      >
+    <div class="pull-right">
+      <button class="btn btn-info" ng-click="edit('1.2.6', 'UI.Layout', 'ui-layout')">
+        <i class="glyphicon glyphicon-edit"></i> Edit in plunker
+      </button>
+    </div>
+
+    <tabset>
+      <tab heading="Markup">
+        <div plunker-content="markup">
+<pre class="prettyprint">&lt;div ui-layout class=&quot;layout-mock&quot;&gt;
+  &lt;header class=&quot;north-back&quot;&gt;&lt;/header&gt;
+  &lt;ui-layout options=&quot;{ flow : &#39;column&#39; }&quot;&gt;
+    &lt;sidebar class=&quot;east-back&quot;&gt;&lt;/sidebar&gt;
+    &lt;div class=&quot;center-back&quot;&gt;&lt;/div&gt;
+    &lt;sidebar class=&quot;west-back&quot;&gt;&lt;/sidebar&gt;
+  &lt;/ui-layout&gt;
+  &lt;footer class=&quot;south-back&quot;&gt;&lt;/footer&gt;
+&lt;/div&gt;</pre>
+        </div>
+      </tab>
+      <tab heading="CSS">
+        <div plunker-content="css">
+<pre class="prettyprint">.layout-mock *:not(.ui-splitbar){
+  background : #eee no-repeat center;
+}
+
+
+.layout-mock .center-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=CENTER");
+}
+.layout-mock .north-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=NORTH");
+}
+.layout-mock .south-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=SOUTH");
+}
+.layout-mock .east-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=EAST");
+}
+.layout-mock .west-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=WEST");
+}
+</pre>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>
+
+</section>
+
+</div>
+
+<!-- Le javascript
+================================================== -->
+<script src="assets/vendor/prettify.js"></script>
+
+<script src="assets/vendor/angular.min.js"></script>
+<script src="assets/vendor/ui-bootstrap-tpls.min.js"></script>
+<script src="core/prettifyDirective.js"></script>
+<script src="core/plunker.js"></script>
+
+<script src="dist/ui-layout.js"></script>
+
+
+<script>
+  angular.module('doc.ui-layout', ['ui.layout', 'prettifyDirective', 'ui.bootstrap', 'plunker' ]);
+</script>
+
+</body>
+
+</html>
