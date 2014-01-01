@@ -51,8 +51,7 @@ Type: `String`
 Default: `'row'`  
 `flow: row | column`
 
-A fake flex-direction property. wait...
-
+A fake [flex-direction property](http://www.w3.org/TR/css3-flexbox/#flex-direction). It specifies how the child elements are placed in the layout container, by setting the direction of the flex container's main axis. This determines the direction that child elements are laid out in.
 
 ## Testing
 
