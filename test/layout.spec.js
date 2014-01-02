@@ -149,7 +149,7 @@ describe('uiLayout', function () {
     describe('in row flow', function () {
 
       beforeEach(function () {
-        appendTemplate('<div ui-layout="{ flow : \'row\' }"><header></header><footer></footer></div>');
+        appendTemplate('<div ui-layout><header></header><footer></footer></div>');
       });
 
       it('should have a "ui-layout-row" class by default', function () {
