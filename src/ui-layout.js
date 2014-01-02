@@ -22,6 +22,7 @@ angular.module('ui.layout', [])
       compile: function compile(tElement, tAttrs) {
 
         var _i, _childens = tElement.children(), _child_len = _childens.length;
+        var _sizes;
 
         // Parse `ui-layout` or `options` attributes (with no scope...)
         var opts = angular.extend({}, $parse(tAttrs.uiLayout)(), $parse(tAttrs.options)());
@@ -39,21 +40,47 @@ angular.module('ui.layout', [])
           angular.element(_childens[_i]).addClass('stretch');
         }
 
+        //Detect if "ui-size" was used in HTML to determine panel sizes
+        _sizes = new Array();
+        var _totalSize = 0;
+        _sizes.push(0);
+        for (_i = 0; _i < _child_len; ++_i) {
+          var _size = angular.element(_childens[_i]).attr('ui-size');
+          if (_size === undefined) {
+            _totalSize = 0;
+            break;
+          } else {
+            var _x = parseInt(_size);
+            _totalSize = _totalSize + _x;
+            if (_i >= 0) {
+              _sizes.push(_totalSize);
+            }
+          }
+        }
+        //Either the user did not specify properly or no extra option detected
+        if (_totalSize != 100 || _totalSize == 0) {
+          _sizes = new Array();
+          var _step = 100 / _child_len;
+          // split evenly between panels
+          for (_i = 0; _i < _child_len; ++_i) {
+            _sizes.push(_step * _i);
+          }
+        }
+
         if (_child_len > 1) {
           // Initialise the layout with equal sizes.
 
           var flowProperty = ( isUsingColumnFlow ? 'left' : 'top');
           var oppositeFlowProperty = ( isUsingColumnFlow ? 'right' : 'bottom');
 
-          var step = 100 / _child_len;
           for (_i = 0; _i < _child_len; ++_i) {
             var area = angular.element(_childens[_i])
-              .css(flowProperty, (step * _i) + '%')
-              .css(oppositeFlowProperty, (100 - step * (_i + 1)) + '%');
+              .css(flowProperty, _sizes[_i] + '%')
+              .css(oppositeFlowProperty, (100 - _sizes[_i + 1]) + '%');
 
             if (_i < _child_len - 1) {
               // Add a split bar
-              var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, step * (_i + 1) + '%');
+              var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, _sizes[_i + 1] + '%');
               area.after(bar);
             }
           }
