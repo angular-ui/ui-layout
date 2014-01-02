@@ -123,25 +123,77 @@ describe('uiLayout', function () {
 
     });
 
-    describe('in column flow', function () {
 
-      beforeEach(function () {
-        appendTemplate('<div ui-layout="{ flow : \'column\' }"><header></header><footer></footer></div>');
-      });
+    describe('size option', function () {
 
-      it('should have a "ui-layout-column" class by default', function () {
-        expect(element).toHaveClass('ui-layout-column');
-      });
+      function testSizeNotation(notation, middlePosition){
+        appendTemplate('<div ui-layout><header size="' + notation + '"></header><footer></footer></div>');
+        expect(element.children().eq(0)[0].style.top).toEqual('0%');
+        expect(element.children().eq(0)[0].style.bottom).toEqual( (100 - middlePosition || 50) + '%');
+        expect(element.children().eq(1)[0].style.top).toEqual( (middlePosition || 50) + '%');
+        expect(element.children().eq(1)[0].style.bottom).toEqual('');
+        element.remove();
+      }
 
-      it('should initialise with equal width', function () {
-        var firstElemWidth = element.children()[0].getBoundingClientRect().width;
-        for (var i = 0; i < element.children().length; i+=2) {
-          expect(element.children()[i].getBoundingClientRect().width, 'tagName').toEqual(firstElemWidth);
+      describe('should only support pixels and pencent data type', function () {
+        var wtfSizes = ['fuu', '  ', 'wtf10', '10wtf', '12', '12ppx', '12px%', '12px %'];
+        for (var _i = 0, n = wtfSizes.length ; _i < n ; ++_i){
+          (function(notation){ // Use a new scope
+            it('"' + notation + '" should be handled as auto', function () {
+              testSizeNotation(notation);
+            });
+          })(wtfSizes[_i]);
         }
       });
 
-      it('should have a split bar at the middle', function () {
-        expect(element.children().eq(1)[0].style.left).toEqual('50%');
+      it('should support percent type', function () {
+        testSizeNotation('10%', 10);
+      });
+
+      it('should support pixel type', function () {
+        appendTemplate('<div ui-layout><header size="10px"></header><footer></footer></div>');
+        var expectedMiddle =  (10 / _jQuery(element[0]).height() * 100).toFixed(5);
+        expect(element.children().eq(0)[0].style.top).toEqual('0%');
+        expect(element.children().eq(0)[0].style.bottom).toEqual( (100 - expectedMiddle ) + '%');
+        expect(element.children().eq(1)[0].style.top).toEqual( expectedMiddle + '%');
+        expect(element.children().eq(1)[0].style.bottom).toEqual('');
+      });
+
+      it('should handle useless spaces', function () {
+        testSizeNotation('    10%', 10);
+        testSizeNotation('10%    ', 10);
+        testSizeNotation('  10%  ', 10);
+        testSizeNotation(' 10  % ', 10);
+      });
+
+    });
+
+    describe('in column flow', function () {
+
+      describe('when using no options', function () {
+        beforeEach(function () {
+          appendTemplate('<div ui-layout="{ flow : \'column\' }"><header></header><footer></footer></div>');
+        });
+
+        it('should have a "ui-layout-column" class', function () {
+          expect(element).toHaveClass('ui-layout-column');
+        });
+
+        it('should initialise with equal width', function () {
+          expect(element.children().eq(0)[0].style.left).toEqual('0%');
+          expect(element.children().eq(0)[0].style.right).toEqual('50%');
+          expect(element.children().eq(1)[0].style.left).toEqual('50%');
+          expect(element.children().eq(1)[0].style.right).toEqual('');
+        });
+
+        it('should have a split bar at the middle', function () {
+          expect(element.children().eq(1)[0].style.left).toEqual('50%');
+        });
+      });
+
+      it('should initialise the header width to 10%', function () {
+        appendTemplate('<div ui-layout="{ flow : \'column\' }"><header size="10%"></header><footer></footer></div>');
+        expect(element.children().eq(1)[0].style.left).toEqual('10%');
       });
     });
 

@@ -17,12 +17,51 @@ angular.module('ui.layout', [])
 
     var splitBarElem_htmlTemplate = '<div class="stretch ui-splitbar"></div>';
 
+    function convertNumericDataTypesToPencents(numberVairousTypeArray, parentSize){
+      var _i, _n;
+      var _res = []; _res.length = numberVairousTypeArray.length;
+      var _commonSizeIndex = [];
+      var _remainingSpace = 100;
+      for (_i = 0, _n = numberVairousTypeArray.length; _i < _n; ++_i) {
+        var rawSize = numberVairousTypeArray[_i];
+        var value = parseInt(rawSize, 10);
+        // should only support pixels and pencent data type
+        var type = rawSize.match(/\d+\s*(px|%)\s*$/i);
+        if (!isNaN(value) && type){
+          if (type.length > 1 && 'px' === type[1]){
+            value = + (value / parentSize * 100).toFixed(5);
+          }
+          _res[_i] = value;
+          _remainingSpace -= value;
+        } else{
+          rawSize = 'auto';
+        }
+
+        if (/^\s*auto\s*$/.test(rawSize)){
+          _commonSizeIndex.push(_i); continue;
+        }
+      }
+
+
+      if (_commonSizeIndex.length > 0){
+        var _commonSize = _remainingSpace / _commonSizeIndex.length ;
+        for (_i = 0, _n = _commonSizeIndex.length; _i < _n; ++_i) {
+          var cid = _commonSizeIndex[_i];
+          _res[cid] = _commonSize;
+        }
+      }
+
+      parentSize;
+
+      return _res;
+    }
+
     return {
       restrict: 'AE',
       compile: function compile(tElement, tAttrs) {
 
         var _i, _childens = tElement.children(), _child_len = _childens.length;
-        var _sizes;
+        var _sizes, _position;
 
         // Parse `ui-layout` or `options` attributes (with no scope...)
         var opts = angular.extend({}, $parse(tAttrs.uiLayout)(), $parse(tAttrs.options)());
@@ -35,52 +74,40 @@ angular.module('ui.layout', [])
           // set the layout css class
           .addClass('ui-layout-' + (opts.flow || 'row'));
 
-        // Stretch all the children by default
+        // Initial global size definition
+        opts.sizes = opts.sizes || [];
+        // Preallocate the array size
+        opts.sizes.length = _child_len;
+
         for (_i = 0; _i < _child_len; ++_i) {
+          // Stretch all the children by default
           angular.element(_childens[_i]).addClass('stretch');
+          // Size initialization priority
+          // - the size attr on the child element
+          // - the global size on the layout option
+          // - 'auto' Fair separation of the remaining space
+          opts.sizes[_i] = angular.element(_childens[_i]).attr('size') || opts.sizes[_i]  || 'auto';
         }
 
-        //Detect if "ui-size" was used in HTML to determine panel sizes
-        _sizes = new Array();
-        var _totalSize = 0;
-        _sizes.push(0);
-        for (_i = 0; _i < _child_len; ++_i) {
-          var _size = angular.element(_childens[_i]).attr('ui-size');
-          if (_size === undefined) {
-            _totalSize = 0;
-            break;
-          } else {
-            var _x = parseInt(_size);
-            _totalSize = _totalSize + _x;
-            if (_i >= 0) {
-              _sizes.push(_totalSize);
-            }
-          }
-        }
-        //Either the user did not specify properly or no extra option detected
-        if (_totalSize != 100 || _totalSize == 0) {
-          _sizes = new Array();
-          var _step = 100 / _child_len;
-          // split evenly between panels
-          for (_i = 0; _i < _child_len; ++_i) {
-            _sizes.push(_step * _i);
-          }
-        }
+        // get the final percent sizes
+        _sizes = convertNumericDataTypesToPencents(opts.sizes, tElement[0]['offset' + (isUsingColumnFlow ? 'Width' : 'Height')]);
 
         if (_child_len > 1) {
           // Initialise the layout with equal sizes.
 
           var flowProperty = ( isUsingColumnFlow ? 'left' : 'top');
           var oppositeFlowProperty = ( isUsingColumnFlow ? 'right' : 'bottom');
-
+          _position = 0;
           for (_i = 0; _i < _child_len; ++_i) {
             var area = angular.element(_childens[_i])
-              .css(flowProperty, _sizes[_i] + '%')
-              .css(oppositeFlowProperty, (100 - _sizes[_i + 1]) + '%');
+              .css(flowProperty, _position + '%');
+
+            _position += _sizes[_i];
+            area.css(oppositeFlowProperty, (100 - _position) + '%');
 
             if (_i < _child_len - 1) {
               // Add a split bar
-              var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, _sizes[_i + 1] + '%');
+              var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, _position + '%');
               area.after(bar);
             }
           }
