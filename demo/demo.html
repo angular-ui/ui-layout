@@ -131,4 +131,78 @@ vendor_js=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.js']
   </div>
 </div>
 
+
+<!-- =Initial size demo
+--------------------------------------------------------------------------- -->
+<div id="demo-mini">
+  <div class="page-header">
+    <h1>Initial size demo</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div style="position: relative; height: 600px;">
+        <div ui-layout class="layout-mock">
+          <header class="north-back"></header>
+          <div class="center-back" size="10%"></div>
+          <footer ui-layout="{ flow : 'column', sizes: [ '300px' ] }" >
+            <div class="west-back"></div>
+            <div class="south-back"></div>
+            <div size="100px"></div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6" ng-controller="PlunkerCtrl"
+         ng-init="
+vendor_css=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.css'];
+vendor_js=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.js'];
+      "
+        >
+      <div class="pull-right">
+        <button class="btn btn-info" ng-click="edit('1.2.6', 'UI.Layout', 'ui-layout')">
+          <i class="glyphicon glyphicon-edit"></i> Edit in plunker
+        </button>
+      </div>
+
+      <tabset>
+        <tab heading="Markup">
+          <div plunker-content="markup">
+<pre class="prettyprint">&lt;div ui-layout class=&quot;layout-mock&quot;&gt;
+  &lt;header class=&quot;north-back&quot;&gt;&lt;/header&gt;
+  &lt;div class=&quot;center-back&quot; size=&quot;10%&quot;&gt;&lt;/div&gt;
+  &lt;footer ui-layout=&quot;{ flow : &#39;column&#39;, sizes: [ &#39;300px&#39; ] }&quot; &gt;
+    &lt;div class=&quot;west-back&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;south-back&quot;&gt;&lt;/div&gt;
+    &lt;div size=&quot;100px&quot;&gt;&lt;/div&gt;
+  &lt;/footer&gt;
+&lt;/div&gt;</pre>
+          </div>
+        </tab>
+        <tab heading="CSS">
+          <div plunker-content="css">
+<pre class="prettyprint">.layout-mock *:not(.ui-splitbar){
+  background : #eee no-repeat center;
+}
+
+
+.layout-mock .center-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=CENTER");
+}
+.layout-mock .north-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=NORTH");
+}
+.layout-mock .south-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=SOUTH");
+}
+.layout-mock .west-back{
+  background-image: url("http://placehold.it/400x300/eee/666&text=WEST");
+}</pre>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</div>
+
 </section>
