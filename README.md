@@ -24,7 +24,7 @@ This will copy the UI.Layout files into a `bower_components` folder, along with 
 ```html
 <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-layout/ui-layout.css"/>
 <!-- ... -->
-<script type="text/javascript" src="bower_components/angular-ui-layout/layout.js"></script>
+<script type="text/javascript" src="bower_components/angular-ui-layout/ui-layout.js"></script>
 ```
 
 Add the UI.Layout module as a dependency to your application module:
