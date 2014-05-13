@@ -1,47 +1,34 @@
 'use strict';
 
-describe('uiLayout', function () {
+describe('Directive: uiLayout', function () {
+  var element, scope, compile,
+    validTemplate = '<div ui-layout></div>';
 
-  // declare these up here to be global to all tests
-  var scope, $compile, element;
+  function createDirective(data, template) {
+    var elm;
 
-  /**
-   * UTILS
-   */
+//    scope.data = data || defaultData;
 
-  function appendTemplate(tpl) {
-    element = angular.element(tpl);
-    angular.element(document.body).append(element);
-    $compile(element)(scope);
+    elm = angular.element(template || validTemplate);
+    angular.element(document.body).prepend(elm);
+    compile(elm)(scope);
     scope.$digest();
+
+    return elm;
   }
 
-  /**
-   * TESTS
-   */
-
-  beforeEach(module('ui.layout'));
-
-  // inject in angular constructs. Injector knows about leading/trailing underscores and does the right thing
-  // otherwise, you would need to inject these into each test
-  beforeEach(inject(function (_$rootScope_, _$compile_) {
-    scope = _$rootScope_.$new();
-    $compile = _$compile_;
-  }));
-
-
-  // jasmine matcher for expecting an element to have a css class
-  // https://github.com/angular/angular.js/blob/master/test/matchers.js
   beforeEach(function () {
-    this.addMatchers({
-      toHaveClass: function (cls) {
-        this.message = function () {
-          return 'Expected "' + angular.mock.dump(this.actual) + '" to have class "' + cls + '".';
-        };
 
-        return this.actual.hasClass(cls);
-      }
+    module('ui.layout');
+
+    inject(function ($rootScope, $compile) {
+      scope = $rootScope.$new();
+      compile = $compile;
     });
+  });
+
+  afterEach(function () {
+    if (element) element.remove();
   });
 
   describe('require', function () {
@@ -53,47 +40,38 @@ describe('uiLayout', function () {
     });
   });
 
-  afterEach(function () {
-    if (element) element.remove();
-  });
-
-  describe('directive', function () {
+  describe('when created', function () {
 
     it('should have a "stretch" class', function () {
-      appendTemplate('<div ui-layout></div>');
+      element = createDirective();
       expect(element).toHaveClass('stretch');
     });
 
     it('should work as an element', function () {
-      appendTemplate('<ui-layout></ui-layout>');
+      element = createDirective(null, '<ui-layout></ui-layout>');
       expect(element).toHaveClass('stretch');
     });
 
     it('should work as an attribute', function () {
-      appendTemplate('<div ui-layout></div>');
+      element = createDirective();
       expect(element).toHaveClass('stretch');
     });
 
     it('should have a "ui-layout-row" class by default', function () {
-      appendTemplate('<div ui-layout></div>');
+      element = createDirective();
       expect(element).toHaveClass('ui-layout-row');
     });
 
     it('should not add split bar when empty', function () {
-      appendTemplate('<div ui-layout></div>');
+      element = createDirective();
       expect(element.children().length).toEqual(0);
-    });
-
-    it('should not add split bar when only one area', function () {
-      appendTemplate('<div ui-layout><section></section></div>');
-      expect(element.children().length).toEqual(1);
     });
 
     it('should add n-1 split bar pour n area', function () {
       var children, splitBarElm;
 
       // Try with 2 elements
-      appendTemplate('<div ui-layout><article></article><section></section></div>');
+      element = createDirective(null, '<div ui-layout><article></article><section></section></div>');
       children = element.children();
       expect(children.length).toEqual(2 + 1); // add one slide
       expect(children[0].tagName).toEqual('ARTICLE');
@@ -106,7 +84,7 @@ describe('uiLayout', function () {
 
       // Try with 4 elements
       element.remove();
-      appendTemplate('<div ui-layout><header></header><article></article><section></section><footer></footer></div>');
+      element = createDirective(null, '<div ui-layout><header></header><article></article><section></section><footer></footer></div>');
       children = element.children();
       expect(children.length).toEqual(4 + 3); // add three slide
 
@@ -123,85 +101,118 @@ describe('uiLayout', function () {
 
     });
 
+  });
 
-    describe('size option', function () {
+  describe('when using size option', function () {
 
-      function testSizeNotation(notation, middlePosition){
-        appendTemplate('<div ui-layout><header size="' + notation + '"></header><footer></footer></div>');
-        expect(element.children().eq(0)[0].style.top).toEqual('0%');
-        expect(element.children().eq(0)[0].style.bottom).toEqual( (100 - middlePosition || 50) + '%');
-        expect(element.children().eq(1)[0].style.top).toEqual( (middlePosition || 50) + '%');
-        expect(element.children().eq(1)[0].style.bottom).toEqual('');
-        element.remove();
+    var $header, $footer;
+
+    function createSizedDirective(notation) {
+      element = createDirective(null, '<div ui-layout><header size="' + notation + '"></header><footer></footer></div>');
+
+      $header = element.children().eq(0)[0];
+      $footer = element.children().eq(2)[0];
+
+      return element;
+    }
+
+    function testSizeNotation(notation, middlePosition) {
+      element = createSizedDirective(notation);
+      expect($header.style.top).toEqual('0%');
+      expect($header.style.bottom).toEqual((100 - middlePosition || 50) + '%');
+      expect($footer.style.top).toEqual((middlePosition || 50) + '%');
+      expect($footer.style.bottom).toEqual('0%');
+      element.remove();
+    }
+
+    describe('when using dummy input', function () {
+      var wtfSizes = ['fuu', '  ', 'wtf10', '10wtf', '12', '12ppx', '12px%', '12px %'];
+      for (var _i = 0, n = wtfSizes.length; _i < n; ++_i) {
+        (function (notation) { // Use a new scope
+          it('should handle "' + notation + '" as auto', function () {
+            testSizeNotation(notation);
+          });
+        })(wtfSizes[_i]);
       }
-
-      describe('should only support pixels and pencent data type', function () {
-        var wtfSizes = ['fuu', '  ', 'wtf10', '10wtf', '12', '12ppx', '12px%', '12px %'];
-        for (var _i = 0, n = wtfSizes.length ; _i < n ; ++_i){
-          (function(notation){ // Use a new scope
-            it('"' + notation + '" should be handled as auto', function () {
-              testSizeNotation(notation);
-            });
-          })(wtfSizes[_i]);
-        }
-      });
-
-      it('should support percent type', function () {
-        testSizeNotation('10%', 10);
-      });
-
-      it('should support pixel type', function () {
-        appendTemplate('<div ui-layout><header size="10px"></header><footer></footer></div>');
-        var expectedMiddle =  (10 / _jQuery(element[0]).height() * 100).toFixed(5);
-        expect(element.children().eq(0)[0].style.top).toEqual('0%');
-        expect(element.children().eq(0)[0].style.bottom).toEqual( (100 - expectedMiddle ) + '%');
-        expect(element.children().eq(1)[0].style.top).toEqual( expectedMiddle + '%');
-        expect(element.children().eq(1)[0].style.bottom).toEqual('');
-      });
-
-      it('should handle useless spaces', function () {
-        testSizeNotation('    10%', 10);
-        testSizeNotation('10%    ', 10);
-        testSizeNotation('  10%  ', 10);
-        testSizeNotation(' 10  % ', 10);
-      });
-
     });
 
-    describe('in column flow', function () {
-
-      describe('when using no options', function () {
-        beforeEach(function () {
-          appendTemplate('<div ui-layout="{ flow : \'column\' }"><header></header><footer></footer></div>');
-        });
-
-        it('should have a "ui-layout-column" class', function () {
-          expect(element).toHaveClass('ui-layout-column');
-        });
-
-        it('should initialise with equal width', function () {
-          expect(element.children().eq(0)[0].style.left).toEqual('0%');
-          expect(element.children().eq(0)[0].style.right).toEqual('50%');
-          expect(element.children().eq(1)[0].style.left).toEqual('50%');
-          expect(element.children().eq(1)[0].style.right).toEqual('');
-        });
-
-        it('should have a split bar at the middle', function () {
-          expect(element.children().eq(1)[0].style.left).toEqual('50%');
-        });
-      });
-
-      it('should initialise the header width to 10%', function () {
-        appendTemplate('<div ui-layout="{ flow : \'column\' }"><header size="10%"></header><footer></footer></div>');
-        expect(element.children().eq(1)[0].style.left).toEqual('10%');
-      });
+    it('should support percent type', function () {
+      testSizeNotation('10%', 10);
     });
 
+    it('should support pixel type', function () {
+      var pixelPosition = 10;
+      element = createSizedDirective(pixelPosition + 'px');
 
-    describe('in row flow', function () {
+      var expectedMiddle = +(pixelPosition / _jQuery(element[0]).height() * 100).toFixed(5);
 
+      expect(parseFloat($header.style.top)).toEqual(0);
+      expect(parseFloat($header.style.bottom)).toBeCloseTo(100 - expectedMiddle);
+
+      expect(parseFloat($footer.style.top)).toBeCloseTo(expectedMiddle);
+      expect($footer.style.bottom).toEqual('0%');
+
+      element.remove();
+    });
+
+    it('should handle useless spaces', function () {
+      testSizeNotation('    10%', 10);
+      testSizeNotation('10%    ', 10);
+      testSizeNotation('  10%  ', 10);
+      testSizeNotation(' 10  % ', 10);
+    });
+
+  });
+
+  describe('when using column flow', function () {
+
+    var $header, $sidebar, $footer;
+
+    describe('when created', function () {
       beforeEach(function () {
-        appendTemplate('<div ui-layout><header></header><footer></footer></div>');
+        element = createDirective(null, '<div ui-layout="{ flow : \'column\' }"><header></header><footer></footer></div>');
+
+        $header = element.children().eq(0)[0];
+        $sidebar = element.children().eq(1)[0];
+        $footer = element.children().eq(2)[0];
+      });
+
+      it('should have a "ui-layout-column" class', function () {
+        expect(element).toHaveClass('ui-layout-column');
+      });
+
+      it('should initialise with equal width', function () {
+        expect($header.style.left).toEqual('0%');
+        expect($header.style.right).toEqual('50%');
+        expect($footer.style.left).toEqual('50%');
+        expect($footer.style.right).toEqual('0%');
+      });
+
+      it('should have a split bar at the middle', function () {
+        expect($sidebar.style.left).toEqual('50%');
+      });
+    });
+
+    it('should initialise a sidebar at 10%', function () {
+      element = createDirective(null, '<div ui-layout="{ flow : \'column\' }"><header size="10%"></header><footer></footer></div>');
+      $sidebar = element.children().eq(1)[0];
+      expect($sidebar.style.left).toEqual('10%');
+    });
+  });
+
+  describe('in row flow', function () {
+
+    var $header, $sidebar, $footer;
+
+    describe('when created', function () {
+      beforeEach(function () {
+
+        element = createDirective(null, '<div ui-layout><header></header><footer></footer></div>');
+
+        $header = element.children().eq(0)[0];
+        $sidebar = element.children().eq(1)[0];
+        $footer = element.children().eq(1)[0];
+
       });
 
       it('should have a "ui-layout-row" class by default', function () {
@@ -210,16 +221,21 @@ describe('uiLayout', function () {
 
       it('should initialise with equal height', function () {
         var firstElemHeight = element.children()[0].getBoundingClientRect().height;
-        for (var i = 0; i < element.children().length; i+=2) {
+        for (var i = 0; i < element.children().length; i += 2) {
           expect(element.children()[i].getBoundingClientRect().height, 'tagName').toEqual(firstElemHeight);
         }
       });
 
       it('should have a split bar at the middle', function () {
-        expect(element.children().eq(1)[0].style.top).toEqual('50%');
+        expect($sidebar.style.top).toEqual('50%');
       });
     });
 
+    it('should initialise a sidebar at 10%', function () {
+      element = createDirective(null, '<div ui-layout><header size="10%"></header><footer></footer></div>');
+      $sidebar = element.children().eq(1)[0];
+      expect($sidebar.style.top).toEqual('10%');
+    });
   });
 
 
@@ -227,7 +243,7 @@ describe('uiLayout', function () {
     var ctrl;
 
     beforeEach(inject(function (_$controller_) {
-      appendTemplate('<div ui-layout="{ flow : \'row\' }"></div>');
+      element = createDirective();
       ctrl = _$controller_('uiLayoutCtrl', { $scope: scope, $element: element, $attrs: element[0].attributes });
     }));
 

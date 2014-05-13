@@ -16,6 +16,7 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'test/helpers/spec_helper.js',
       'bower_components/jquery/dist/jquery.js',
       'test/helpers/jquery_alias.js',
       'test/helpers/browserTrigger.js',
