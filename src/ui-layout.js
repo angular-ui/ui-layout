@@ -185,7 +185,10 @@ angular.module('ui.layout', [])
 
           // FIX :
           // - with touch events, when using jQuery, the mouseEvent is in fact a jQueryEvent. So we use originalEvent here.
-          lastX = mouseEvent[mouseProperty] || mouseEvent.originalEvent[mouseProperty];
+          // - real touch events comes in the _targetTouches_ array
+          lastX = mouseEvent[mouseProperty] ||
+            (mouseEvent.originalEvent && mouseEvent.originalEvent[mouseProperty]) ||
+            (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][mouseProperty] : 0);
 
           // Cancel previous rAF call
           if (animationFrameRequested) {
