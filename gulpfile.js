@@ -8,7 +8,7 @@ var gulp = require('gulp');
 
 gulp.task('default', ['jshint', 'karma']);
 gulp.task('serve', ['dist', 'continuousMode']);
-gulp.task('dist', ['clean:dist', 'uglify', 'scss']);
+gulp.task('dist', ['clean:dist', 'uglify']);
 
 
 
@@ -64,7 +64,6 @@ gulp.task('karma', function(cb){
   kwjQlite.simpleRun(done);
 });
 
-gulp.task('karma:jqlite', kwjQlite.start);
 gulp.task('karma:jqlite:unit', kwjQlite.simpleRun);
 gulp.task('karma:jqlite:watch', function(){
   kwjQlite.inBackground();
@@ -73,7 +72,6 @@ gulp.task('karma:jqlite:watch', function(){
   });
 });
 
-gulp.task('karma:jquery', kwjQuery.start);
 gulp.task('karma:jquery:unit', kwjQuery.simpleRun);
 gulp.task('karma:jquery:watch', function(){
   kwjQuery.inBackground();
@@ -94,22 +92,6 @@ gulp.task('clean:dist', function () {
   return gulp.src('./dist')
     .pipe($.rimraf());
 });
-
-gulp.task('scss', function () {
-  return gulp.src('./src/*.scss')
-    .pipe($.plumber({
-      errorHandler: function(){}
-    }))
-    .pipe($.rubySass({
-      loadPath: './src',
-      style: 'expanded',
-      lineNumbers: true,
-      precision: 10
-    }))
-    .pipe($.plumber.stop())
-    .pipe(gulp.dest('./dist'));
-});
-
 
 gulp.task('ngmin', function () {
   return gulp.src('*.js', { cwd: './src' })
