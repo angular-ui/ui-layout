@@ -24,6 +24,7 @@ This will copy the UI.Layout files into a `bower_components` folder, along with 
 ```html
 <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-layout/ui-layout.css"/>
 <!-- ... -->
+<script type="text/javascript" src="bower_components/raf/index.js"></script>
 <script type="text/javascript" src="bower_components/angular-ui-layout/ui-layout.js"></script>
 ```
 
@@ -58,26 +59,18 @@ A fake [flex-direction property](http://www.w3.org/TR/css3-flexbox/#flex-directi
 We use Karma and jshint to ensure the quality of the code.  The easiest way to run these checks is to use grunt:
 
 ```sh
-npm install -g grunt-cli
+npm install -g gulp
 npm install && bower install
-grunt
+gulp
 ```
 
-The karma task will try to open Firefox and Chrome as browser in which to run the tests.  Make sure this is available or change the configuration in `test\karma.conf.js`
+The karma task will try to open Firefox and Chrome as browser in which to run the tests.  Make sure this is available or change the configuration in `test\karma-jqlite.conf.js` and `test\karma-jquery.conf.js`
 
+Some test tasks :
+ - `gulp karma` : Will run _jqlite_ and _jquery_ tests in simple run mode,
+ - `gulp karma:jqlite:unit` : Will run _jqlite_ tests in simple run mode,
+ - `gulp karma:jquery:unit` : Will run _jquery_ tests in simple run mode,
+ - `gulp karma:jqlite:watch` : Will run _jqlite_ tests and watch for changes,
+ - `gulp karma:jquery:watch` : Will run _jquery_ tests and watch for changes,
 
-### Grunt Serve
-
-We have one task to serve them all !
-
-```sh
-grunt serve
-```
-
-It's equal to run separately: 
-
-* `grunt connect:server` : giving you a development server at [http://localhost:8000/](http://127.0.0.1:8000/).
-
-* `grunt karma:unit` : giving you two Karma servers to run tests (at [http://localhost:9876/](http://localhost:9876/) for tests with jQlite and [http://localhost:5432/](http://localhost:5432/) for tests with jQuery). You can force tests on the servers with `grunt karma:unit:run`.
-
-* `grunt watch` : will automatically test your code and build your demo. You can force a demo generation with `grunt dist build:gh-pages`.
+** `gulp serve` runs and watches all**

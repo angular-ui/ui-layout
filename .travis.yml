@@ -4,14 +4,16 @@ node_js:
 before_install:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
-- npm install -qg bower grunt-cli
+- npm install -qg bower gulp
 - npm install -q
 - bower install --force
 - bower install --force
 after_success:
 - ./node_modules/angular-ui-publisher/travis/authentication.sh || exit 0
-- grunt dist build:gh-pages publish:gh-pages build:bower publish:bower
-script: grunt
+- gulp dist
+- gulp build --branch=bower
+- gulp publish --branch=bower
+script: gulp
 env:
   global:
   - REPO="git@github.com:angular-ui/ui-layout.git"
