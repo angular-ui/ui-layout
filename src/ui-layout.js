@@ -93,21 +93,32 @@ angular.module('ui.layout', [])
         _sizes = convertNumericDataTypesToPencents(opts.sizes, tElement[0]['offset' + (isUsingColumnFlow ? 'Width' : 'Height')]);
 
         if (_child_len > 1) {
-          // Initialise the layout with equal sizes.
+          var flowProperty = isUsingColumnFlow ? 'left' : 'top';
+          var oppositeFlowProperty = isUsingColumnFlow ? 'right' : 'bottom';
+          
+          var step = 100 / _child_len;
 
-          var flowProperty = ( isUsingColumnFlow ? 'left' : 'top');
-          var oppositeFlowProperty = ( isUsingColumnFlow ? 'right' : 'bottom');
-          _position = 0;
+          var offsets = [];
+          var currentOffset = 0;
+
           for (_i = 0; _i < _child_len; ++_i) {
-            var area = angular.element(_childens[_i])
-              .css(flowProperty, _position + '%');
+            var size,initialSize = angular.element(_children[_i]).attr('initial-size');
+            if(initialSize) {
+              size = parseInt(initialSize);
+            } else {
+              size = step;
+            }
+            offsets[_i] = currentOffset;
+            currentOffset += size;
+          }
 
-            _position += _sizes[_i];
-            area.css(oppositeFlowProperty, (100 - _position) + '%');
+          for (_i = 0; _i < _child_len; ++_i) {
+            var offset = offsets[_i];
+            var nextOffset = offsets[_i+1];
 
+            var area = angular.element(_children[_i]).css(flowProperty, offset + '%').css(oppositeFlowProperty, 100 - nextOffset + '%');
             if (_i < _child_len - 1) {
-              // Add a split bar
-              var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, _position + '%');
+              var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, nextOffset + '%');
               area.after(bar);
             }
           }
