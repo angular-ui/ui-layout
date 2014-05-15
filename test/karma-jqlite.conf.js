@@ -22,6 +22,7 @@ module.exports = function (config) {
       'test/helpers/browserTrigger.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/raf/index.js',
       'src/*',
       'test/*.spec.js'
     ],
