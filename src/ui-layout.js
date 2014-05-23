@@ -65,7 +65,6 @@ angular.module('ui.layout', [])
         }  else {
           rawSize = 'auto';
         }
-        // console.log(minSize, maxSize, rawSize, value);
 
         if (/^\s*auto\s*$/.test(rawSize)){
           _commonSizeIndex.push(_i); continue;
@@ -74,9 +73,7 @@ angular.module('ui.layout', [])
 
       if (_commonSizeIndex.length > 0){
         var _commonSize = _remainingSpace / _commonSizeIndex.length;
-        // console.log('_commonSize:', _commonSize);
         var _modifiedSizeIndex = [];
-        // console.log('_commonSizeIndex:', _commonSizeIndex);
         for (_i = 0, _n = _commonSizeIndex.length; _i < _n; ++_i) {
           var _cid = _commonSizeIndex[_i];
           var _minSize = _minSizes[_cid];
@@ -151,7 +148,6 @@ angular.module('ui.layout', [])
 
         if (_child_len > 1) {
           // Initialise the layout with equal sizes.
-
           var flowProperty = ( isUsingColumnFlow ? 'left' : 'top');
           var oppositeFlowProperty = ( isUsingColumnFlow ? 'right' : 'bottom');
           _position = 0;
@@ -202,13 +198,6 @@ angular.module('ui.layout', [])
         var barElm = iElement[0];
         var previousElement = barElm.previousElementSibling;
         var nextElement = barElm.nextElementSibling;
-
-        // Retrieve min and max sizes from previous and next elements
-        // var previousElementMaxSize = parseInt(previousElement.getAttribute('max-size'),10);
-        // var previousElementMinSize = parseInt(previousElement.getAttribute('min-size'),10);
-        // var nextElementMaxSize = parseInt(nextElement.getAttribute('max-size'),10);
-        // var nextElementMinSize = parseInt(nextElement.getAttribute('min-size'),10);
-
 
         // Stores the layout values for some seconds to not recalculate it during the animation
         function _cached_layout_values() {
@@ -276,18 +265,13 @@ angular.module('ui.layout', [])
           var previousElementValue = _cache.previousElement[flowProperty] / _cache.layoutSize * 100;
           if(!isNaN(_cache.previousElement.min) && the_pos < (previousElementValue + _cache.previousElement.min)) the_pos = (previousElementValue + _cache.previousElement.min);
           if(!isNaN(_cache.previousElement.max) && the_pos > (previousElementValue + _cache.previousElement.max)) the_pos = (previousElementValue + _cache.previousElement.max);
-          // console.log(previousElementValue, _cache.previousElement.min, the_pos);
 
+          // Keep the bar from going past the next elements max/min sizes
           var nextElementValue = (_cache.nextElement[flowProperty] + _cache.nextElement.width) / _cache.layoutSize * 100;
           var nextElementMinValue = nextElementValue - _cache.nextElement.min;
           var nextElementMaxValue = nextElementValue - _cache.nextElement.max;
           if(!isNaN(_cache.nextElement.max) && the_pos < nextElementMaxValue) the_pos = nextElementMaxValue;
           if(!isNaN(_cache.nextElement.min) && the_pos > nextElementMinValue) the_pos = nextElementMinValue;
-
-          // console.log(nextElementMinValue, nextElementMaxValue, the_pos);
-
-          // Keep the bar from going past the next elements max/min sizes
-          // console.log(the_pos, _cache.nextElement);
 
           // The the bar in the near beetween the near by area
           the_pos = Math.max(the_pos, parseInt(barElm.previousElementSibling.style[flowProperty], 10));
