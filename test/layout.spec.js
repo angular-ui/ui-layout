@@ -161,7 +161,102 @@ describe('Directive: uiLayout', function () {
       testSizeNotation('  10%  ', 10);
       testSizeNotation(' 10  % ', 10);
     });
+  });
 
+  describe('when using the min-size option', function() {
+    var $header, $footer;
+
+    function createSizedDirective(notation) {
+      element = createDirective(null, '<div ui-layout><header size="1%" min-size="' + notation + '"></header><footer></footer></div>');
+
+      $header = element.children().eq(0)[0];
+      $footer = element.children().eq(2)[0];
+
+      return element;
+    }
+
+    function testSizeNotation(notation, minSize) {
+      element = createSizedDirective(notation);
+      expect($header.style.top).toEqual('0%');
+      expect($header.style.bottom).toEqual((100 - minSize) + '%');
+      expect($footer.style.top).toEqual((minSize) + '%');
+      expect($footer.style.bottom).toEqual('0%');
+      element.remove();
+    }
+
+    it('should support percent type', function() {
+      testSizeNotation('10%', 10);
+    });
+
+    it('should support pixel type', function() {
+      var pixelPosition = 10;
+      element = createSizedDirective(pixelPosition + 'px');
+
+      var expectedMiddle = +(pixelPosition / _jQuery(element[0]).height() * 100).toFixed(5);
+
+      expect(parseFloat($header.style.top)).toEqual(0);
+      expect(parseFloat($header.style.bottom)).toBeCloseTo(100 - expectedMiddle);
+
+      expect(parseFloat($footer.style.top)).toBeCloseTo(expectedMiddle);
+      expect($footer.style.bottom).toEqual('0%');
+
+      element.remove();
+    });
+
+    it('should handle useless spaces', function () {
+      testSizeNotation('    10%', 10);
+      testSizeNotation('10%    ', 10);
+      testSizeNotation('  10%  ', 10);
+      testSizeNotation(' 10  % ', 10);
+    });
+  });
+
+  describe('when using the max-size option', function() {
+    var $header, $footer;
+
+    function createSizedDirective(notation) {
+      element = createDirective(null, '<div ui-layout><header size="100%" max-size="' + notation + '"></header><footer></footer></div>');
+
+      $header = element.children().eq(0)[0];
+      $footer = element.children().eq(2)[0];
+
+      return element;
+    }
+
+    function testSizeNotation(notation, maxSize) {
+      element = createSizedDirective(notation);
+      expect($header.style.top).toEqual('0%');
+      expect($header.style.bottom).toEqual((100 - maxSize) + '%');
+      expect($footer.style.top).toEqual((maxSize) + '%');
+      expect($footer.style.bottom).toEqual('0%');
+      element.remove();
+    }
+
+    it('should support percent type', function() {
+      testSizeNotation('10%', 10);
+    });
+
+    it('should support pixel type', function() {
+      var pixelPosition = 10;
+      element = createSizedDirective(pixelPosition + 'px');
+
+      var expectedMiddle = +(pixelPosition / _jQuery(element[0]).height() * 100).toFixed(5);
+
+      expect(parseFloat($header.style.top)).toEqual(0);
+      expect(parseFloat($header.style.bottom)).toBeCloseTo(100 - expectedMiddle);
+
+      expect(parseFloat($footer.style.top)).toBeCloseTo(expectedMiddle);
+      expect($footer.style.bottom).toEqual('0%');
+
+      element.remove();
+    });
+
+    it('should handle useless spaces', function () {
+      testSizeNotation('    10%', 10);
+      testSizeNotation('10%    ', 10);
+      testSizeNotation('  10%  ', 10);
+      testSizeNotation(' 10  % ', 10);
+    });
   });
 
   describe('when using column flow', function () {

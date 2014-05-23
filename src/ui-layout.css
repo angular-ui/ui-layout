@@ -14,7 +14,7 @@
 
 .ui-splitbar{
   display: block;
-  background-color: #ffffff;
+  background-color: blue;
   right: auto;
   position: absolute;
   z-index: 99999;
