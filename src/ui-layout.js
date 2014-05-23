@@ -74,11 +74,11 @@ angular.module('ui.layout', [])
       if (_commonSizeIndex.length > 0){
         var _commonSize = _remainingSpace / _commonSizeIndex.length;
         var _modifiedSizeIndex = [];
+        // Check to make sure the common size isn't outside the bounds of min/max-size
         for (_i = 0, _n = _commonSizeIndex.length; _i < _n; ++_i) {
           var _cid = _commonSizeIndex[_i];
           var _minSize = _minSizes[_cid];
           var _maxSize = _maxSizes[_cid];
-          console.log('_commonSize:', _commonSize, '_minSize:', _minSize, '_maxSize:', _maxSize, '_remainingSpace:', _remainingSpace);
           if(_commonSize <= _minSize) {
             _remainingSpace -= _minSize;
             _res[_cid] = _minSize;
@@ -89,7 +89,6 @@ angular.module('ui.layout', [])
             _modifiedSizeIndex.push(_cid);
           }
         }
-        console.log('_modifiedSizeIndex:', _modifiedSizeIndex);
         _commonSize = _remainingSpace / _modifiedSizeIndex.length;
         for (_i = 0, _n = _modifiedSizeIndex.length; _i < _n; ++_i) {
           var cid = _modifiedSizeIndex[_i];
@@ -98,7 +97,6 @@ angular.module('ui.layout', [])
           }
         }
       }
-      console.log(_res);
 
       parentSize;
 
