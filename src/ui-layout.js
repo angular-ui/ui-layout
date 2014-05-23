@@ -17,12 +17,37 @@ angular.module('ui.layout', [])
 
     var splitBarElem_htmlTemplate = '<div class="stretch ui-splitbar"></div>';
 
-    function convertNumericDataTypesToPencents(numberVairousTypeArray, parentSize){
+    function convertNumericDataTypesToPencents(numberVairousTypeArray, minSizes, maxSizes, parentSize){
       var _i, _n;
       var _res = []; _res.length = numberVairousTypeArray.length;
       var _commonSizeIndex = [];
+      var _minSizes = [];
+      var _maxSizes = [];
       var _remainingSpace = 100;
+
       for (_i = 0, _n = numberVairousTypeArray.length; _i < _n; ++_i) {
+        var minSize = parseInt(minSizes[_i], 10);
+        if(minSize) {
+          var minType = minSizes[_i].match(/\d+\s*(px|%)\s*$/i);
+          if(!isNaN(minSize) && minType) {
+            if(minType.length > 1 && 'px' === minType[1]) {
+               minSize = + (minSize / parentSize * 100).toFixed(5);
+            }
+          }
+        }
+        _minSizes.push(minSize);
+
+        var maxSize = parseInt(maxSizes[_i], 10);
+        if(maxSize) {
+          var maxType = maxSizes[_i].match(/\d+\s*(px|%)\s*$/i);
+          if(!isNaN(maxSize) && maxType) {
+            if(maxType.length > 1 && 'px' === maxType[1]) {
+               maxSize = + (maxSize / parentSize * 100).toFixed(5);
+            }
+          }
+        }
+        _maxSizes.push(maxSize);
+
         var rawSize = numberVairousTypeArray[_i];
         var value = parseInt(rawSize, 10);
         // should only support pixels and pencent data type
@@ -31,25 +56,52 @@ angular.module('ui.layout', [])
           if (type.length > 1 && 'px' === type[1]){
             value = + (value / parentSize * 100).toFixed(5);
           }
+
+          if(minSize) value = Math.max(value, minSize);
+          if(maxSize) value = Math.min(value, maxSize);
+
           _res[_i] = value;
           _remainingSpace -= value;
-        } else{
+        }  else {
           rawSize = 'auto';
         }
+        // console.log(minSize, maxSize, rawSize, value);
 
         if (/^\s*auto\s*$/.test(rawSize)){
           _commonSizeIndex.push(_i); continue;
         }
       }
 
-
       if (_commonSizeIndex.length > 0){
-        var _commonSize = _remainingSpace / _commonSizeIndex.length ;
+        var _commonSize = _remainingSpace / _commonSizeIndex.length;
+        // console.log('_commonSize:', _commonSize);
+        var _modifiedSizeIndex = [];
+        // console.log('_commonSizeIndex:', _commonSizeIndex);
         for (_i = 0, _n = _commonSizeIndex.length; _i < _n; ++_i) {
-          var cid = _commonSizeIndex[_i];
-          _res[cid] = _commonSize;
+          var _cid = _commonSizeIndex[_i];
+          var _minSize = _minSizes[_cid];
+          var _maxSize = _maxSizes[_cid];
+          console.log('_commonSize:', _commonSize, '_minSize:', _minSize, '_maxSize:', _maxSize, '_remainingSpace:', _remainingSpace);
+          if(_commonSize <= _minSize) {
+            _remainingSpace -= _minSize;
+            _res[_cid] = _minSize;
+          } else if(_commonSize >= _maxSize) {
+            _remainingSpace -= _maxSize;
+            _res[_cid] = _maxSize;
+          } else {
+            _modifiedSizeIndex.push(_cid);
+          }
+        }
+        console.log('_modifiedSizeIndex:', _modifiedSizeIndex);
+        _commonSize = _remainingSpace / _modifiedSizeIndex.length;
+        for (_i = 0, _n = _modifiedSizeIndex.length; _i < _n; ++_i) {
+          var cid = _modifiedSizeIndex[_i];
+          if(cid !== null) {
+            _res[cid] = _commonSize;
+          }
         }
       }
+      console.log(_res);
 
       parentSize;
 
@@ -76,6 +128,9 @@ angular.module('ui.layout', [])
 
         // Initial global size definition
         opts.sizes = opts.sizes || [];
+        opts.maxSizes = opts.maxSizes || [];
+        opts.minSizes = opts.minSizes || [];
+
         // Preallocate the array size
         opts.sizes.length = _child_len;
 
@@ -87,10 +142,12 @@ angular.module('ui.layout', [])
           // - the global size on the layout option
           // - 'auto' Fair separation of the remaining space
           opts.sizes[_i] = angular.element(_childens[_i]).attr('size') || opts.sizes[_i]  || 'auto';
+          opts.maxSizes[_i] = angular.element(_childens[_i]).attr('max-size') || opts.maxSizes[_i] || null;
+          opts.minSizes[_i] = angular.element(_childens[_i]).attr('min-size') || opts.minSizes[_i] || null;
         }
 
         // get the final percent sizes
-        _sizes = convertNumericDataTypesToPencents(opts.sizes, tElement[0]['offset' + (isUsingColumnFlow ? 'Width' : 'Height')]);
+        _sizes = convertNumericDataTypesToPencents(opts.sizes, opts.minSizes, opts.maxSizes, tElement[0]['offset' + (isUsingColumnFlow ? 'Width' : 'Height')]);
 
         if (_child_len > 1) {
           // Initialise the layout with equal sizes.
@@ -143,6 +200,14 @@ angular.module('ui.layout', [])
 
         // Use bounding box properties
         var barElm = iElement[0];
+        var previousElement = barElm.previousElementSibling;
+        var nextElement = barElm.nextElementSibling;
+
+        // Retrieve min and max sizes from previous and next elements
+        // var previousElementMaxSize = parseInt(previousElement.getAttribute('max-size'),10);
+        // var previousElementMinSize = parseInt(previousElement.getAttribute('min-size'),10);
+        // var nextElementMaxSize = parseInt(nextElement.getAttribute('max-size'),10);
+        // var nextElementMinSize = parseInt(nextElement.getAttribute('min-size'),10);
 
 
         // Stores the layout values for some seconds to not recalculate it during the animation
@@ -157,6 +222,48 @@ angular.module('ui.layout', [])
           _cache.barSize = bar_bb[sizeProperty];
           _cache.layoutSize = layout_bb[sizeProperty];
           _cache.layoutOrigine = layout_bb[flowProperty];
+          _cache.previousElement = previousElement.getBoundingClientRect();
+          _cache.previousElement.min = parseInt(previousElement.getAttribute('min-size'),10);
+          _cache.previousElement.max = parseInt(previousElement.getAttribute('max-size'),10);
+          _cache.nextElement = nextElement.getBoundingClientRect();
+          _cache.nextElement.min = parseInt(nextElement.getAttribute('min-size'),10);
+          _cache.nextElement.max = parseInt(nextElement.getAttribute('max-size'),10);
+
+          if(_cache.previousElement.min) {
+            var minType = previousElement.getAttribute('min-size').match(/\d+\s*(px|%)\s*$/i);
+            if(!isNaN(_cache.previousElement.min) && minType) {
+              if(minType.length > 1 && 'px' === minType[1]) {
+                 _cache.previousElement.min = + (_cache.previousElement.min / _cache.layoutSize * 100).toFixed(5);
+              }
+            }
+          }
+
+          if( _cache.previousElement.max) {
+            var maxType = previousElement.getAttribute('max-size').match(/\d+\s*(px|%)\s*$/i);
+            if(!isNaN( _cache.previousElement.max) && maxType) {
+              if(maxType.length > 1 && 'px' === maxType[1]) {
+                  _cache.previousElement.max = + ( _cache.previousElement.max / _cache.layoutSize * 100).toFixed(5);
+              }
+            }
+          }
+
+          if(_cache.nextElement.min) {
+            var _minType = nextElement.getAttribute('min-size').match(/\d+\s*(px|%)\s*$/i);
+            if(!isNaN(_cache.nextElement.min) && _minType) {
+              if(_minType.length > 1 && 'px' === _minType[1]) {
+                 _cache.nextElement.min = + (_cache.nextElement.min / _cache.layoutSize * 100).toFixed(5);
+              }
+            }
+          }
+
+          if(_cache.nextElement.max) {
+            var _maxType = nextElement.getAttribute('max-size').match(/\d+\s*(px|%)\s*$/i);
+            if(!isNaN(_cache.nextElement.max) && _maxType) {
+              if(_maxType.length > 1 && 'px' === _maxType[1]) {
+                 _cache.nextElement.max = + (_cache.nextElement.max / _cache.layoutSize * 100).toFixed(5);
+              }
+            }
+          }
         }
 
         function _draw() {
@@ -164,6 +271,23 @@ angular.module('ui.layout', [])
 
           // Keep the bar in the window (no left/top 100%)
           the_pos = Math.min(the_pos, 100 - _cache.barSize / _cache.layoutSize * 100);
+
+          // Keep the bar from going past the previous elements max/min sizes
+          var previousElementValue = _cache.previousElement[flowProperty] / _cache.layoutSize * 100;
+          if(!isNaN(_cache.previousElement.min) && the_pos < (previousElementValue + _cache.previousElement.min)) the_pos = (previousElementValue + _cache.previousElement.min);
+          if(!isNaN(_cache.previousElement.max) && the_pos > (previousElementValue + _cache.previousElement.max)) the_pos = (previousElementValue + _cache.previousElement.max);
+          // console.log(previousElementValue, _cache.previousElement.min, the_pos);
+
+          var nextElementValue = (_cache.nextElement[flowProperty] + _cache.nextElement.width) / _cache.layoutSize * 100;
+          var nextElementMinValue = nextElementValue - _cache.nextElement.min;
+          var nextElementMaxValue = nextElementValue - _cache.nextElement.max;
+          if(!isNaN(_cache.nextElement.max) && the_pos < nextElementMaxValue) the_pos = nextElementMaxValue;
+          if(!isNaN(_cache.nextElement.min) && the_pos > nextElementMinValue) the_pos = nextElementMinValue;
+
+          // console.log(nextElementMinValue, nextElementMaxValue, the_pos);
+
+          // Keep the bar from going past the next elements max/min sizes
+          // console.log(the_pos, _cache.nextElement);
 
           // The the bar in the near beetween the near by area
           the_pos = Math.max(the_pos, parseInt(barElm.previousElementSibling.style[flowProperty], 10));
