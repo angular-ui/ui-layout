@@ -1,6 +1,6 @@
 # UI.Layout directive [![Build Status](https://travis-ci.org/angular-ui/ui-layout.png)](https://travis-ci.org/angular-ui/ui-layout)
 
-This directive allows you to split stuff !  
+This directive allows you to split stuff !
 [Holy grail demo](http://plnkr.co/k74rGs)
 
 ## Requirements
@@ -48,11 +48,48 @@ or
 
 ### flow
 
-Type: `String`  
-Default: `'row'`  
+Type: `String`
+Default: `'row'`
 `flow: row | column`
 
 A fake [flex-direction property](http://www.w3.org/TR/css3-flexbox/#flex-direction). It specifies how the child elements are placed in the layout container, by setting the direction of the flex container's main axis. This determines the direction that child elements are laid out in.
+
+## Child Attributes
+
+### minSize
+
+Type: `String`
+Default: `'8px'`
+
+Specifices the minimum size the child element can be set to. Defaults to the width of the `splitbar` if no value is provided.
+
+```pixels
+<div ui-layout>
+    <div min-size="100px"></div>
+</div>
+
+percentage
+<div ui-layout>
+    <div min-size="10%"></div>
+</div>
+```
+
+### maxSize
+
+Type: `String`
+
+Specifices the maxium size the child element can be set to.
+
+```pixels
+<div ui-layout>
+    <div max-size="100px"></div>
+</div>
+
+percentage
+<div ui-layout>
+    <div max-size="10%"></div>
+</div>
+```
 
 ## Testing
 
