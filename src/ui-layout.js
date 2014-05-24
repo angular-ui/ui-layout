@@ -216,6 +216,15 @@ angular.module('ui.layout', [])
           _cache.nextElement.min = parseInt(nextElement.getAttribute('min-size'),10);
           _cache.nextElement.max = parseInt(nextElement.getAttribute('max-size'),10);
 
+          var dividerSize = isNaN(bar_bb[sizeProperty]) ? bar_bb[sizeProperty] : bar_bb[sizeProperty] + 'px';
+          var _dividerSize = parseInt(dividerSize, 10);
+          var _dividerType = dividerSize.match(/\d+\s*(px|%)\s*$/i);
+          if(!isNaN(_dividerSize) && _dividerType) {
+            if(_dividerType.length > 1 && 'px' === _dividerType[1]) {
+              _dividerSize = + (_dividerSize / _cache.layoutSize * 100).toFixed(5);
+            }
+          }
+
           if(_cache.previousElement.min) {
             var minType = previousElement.getAttribute('min-size').match(/\d+\s*(px|%)\s*$/i);
             if(!isNaN(_cache.previousElement.min) && minType) {
@@ -223,6 +232,10 @@ angular.module('ui.layout', [])
                  _cache.previousElement.min = + (_cache.previousElement.min / _cache.layoutSize * 100).toFixed(5);
               }
             }
+            // ensure the min size isn't smaller than the divider size
+            if(_dividerSize && _cache.previousElement.min < _dividerSize) _cache.previousElement.min = _dividerSize;
+          } else {
+            _cache.previousElement.min = _dividerSize
           }
 
           if( _cache.previousElement.max) {
@@ -241,6 +254,10 @@ angular.module('ui.layout', [])
                  _cache.nextElement.min = + (_cache.nextElement.min / _cache.layoutSize * 100).toFixed(5);
               }
             }
+            // ensure the min size isn't smaller than the divider size
+            if(_dividerSize && _cache.nextElement.min < _dividerSize) _cache.nextElement.min = _dividerSize;
+          } else {
+            _cache.nextElement.min = _dividerSize;
           }
 
           if(_cache.nextElement.max) {
