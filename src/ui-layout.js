@@ -235,7 +235,7 @@ angular.module('ui.layout', [])
             // ensure the min size isn't smaller than the divider size
             if(_dividerSize && _cache.previousElement.min < _dividerSize) _cache.previousElement.min = _dividerSize;
           } else {
-            _cache.previousElement.min = _dividerSize
+            _cache.previousElement.min = _dividerSize;
           }
 
           if( _cache.previousElement.max) {
@@ -282,7 +282,7 @@ angular.module('ui.layout', [])
           if(!isNaN(_cache.previousElement.max) && the_pos > (previousElementValue + _cache.previousElement.max)) the_pos = (previousElementValue + _cache.previousElement.max);
 
           // Keep the bar from going past the next elements max/min sizes
-          var nextElementValue = (_cache.nextElement[flowProperty] + _cache.nextElement.width) / _cache.layoutSize * 100;
+          var nextElementValue = (_cache.nextElement[flowProperty] + _cache.nextElement[sizeProperty]) / _cache.layoutSize * 100;
           var nextElementMinValue = nextElementValue - _cache.nextElement.min;
           var nextElementMaxValue = nextElementValue - _cache.nextElement.max;
           if(!isNaN(_cache.nextElement.max) && the_pos < nextElementMaxValue) the_pos = nextElementMaxValue;
