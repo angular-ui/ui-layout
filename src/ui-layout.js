@@ -125,6 +125,7 @@ angular.module('ui.layout', [])
         opts.sizes = opts.sizes || [];
         opts.maxSizes = opts.maxSizes || [];
         opts.minSizes = opts.minSizes || [];
+        opts.dividerSize = opts.dividerSize || '10px';
 
         // Preallocate the array size
         opts.sizes.length = _child_len;
@@ -148,6 +149,7 @@ angular.module('ui.layout', [])
           // Initialise the layout with equal sizes.
           var flowProperty = ( isUsingColumnFlow ? 'left' : 'top');
           var oppositeFlowProperty = ( isUsingColumnFlow ? 'right' : 'bottom');
+          var sizeProperty = ( isUsingColumnFlow ? 'width' : 'height');
           _position = 0;
           for (_i = 0; _i < _child_len; ++_i) {
             var area = angular.element(_childens[_i])
@@ -159,6 +161,7 @@ angular.module('ui.layout', [])
             if (_i < _child_len - 1) {
               // Add a split bar
               var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, _position + '%');
+              bar.css(sizeProperty, opts.dividerSize);
               area.after(bar);
             }
           }
