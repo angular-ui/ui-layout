@@ -60,7 +60,7 @@ angular.module('ui.layout', [])
       restrict: 'AE',
       compile: function compile(tElement, tAttrs) {
 
-        var _i, _childens = tElement.children(), _child_len = _childens.length;
+        var _i, _children = tElement.children(), _child_len = _children.length;
         var _sizes, _position;
 
         // Parse `ui-layout` or `options` attributes (with no scope...)
@@ -81,33 +81,44 @@ angular.module('ui.layout', [])
 
         for (_i = 0; _i < _child_len; ++_i) {
           // Stretch all the children by default
-          angular.element(_childens[_i]).addClass('stretch');
+          angular.element(_children[_i]).addClass('stretch');
           // Size initialization priority
           // - the size attr on the child element
           // - the global size on the layout option
           // - 'auto' Fair separation of the remaining space
-          opts.sizes[_i] = angular.element(_childens[_i]).attr('size') || opts.sizes[_i]  || 'auto';
+          opts.sizes[_i] = angular.element(_children[_i]).attr('size') || opts.sizes[_i]  || 'auto';
         }
 
         // get the final percent sizes
         _sizes = convertNumericDataTypesToPencents(opts.sizes, tElement[0]['offset' + (isUsingColumnFlow ? 'Width' : 'Height')]);
 
         if (_child_len > 1) {
-          // Initialise the layout with equal sizes.
+          var flowProperty = isUsingColumnFlow ? 'left' : 'top';
+          var oppositeFlowProperty = isUsingColumnFlow ? 'right' : 'bottom';
+          
+          var step = 100 / _child_len;
 
-          var flowProperty = ( isUsingColumnFlow ? 'left' : 'top');
-          var oppositeFlowProperty = ( isUsingColumnFlow ? 'right' : 'bottom');
-          _position = 0;
+          var offsets = [];
+          var currentOffset = 0;
+
           for (_i = 0; _i < _child_len; ++_i) {
-            var area = angular.element(_childens[_i])
-              .css(flowProperty, _position + '%');
+            var size,initialSize = angular.element(_children[_i]).attr('initial-size');
+            if(initialSize) {
+              size = parseInt(initialSize);
+            } else {
+              size = step;
+            }
+            offsets[_i] = currentOffset;
+            currentOffset += size;
+          }
 
-            _position += _sizes[_i];
-            area.css(oppositeFlowProperty, (100 - _position) + '%');
+          for (_i = 0; _i < _child_len; ++_i) {
+            var offset = offsets[_i];
+            var nextOffset = offsets[_i+1];
 
+            var area = angular.element(_children[_i]).css(flowProperty, offset + '%').css(oppositeFlowProperty, 100 - nextOffset + '%');
             if (_i < _child_len - 1) {
-              // Add a split bar
-              var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, _position + '%');
+              var bar = angular.element(splitBarElem_htmlTemplate).css(flowProperty, nextOffset + '%');
               area.after(bar);
             }
           }
