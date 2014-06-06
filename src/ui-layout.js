@@ -60,7 +60,7 @@ angular.module('ui.layout', [])
       restrict: 'AE',
       compile: function compile(tElement, tAttrs) {
 
-        var _i, _childens = tElement.children(), _child_len = _childens.length;
+        var _i, _children = tElement.children(), _child_len = _children.length;
         var _sizes, _position;
 
         // Parse `ui-layout` or `options` attributes (with no scope...)
@@ -81,12 +81,12 @@ angular.module('ui.layout', [])
 
         for (_i = 0; _i < _child_len; ++_i) {
           // Stretch all the children by default
-          angular.element(_childens[_i]).addClass('stretch');
+          angular.element(_children[_i]).addClass('stretch');
           // Size initialization priority
           // - the size attr on the child element
           // - the global size on the layout option
           // - 'auto' Fair separation of the remaining space
-          opts.sizes[_i] = angular.element(_childens[_i]).attr('size') || opts.sizes[_i]  || 'auto';
+          opts.sizes[_i] = angular.element(_children[_i]).attr('size') || opts.sizes[_i]  || 'auto';
         }
 
         // get the final percent sizes
