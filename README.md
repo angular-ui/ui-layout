@@ -56,6 +56,23 @@ A fake [flex-direction property](http://www.w3.org/TR/css3-flexbox/#flex-directi
 
 ## Child Attributes
 
+### size
+Type: `String`
+
+Sets the default placement of the splitbar.
+
+```
+pixels
+<div ui-layout>
+    <div size="100px"></div>
+</div>
+
+percentage
+<div ui-layout>
+    <div size="10%"></div>
+</div>
+```
+
 ### minSize
 
 Type: `String`
@@ -63,7 +80,8 @@ Default: `'8px'`
 
 Specifices the minimum size the child element can be set to. Defaults to the width of the `splitbar` if no value is provided.
 
-```pixels
+```
+pixels
 <div ui-layout>
     <div min-size="100px"></div>
 </div>
@@ -80,7 +98,8 @@ Type: `String`
 
 Specifices the maxium size the child element can be set to.
 
-```pixels
+```
+pixels
 <div ui-layout>
     <div max-size="100px"></div>
 </div>
