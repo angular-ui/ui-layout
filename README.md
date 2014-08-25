@@ -1,4 +1,4 @@
-# UI.Layout directive [![Build Status](https://travis-ci.org/angular-ui/ui-layout.png)](https://travis-ci.org/angular-ui/ui-layout)
+# UI.Layout directive [![Build Status](https://travis-ci.org/angular-ui/ui-layout.svg)](https://travis-ci.org/angular-ui/ui-layout)
 
 This directive allows you to split stuff !
 [Holy grail demo](http://plnkr.co/k74rGs)
