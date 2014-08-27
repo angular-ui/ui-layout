@@ -17,15 +17,15 @@ angular.module('ui.layout', [])
 
     var splitBarElem_htmlTemplate = '<div class="stretch ui-splitbar"></div>';
 
-    function convertNumericDataTypesToPencents(numberVairousTypeArray, minSizes, maxSizes, parentSize){
+    function convertNumericDataTypesToPercents(numberVariousTypeArray, minSizes, maxSizes, parentSize){
       var _i, _n;
-      var _res = []; _res.length = numberVairousTypeArray.length;
+      var _res = []; _res.length = numberVariousTypeArray.length;
       var _commonSizeIndex = [];
       var _minSizes = [];
       var _maxSizes = [];
       var _remainingSpace = 100;
 
-      for (_i = 0, _n = numberVairousTypeArray.length; _i < _n; ++_i) {
+      for (_i = 0, _n = numberVariousTypeArray.length; _i < _n; ++_i) {
         var minSize = parseInt(minSizes[_i], 10);
         if(minSize) {
           var minType = minSizes[_i].match(/\d+\s*(px|%)\s*$/i);
@@ -48,9 +48,9 @@ angular.module('ui.layout', [])
         }
         _maxSizes.push(maxSize);
 
-        var rawSize = numberVairousTypeArray[_i];
+        var rawSize = numberVariousTypeArray[_i];
         var value = parseInt(rawSize, 10);
-        // should only support pixels and pencent data type
+        // should only support pixels and percent data type
         var type = rawSize.match(/\d+\s*(px|%)\s*$/i);
         if (!isNaN(value) && type){
           if (type.length > 1 && 'px' === type[1]){
@@ -107,7 +107,7 @@ angular.module('ui.layout', [])
       restrict: 'AE',
       compile: function compile(tElement, tAttrs) {
 
-        var _i, _childens = tElement.children(), _child_len = _childens.length;
+        var _i, _children = tElement.children(), _child_len = _children.length;
         var _sizes, _position;
 
         // Parse `ui-layout` or `options` attributes (with no scope...)
@@ -132,18 +132,18 @@ angular.module('ui.layout', [])
 
         for (_i = 0; _i < _child_len; ++_i) {
           // Stretch all the children by default
-          angular.element(_childens[_i]).addClass('stretch');
+          angular.element(_children[_i]).addClass('stretch');
           // Size initialization priority
           // - the size attr on the child element
           // - the global size on the layout option
           // - 'auto' Fair separation of the remaining space
-          opts.sizes[_i] = angular.element(_childens[_i]).attr('size') || opts.sizes[_i]  || 'auto';
-          opts.maxSizes[_i] = angular.element(_childens[_i]).attr('max-size') || opts.maxSizes[_i] || null;
-          opts.minSizes[_i] = angular.element(_childens[_i]).attr('min-size') || opts.minSizes[_i] || null;
+          opts.sizes[_i] = angular.element(_children[_i]).attr('size') || opts.sizes[_i]  || 'auto';
+          opts.maxSizes[_i] = angular.element(_children[_i]).attr('max-size') || opts.maxSizes[_i] || null;
+          opts.minSizes[_i] = angular.element(_children[_i]).attr('min-size') || opts.minSizes[_i] || null;
         }
 
         // get the final percent sizes
-        _sizes = convertNumericDataTypesToPencents(opts.sizes, opts.minSizes, opts.maxSizes, tElement[0]['offset' + (isUsingColumnFlow ? 'Width' : 'Height')]);
+        _sizes = convertNumericDataTypesToPercents(opts.sizes, opts.minSizes, opts.maxSizes, tElement[0]['offset' + (isUsingColumnFlow ? 'Width' : 'Height')]);
 
         if (_child_len > 1) {
           // Initialise the layout with equal sizes.
@@ -152,7 +152,7 @@ angular.module('ui.layout', [])
           var sizeProperty = ( isUsingColumnFlow ? 'width' : 'height');
           _position = 0;
           for (_i = 0; _i < _child_len; ++_i) {
-            var area = angular.element(_childens[_i])
+            var area = angular.element(_children[_i])
               .css(flowProperty, _position + '%');
 
             _position += _sizes[_i];
