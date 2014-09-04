@@ -7,6 +7,9 @@ This directive allows you to split stuff !
 
 - AngularJS
 
+**NOTE :** if you use IE<=9, iOS<7 or Android<4 please include the [requestAnimationFrame polyfill](https://github.com/darius/requestAnimationFrame/blob/master/requestAnimationFrame.js) in your application.
+
+
 ## Usage
 
 You can get it from [Bower](http://bower.io/)
