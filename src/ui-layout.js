@@ -335,9 +335,11 @@ angular.module('ui.layout', [])
           e.preventDefault();
           e.stopPropagation();
           htmlElement.on('mousemove touchmove', _resize);
+		  jQuery(document).trigger('ui-layout_mousedown');
           return false;
         });
         htmlElement.on('mouseup touchend', function () {
+		  jQuery(document).trigger('ui-layout_mouseup');
           htmlElement.off('mousemove touchmove');
         });
       }
