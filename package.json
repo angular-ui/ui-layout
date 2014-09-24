@@ -33,7 +33,7 @@
   "main": "ui-layout.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/angular-ui/ui-layout.git"
+    "url": "git://github.com/thireven/ui-layout.git"
   },
   "author": "https://github.com/angular-ui/ui-layout/contributors",
   "license": "MIT",
