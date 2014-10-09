@@ -28,3 +28,8 @@
   width: 8px; height: 100%;
   cursor: col-resize;
 }
+
+.ui-layout-column > .ui-splitbar > a,
+.ui-layout-row > .ui-splitbar > a {
+  cursor: pointer;
+}

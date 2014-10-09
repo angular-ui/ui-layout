@@ -45,14 +45,18 @@
       <br/>
       <button ng-click="updateDisplay()">Update Display</button>
     </div>
-    <div ui-layout-container>Two</div>
+    <div ui-layout-container collapsed="false">Two</div>
     <div ui-layout-container>
-      <div ui-layout="{ flow:'row' }">
-        <div ui-layout-container>Three</div>
-        <div ui-layout-container>
+      Three
+      <!--<div ui-layout="{ flow:'row' }">-->
+        <!--<div ui-layout-container>Three</div>-->
+        <!--<div ui-layout-container>-->
           <!--<div ng-include="demo/testinclude.html"></div>-->
-        </div>
-      </div>
+        <!--</div>-->
+      <!--</div>-->
+    </div>
+    <div ui-layout-container>
+      Four
     </div>
   </div>
 </body>
