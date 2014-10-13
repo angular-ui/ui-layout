@@ -421,44 +421,87 @@ angular.module('ui.layout', [])
         scope.splitbar = LayoutContainer.Splitbar();
         scope.splitbar.element = element;
 
-
+        //chevron <a> elements
         var prevButton = angular.element(element.children()[0]);
-        var prevChevron = angular.element(prevButton.children()[0]);
-
         var afterButton = angular.element(element.children()[1]);
+
+        //chevron <span> elements
+        var prevChevron = angular.element(prevButton.children()[0]);
         var afterChevron = angular.element(afterButton.children()[0]);
 
-        var prevSplitbar = element.previousElementSibling;
-        console.log('prev:', prevSplitbar);
+        //chevron bootstrap classes
+        var chevronLeft = 'glyphicon-chevron-left';
+        var chevronRight = 'glyphicon-chevron-right';
+        var chevronUp = 'glyphicon-chevron-up';
+        var chevronDown = 'glyphicon-chevron-down';
+
+        var prevChevronClass = ctrl.isUsingColumnFlow ? chevronLeft : chevronUp;
+        var afterChevronClass = ctrl.isUsingColumnFlow ? chevronRight : chevronDown;
+
+        prevChevron.addClass(prevChevronClass);
+        afterChevron.addClass(afterChevronClass);
+
+//        var prevSplitbar = element.previousElementSibling;
+//        console.log('prev:', prevSplitbar);
 
         prevButton.on('click', function() {
           var result = ctrl.toggleBefore(scope.splitbar);
 
-          if(result) {
-            afterButton.css('display', 'none');
-            prevChevron.removeClass('glyphicon-chevron-left');
-            prevChevron.addClass('glyphicon-chevron-right');
+          if(ctrl.isUsingColumnFlow) {
+            if(result) {
+              afterButton.css('display', 'none');
+              prevChevron.removeClass(chevronLeft);
+              prevChevron.addClass(chevronRight);
+              //TODO: hide previous splitbar afterButton / both buttons
+            } else {
+              afterButton.css('display', 'inline');
+              prevChevron.removeClass(chevronRight);
+              prevChevron.addClass(chevronLeft);
+              //TODO: show previous splitbar afterButton / both buttons
+            }
           } else {
-            afterButton.css('display', 'inline');
-            prevChevron.removeClass('glyphicon-chevron-right');
-            prevChevron.addClass('glyphicon-chevron-left');
+            if(result) {
+              afterButton.css('display', 'none');
+              prevChevron.removeClass(chevronUp);
+              prevChevron.addClass(chevronDown);
+              //TODO: hide previous splitbar afterButton / both buttons
+            } else {
+              afterButton.css('display', 'inline');
+              prevChevron.removeClass(chevronDown);
+              prevChevron.addClass(chevronUp);
+              //TODO: show previous splitbar afterButton / both buttons
+            }
           }
-
         });
 
         afterButton.on('click', function() {
           var result = ctrl.toggleAfter(scope.splitbar);
 
-          if(result) {
-            prevButton.css('display', 'none');
-            afterChevron.removeClass('glyphicon-chevron-right');
-            afterChevron.addClass('glyphicon-chevron-left');
+          if(ctrl.isUsingColumnFlow) {
+            if(result) {
+              prevButton.css('display', 'none');
+              afterChevron.removeClass(chevronRight);
+              afterChevron.addClass(chevronLeft);
+              //TODO: hide next splitbar prevButton
+            } else {
+              prevButton.css('display', 'inline');
+              afterChevron.removeClass(chevronLeft);
+              afterChevron.addClass(chevronRight);
+              //TODO: show next splitbar prevButton
+            }
           } else {
-            prevButton.css('display', 'inline');
-            afterChevron.removeClass('glyphicon-chevron-left');
-            afterChevron.addClass('glyphicon-chevron-right');
+            if(result) {
+              prevButton.css('display', 'none');
+              afterChevron.removeClass(chevronDown);
+              afterChevron.addClass(chevronUp);
+              //TODO: hide next splitbar prevButton
+            } else {
+              prevButton.css('display', 'inline');
+              afterChevron.removeClass(chevronUp);
+              afterChevron.addClass(chevronDown);
+              //TODO: show next splitbar prevButton
+            }
           }
-
         });
 
         var mouseDownHandler = function(event) {
@@ -496,7 +539,7 @@ angular.module('ui.layout', [])
       replace: true,
       template: '<div><div ng-transclude></div></div>',
       compile: function(element, attributes, transcludeFn) {
-        var splitbar = _splitbar = angular.element('<div ui-splitbar><a><span class="glyphicon glyphicon-chevron-left"></span></a><a><span class="glyphicon glyphicon-chevron-right"></span></a></div>');
+        var splitbar = _splitbar = angular.element('<div ui-splitbar><a><span class="glyphicon"></span></a><a><span class="glyphicon"></span></a></div>');
         element.after(splitbar);
 
         return {

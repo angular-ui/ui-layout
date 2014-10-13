@@ -47,13 +47,13 @@
     </div>
     <div ui-layout-container collapsed="false">Two</div>
     <div ui-layout-container>
-      Three
-      <!--<div ui-layout="{ flow:'row' }">-->
-        <!--<div ui-layout-container>Three</div>-->
-        <!--<div ui-layout-container>-->
-          <!--<div ng-include="demo/testinclude.html"></div>-->
-        <!--</div>-->
-      <!--</div>-->
+      <!--Three-->
+      <div ui-layout="{ flow:'row', dividerSize:'12' }">
+        <div ui-layout-container>Three</div>
+        <div ui-layout-container>
+          <div ng-include="demo/testinclude.html"></div>
+        </div>
+      </div>
     </div>
     <div ui-layout-container>
       Four
