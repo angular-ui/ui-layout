@@ -702,19 +702,6 @@ angular.module('ui.layout', [])
       this.collapsed = false;
     }
 
-    BaseContainer.prototype.canMoveLength = function(length) {
-      var newLength = this.size - length;
-      var minSize = this.minSize || 0;
-      var minCheckSuccess = (newLength >= minSize) ? true : false;
-      var maxCheckSuccess = (this.maxSize == null || newLength < this.maxSize) ? true : false;
-
-      return !this.locked && minCheckSuccess && maxCheckSuccess;
-    };
-
-    BaseContainer.prototype.getAvailableLength = function() {
-      return this.locked === true ? 0 : this.size - this.minSize;
-    };
-
     // Splitbar container
     function SplitbarContainer() {
       this.size = 10;
@@ -722,18 +709,6 @@ angular.module('ui.layout', [])
       this.top = 0;
       this.element = null;
     }
-
-    SplitbarContainer.prototype.canMoveLength = function() {
-      return false;
-    };
-
-    SplitbarContainer.prototype.moveLength = function() {
-      return 0;
-    };
-
-    SplitbarContainer.prototype.getAvailableLength = function() {
-      return 0;
-    };
 
     return {
       Container: function(initialSize) {
