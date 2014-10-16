@@ -7,10 +7,16 @@
 angular.module('ui.layout', [])
   .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', function uiLayoutCtrl($scope, $attrs, $element) {
     // Gives to the children directives the access to the parent layout.
-    return {
+    var obj = {
       opts: angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options)),
       element: $element
     };
+
+    if (angular.version.minor > 2) {
+        angular.extend(this, obj);
+    }
+
+    return obj;
   }])
 
   .directive('uiLayout', ['$parse', function ($parse) {
