@@ -1,5 +1,5 @@
-//'use strict';
-//
+'use strict';
+
 
 describe('Directive: uiLayout', function () {
   var element, scope, compile,
