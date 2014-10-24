@@ -1,5 +1,5 @@
-//'use strict';
-//
+'use strict';
+
 
 describe('Directive: uiLayout', function () {
   var element, scope, compile,
@@ -104,7 +104,8 @@ describe('Directive: uiLayout', function () {
 
       // Try with 4 elements
       element.remove();
-      element = createDirective(null, '<div ui-layout><header ui-layout-container></header><article ui-layout-container></article><section ui-layout-container></section><footer ui-layout-container></footer></div>');
+      var dirHtml = '<div ui-layout><header ui-layout-container></header><article ui-layout-container></article><section ui-layout-container></section><footer ui-layout-container></footer></div>';
+      element = createDirective(null, dirHtml);
       children = element.children();
       expect(children.length).toEqual(4 + 3); // add three slide
 
