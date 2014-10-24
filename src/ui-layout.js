@@ -4,8 +4,7 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer) {
-    var containers = [];
+  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer) {
     var containerMap = {};
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
@@ -17,6 +16,7 @@ angular.module('ui.layout', [])
     var animationFrameRequested;
     var lastPos;
 
+    ctrl.containers = [];
     ctrl.movingSplitbar = null;
     ctrl.bounds = $element[0].getBoundingClientRect();
     ctrl.isUsingColumnFlow = opts.flow === 'column';
@@ -40,7 +40,7 @@ angular.module('ui.layout', [])
     ctrl.opts = opts;
 
     $scope.updateDisplay = function() {
-      console.log(containers);
+      console.log(ctrl.containers);
       ctrl.updateDisplay();
     };
 
@@ -48,32 +48,32 @@ angular.module('ui.layout', [])
     // Private Controller Functions
     //================================================================================
     /*
-    function cacheLayoutValues() {
-      if(ctrl.movingSplitbar !== null) {
-        var splitbarIndex = containers.indexOf(ctrl.movingSplitbar);
-        var processedContainers = ctrl.processSplitbar(containers[splitbarIndex]);
+     function cacheLayoutValues() {
+     if(ctrl.movingSplitbar !== null) {
+     var splitbarIndex = ctrl.containers.indexOf(ctrl.movingSplitbar);
+     var processedContainers = ctrl.processSplitbar(ctrl.containers[splitbarIndex]);
 
-        cache.time = +new Date();
-        cache.beforeContainer = angular.extend({}, processedContainers.beforeContainer);
-        cache.afterContainer = angular.extend({}, processedContainers.afterContainer);
-      }
-    }
-    */
+     cache.time = +new Date();
+     cache.beforeContainer = angular.extend({}, processedContainers.beforeContainer);
+     cache.afterContainer = angular.extend({}, processedContainers.afterContainer);
+     }
+     }
+     */
 
     function draw() {
       var length = 0;
       var position = ctrl.sizeProperties.flowProperty;
       var oppositePosition = ctrl.sizeProperties.oppositeFlowProperty;
-      var dividerSize = ctrl.toNumber(opts.dividerSize);
+      var dividerSize = parseInt(opts.dividerSize);
       var elementSize = $element[0][ctrl.sizeProperties.offsetName];
       var availableSize = elementSize - dividerSize;
 
       if(ctrl.movingSplitbar !== null) {
-        var splitbarIndex = containers.indexOf(ctrl.movingSplitbar);
-        var nextSplitbarIndex = (splitbarIndex + 2) < containers.length ? splitbarIndex + 2 : null;
+        var splitbarIndex = ctrl.containers.indexOf(ctrl.movingSplitbar);
+        var nextSplitbarIndex = (splitbarIndex + 2) < ctrl.containers.length ? splitbarIndex + 2 : null;
 
         if(splitbarIndex > -1) {
-          var processedContainers = ctrl.processSplitbar(containers[splitbarIndex]);
+          var processedContainers = ctrl.processSplitbar(ctrl.containers[splitbarIndex]);
           var beforeContainer = processedContainers.beforeContainer;
           var afterContainer = processedContainers.afterContainer;
 
@@ -99,7 +99,7 @@ angular.module('ui.layout', [])
             if(afterContainer !== null && angular.isNumber(afterContainer.afterMaxValue) && newPosition < afterContainer.afterMaxValue) newPosition = afterContainer.afterMaxValue;
 
             //          console.log('---');
-            //          console.log(splitbarIndex, nextSplitbarIndex, containers.length);
+            //          console.log(splitbarIndex, nextSplitbarIndex, ctrl.containers.length);
             //          console.log('diff:', difference);
             //          console.log('beforeContainer:', beforeContainer);
             //          console.log('afterContainer:', afterContainer);
@@ -136,8 +136,10 @@ angular.module('ui.layout', [])
       }
     };
 
-    ctrl.mouseMoveHandler = function(event) {
-      lastPos = event[ctrl.sizeProperties.mouseProperty];
+    ctrl.mouseMoveHandler = function(mouseEvent) {
+      lastPos = mouseEvent[ctrl.sizeProperties.mouseProperty] ||
+      (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
+      (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0);
 
       //Cancel previous rAF call
       if(animationFrameRequested) {
@@ -151,13 +153,13 @@ angular.module('ui.layout', [])
     };
 
     /**
-     * Returns the min and max values of the containers on each side of the container submitted
+     * Returns the min and max values of the ctrl.containers on each side of the container submitted
      * @param container
      * @returns {*}
      */
     ctrl.processSplitbar = function(container) {
       var beforeIndex, afterIndex;
-      var index = containers.indexOf(container);
+      var index = ctrl.containers.indexOf(container);
       var elementSize = $element[0][ctrl.sizeProperties.offsetName];
 
       var setValues = function(container) {
@@ -173,10 +175,10 @@ angular.module('ui.layout', [])
 
       //verify the container was found in the list
       if(index > -1) {
-        var isLastSplitbar = index === (containers.length - 2);
+        var isLastSplitbar = index === (ctrl.containers.length - 2);
 
-        var beforeContainer = (index > 0) ? containers[index-1] : null;
-        var afterContainer = ((index+1) <= containers.length) ? containers[index+1] : null;
+        var beforeContainer = (index > 0) ? ctrl.containers[index-1] : null;
+        var afterContainer = ((index+1) <= ctrl.containers.length) ? ctrl.containers[index+1] : null;
 
         if(beforeContainer !== null) setValues(beforeContainer);
         if(afterContainer !== null) setValues(afterContainer);
@@ -189,20 +191,6 @@ angular.module('ui.layout', [])
 
       return null;
     }
-
-    /**
-     * Removes all non-digit characters from the parameter and returns the value as a number.
-     * @param num
-     * @returns {*}
-     */
-    ctrl.toNumber = function(num) {
-      if(num) {
-        var n = Number(num);
-        if(parseFloat(num) === n) return n;
-        return Number(num.replace(/\D+/g, '')) || null;
-      }
-      return null;
-    };
 
     /**
      * Checks if a string has a percent symbol in it.
@@ -220,7 +208,7 @@ angular.module('ui.layout', [])
      * @returns {number}
      */
     ctrl.convertToPixels = function(size, parentSize) {
-      return Math.floor(parentSize * (ctrl.toNumber(size) / 100))
+      return Math.floor(parentSize * (parseInt(size) / 100))
     };
 
     /**
@@ -228,27 +216,27 @@ angular.module('ui.layout', [])
      */
     ctrl.updateDisplay = function() {
       var c, i;
-      var dividerSize = ctrl.toNumber(opts.dividerSize);
+      var dividerSize = parseInt(opts.dividerSize);
       var elementSize = $element[0].getBoundingClientRect()[ctrl.sizeProperties.sizeProperty];
       var availableSize = elementSize - (dividerSize * numOfSplitbars);
       var originalSize = availableSize;
       var usedSpace = 0;
       var numOfAutoContainers = 0;
 
-      if(containers.length > 0 && $element.children().length > 0) {
+      if(ctrl.containers.length > 0 && $element.children().length > 0) {
         // remove the last splitbar container from DOM
-        if(!lastDividerRemoved && containers.length === $element.children().length) {
-          var lastContainerIndex = containers.length - 1;
-          containers[lastContainerIndex].element.remove();
-          containers.splice(lastContainerIndex, 1);
+        if(!lastDividerRemoved && ctrl.containers.length === $element.children().length) {
+          var lastContainerIndex = ctrl.containers.length - 1;
+          ctrl.containers[lastContainerIndex].element.remove();
+          ctrl.containers.splice(lastContainerIndex, 1);
           lastDividerRemoved = true;
           numOfSplitbars--;
         }
 
-        // calculate sizing for containers
-        for(i=0; i < containers.length; i++) {
-          if(!LayoutContainer.isSplitbar(containers[i])) {
-            var child = containers[i].element;
+        // calculate sizing for ctrl.containers
+        for(i=0; i < ctrl.containers.length; i++) {
+          if(!LayoutContainer.isSplitbar(ctrl.containers[i])) {
+            var child = ctrl.containers[i].element;
             opts.maxSizes[i] = child.attr('max-size') || opts.maxSizes[i] || null;
             opts.minSizes[i] = child.attr('min-size') || opts.minSizes[i] || null;
             opts.sizes[i] = child.attr('size') || opts.sizes[i] || 'auto';
@@ -302,10 +290,10 @@ angular.module('ui.layout', [])
           }
         }
 
-        // set the sizing for the containers
+        // set the sizing for the ctrl.containers
         var autoSize = Math.floor(availableSize / numOfAutoContainers);
-        for(i=0; i < containers.length; i++) {
-          c = containers[i];
+        for(i=0; i < ctrl.containers.length; i++) {
+          c = ctrl.containers[i];
           c[ctrl.sizeProperties.flowProperty] = usedSpace;
           c.maxSize = opts.maxSizes[i];
           c.minSize = opts.minSizes[i];
@@ -320,7 +308,7 @@ angular.module('ui.layout', [])
             //  c.actualSize = newSize;
             //  newSize = 0;
             //
-            //  //TODO: set the next containers actual size when the current container is uncollapsed
+            //  //TODO: set the next ctrl.containers actual size when the current container is uncollapsed
             //}
 
             c.size = (newSize !== null) ? newSize : autoSize;
@@ -329,8 +317,6 @@ angular.module('ui.layout', [])
           }
 
           usedSpace += c.size;
-//          console.log(i, availableSize, usedSpace, c.size, numOfAutoContainers, containers.length, containers);
-//          console.log('===================================================\n');
         }
       }
 
@@ -338,11 +324,11 @@ angular.module('ui.layout', [])
     };
 
     /**
-     * Adds a container to the list of layout containers.
+     * Adds a container to the list of layout ctrl.containers.
      * @param container
      */
     ctrl.addContainer = function(container) {
-      containers.push(container);
+      ctrl.containers.push(container);
 
       if(LayoutContainer.isSplitbar(container)) {
         numOfSplitbars++;
@@ -352,18 +338,26 @@ angular.module('ui.layout', [])
     };
 
     /**
+     * Returns an array of layout ctrl.containers.
+     * @returns {Array}
+     */
+    ctrl.getContainers = function() {
+      return ctrl.containers;
+    };
+
+    /**
      * Toggles the container before the provided splitbar
      * @param splitbar
      * @returns {boolean|*|Array}
      */
     ctrl.toggleBefore = function(splitbar) {
-      var index = containers.indexOf(splitbar) - 1;
+      var index = ctrl.containers.indexOf(splitbar) - 1;
 
-      var c = containers[index];
-      c.collapsed = !containers[index].collapsed;
+      var c = ctrl.containers[index];
+      c.collapsed = !ctrl.containers[index].collapsed;
 
-      var nextSplitbar = containers[index+1];
-      var nextContainer = containers[index+2];
+      var nextSplitbar = ctrl.containers[index+1];
+      var nextContainer = ctrl.containers[index+2];
 
       $scope.$apply(function() {
         if(c.collapsed) {
@@ -388,7 +382,7 @@ angular.module('ui.layout', [])
       });
 
       return c.collapsed;
-    }
+    };
 
     /**
      * Toggles the container after the provided splitbar
@@ -396,16 +390,16 @@ angular.module('ui.layout', [])
      * @returns {boolean|*|Array}
      */
     ctrl.toggleAfter = function(splitbar) {
-      var index = containers.indexOf(splitbar) + 1;
-      var c = containers[index];
-      var prevSplitbar = containers[index-1];
-      var prevContainer = containers[index-2];
-      var isLastContainer = index === (containers.length - 1);
+      var index = ctrl.containers.indexOf(splitbar) + 1;
+      var c = ctrl.containers[index];
+      var prevSplitbar = ctrl.containers[index-1];
+      var prevContainer = ctrl.containers[index-2];
+      var isLastContainer = index === (ctrl.containers.length - 1);
       var endDiff;
 
       ctrl.bounds = $element[0].getBoundingClientRect();
 
-      c.collapsed = !containers[index].collapsed;
+      c.collapsed = !ctrl.containers[index].collapsed;
 
       $scope.$apply(function() {
         if(c.collapsed) {
@@ -432,7 +426,7 @@ angular.module('ui.layout', [])
       });
 
       return c.collapsed;
-    }
+    };
 
     /**
      * Returns the container object of the splitbar that is before the one passed in.
@@ -440,15 +434,15 @@ angular.module('ui.layout', [])
      */
     ctrl.getPreviousSplitbarContainer = function(currentSplitbar) {
       if(LayoutContainer.isSplitbar(currentSplitbar)) {
-        var currentSplitbarIndex = containers.indexOf(currentSplitbar);
+        var currentSplitbarIndex = ctrl.containers.indexOf(currentSplitbar);
         var previousSplitbarIndex = currentSplitbarIndex - 2;
         if(previousSplitbarIndex >= 0) {
-          return containers[previousSplitbarIndex];
+          return ctrl.containers[previousSplitbarIndex];
         }
         return null;
       }
       return null;
-    }
+    };
 
     /**
      * Returns the container object of the splitbar that is after the one passed in.
@@ -456,17 +450,18 @@ angular.module('ui.layout', [])
      */
     ctrl.getNextSplitbarContainer = function(currentSplitbar) {
       if(LayoutContainer.isSplitbar(currentSplitbar)) {
-        var currentSplitbarIndex = containers.indexOf(currentSplitbar);
+        var currentSplitbarIndex = ctrl.containers.indexOf(currentSplitbar);
         var nextSplitbarIndex = currentSplitbarIndex + 2;
-        if(currentSplitbarIndex > 0 && nextSplitbarIndex < containers.length) {
-          return containers[nextSplitbarIndex];
+        if(currentSplitbarIndex > 0 && nextSplitbarIndex < ctrl.containers.length) {
+          return ctrl.containers[nextSplitbarIndex];
         }
         return null;
       }
       return null;
-    }
+    };
 
-  })
+    return ctrl;
+  }])
 
   .directive('uiLayout', function() {
     return {

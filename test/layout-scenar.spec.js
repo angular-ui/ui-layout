@@ -64,7 +64,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
       var element_bb, $splitbar, splitbar_bb, splitbarLeftPos;
 
       beforeEach(function () {
-        element =   createDirective();
+        element = createDirective();
 
         element_bb = element[0].getBoundingClientRect();
         $splitbar = _jQuery(element[0]).find('.ui-splitbar');
@@ -84,7 +84,6 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect(Math.ceil(splitbar_bb.left)).toEqual(splitbarLeftPos);
 
       });
-
 
       it('should do nothing when moving around it', function () {
 
@@ -134,6 +133,60 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         var expectedPos = Math.floor(element_bb.height / 4);
         expect(window.requestAnimationFrame.calls.count()).toEqual(1);
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+      });
+
+      describe('collapse buttons', function() {
+        var toggleBeforeButton, toggleAfterButton;
+
+        beforeEach(function() {
+          toggleBeforeButton = $splitbar.children()[0];
+          toggleAfterButton = $splitbar.children()[1];
+        });
+
+        it('should exist', function() {
+          expect(toggleBeforeButton).toBeDefined();
+          expect(toggleAfterButton).toBeDefined();
+        });
+
+        it('should toggle before', function() {
+          var expectedSize = Math.floor((element_bb.height - defaultDividerSize) / 2);
+          var $header = element.children().eq(0)[0];
+
+          expect(parseInt($splitbar[0].style.top)).toEqual(expectedSize);
+          expect($header.getBoundingClientRect().height).toEqual(expectedSize);
+
+          browserTrigger(toggleBeforeButton, 'click');
+
+          expect(parseInt($splitbar[0].style.top)).toEqual(0);
+          expect($header.getBoundingClientRect().height).toEqual(0);
+          expect(toggleAfterButton.style.display).toBe('none');
+
+          browserTrigger(toggleBeforeButton, 'click');
+
+          expect(parseInt($splitbar[0].style.top)).toEqual(expectedSize);
+          expect($header.getBoundingClientRect().height).toEqual(expectedSize);
+          expect(toggleAfterButton.style.display).toBe('inline');
+        });
+
+        it('should toggle after', function() {
+          var expectedSize = Math.floor((element_bb.height - defaultDividerSize) / 2);
+          var $footer = element.children().eq(2)[0];
+
+          expect(parseInt($splitbar[0].style.top)).toEqual(expectedSize);
+          expect($footer.getBoundingClientRect().height).toEqual(expectedSize);
+
+          browserTrigger(toggleAfterButton, 'click');
+
+          expect(parseInt($splitbar[0].style.top)).toEqual(element_bb.height - defaultDividerSize);
+          expect($footer.getBoundingClientRect().height).toEqual(0);
+          expect(toggleBeforeButton.style.display).toBe('none');
+
+          browserTrigger(toggleAfterButton, 'click');
+
+          expect(parseInt($splitbar[0].style.top)).toEqual(expectedSize);
+          expect($footer.getBoundingClientRect().height).toEqual(expectedSize);
+          expect(toggleBeforeButton.style.display).toBe('inline');
+        });
       });
     });
 

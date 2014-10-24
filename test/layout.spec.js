@@ -212,7 +212,6 @@ describe('Directive: uiLayout', function () {
         expect(parseFloat($footer.style.top)).toEqual((headerBounds.height + defaultDividerSize));
       } else if(notation.indexOf('px') && minSize != null && !isNaN(minSize)) {
         expect(parseFloat($header.style.height)).toEqual(minSize);
-        console.log($header.style.height, minSize)
         expect(parseFloat($footer.style.height)).toEqual(layoutBounds.height - minSize - defaultDividerSize);
         expect(parseFloat($footer.style.top)).toEqual(minSize + defaultDividerSize);
       }
@@ -263,7 +262,6 @@ describe('Directive: uiLayout', function () {
         expect(parseFloat($footer.style.top)).toEqual((headerBounds.height + defaultDividerSize));
       } else if(notation.indexOf('px') && maxSize != null && !isNaN(maxSize)) {
         expect(parseFloat($header.style.height)).toEqual(maxSize);
-        console.log($header.style.height, maxSize)
         expect(parseFloat($footer.style.height)).toEqual(layoutBounds.height - maxSize - defaultDividerSize);
         expect(parseFloat($footer.style.top)).toEqual(maxSize + defaultDividerSize);
       }
@@ -381,9 +379,9 @@ describe('Directive: uiLayout', function () {
   //describe('controller', function () {
   //  var ctrl;
   //
-  //  beforeEach(inject(function (_$controller_) {
+  //  beforeEach(inject(function (_$controller_, _LayoutContainer_) {
   //    element = createDirective();
-  //    ctrl = _$controller_('uiLayoutCtrl', { $scope: scope, $element: element, $attrs: element[0].attributes });
+  //    ctrl = _$controller_('uiLayoutCtrl', { $scope: scope, $element: element, $attrs: element[0].attributes, LayoutContainer: _LayoutContainer_ });
   //  }));
   //
   //  it('should expose the options and the element', function () {

@@ -43,6 +43,7 @@
 
 .ui-layout-column > .ui-splitbar > a,
 .ui-layout-row > .ui-splitbar > a {
+  color: #fff;
   cursor: pointer;
   font-size: 9px;
 }
