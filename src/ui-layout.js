@@ -41,22 +41,6 @@ angular.module('ui.layout', [])
       ctrl.updateDisplay();
     };
 
-    //================================================================================
-    // Private Controller Functions
-    //================================================================================
-    /*
-     function cacheLayoutValues() {
-     if(ctrl.movingSplitbar !== null) {
-     var splitbarIndex = ctrl.containers.indexOf(ctrl.movingSplitbar);
-     var processedContainers = ctrl.processSplitbar(ctrl.containers[splitbarIndex]);
-
-     cache.time = +new Date();
-     cache.beforeContainer = angular.extend({}, processedContainers.beforeContainer);
-     cache.afterContainer = angular.extend({}, processedContainers.afterContainer);
-     }
-     }
-     */
-
     function draw() {
       var position = ctrl.sizeProperties.flowProperty;
       var dividerSize = parseInt(opts.dividerSize);
@@ -225,10 +209,6 @@ angular.module('ui.layout', [])
             opts.sizes[i] = child.attr('size') || opts.sizes[i] || 'auto';
             //opts.collapsed[i] = child.attr('collapsed') || opts.collapsed[i] || false;
 
-            // cast collapsed values to boolean
-            //if(opts.collapsed[i] === 'true') opts.collapsed[i] = true;
-            //if(opts.collapsed[i] === 'false') opts.collapsed[i] = false;
-
             // verify size is properly set to pixels or percent
             var sizePattern = /\d+\s*(px|%)\s*$/i;
             opts.sizes[i] = (opts.sizes[i] != 'auto' && opts.sizes[i].match(sizePattern)) ? opts.sizes[i] : 'auto';
@@ -285,14 +265,6 @@ angular.module('ui.layout', [])
 
           if(!LayoutContainer.isSplitbar(c)) {
             var newSize = (opts.sizes[i] === 'auto') ? autoSize : opts.sizes[i];
-
-            // set initial size when collapsed
-            //if(c.collapsed) {
-            //  c.actualSize = newSize;
-            //  newSize = 0;
-            //
-            //  //TODO: set the next ctrl.containers actual size when the current container is uncollapsed
-            //}
 
             c.size = (newSize !== null) ? newSize : autoSize;
           } else {

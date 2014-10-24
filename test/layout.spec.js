@@ -376,18 +376,4 @@ describe('Directive: uiLayout', function () {
       expect($sidebar.style.top).toBeAbout(expectedPos);
     });
   });
-
-  //describe('controller', function () {
-  //  var ctrl;
-  //
-  //  beforeEach(inject(function (_$controller_, _LayoutContainer_) {
-  //    element = createDirective();
-  //    ctrl = _$controller_('uiLayoutCtrl', { $scope: scope, $element: element, $attrs: element[0].attributes, LayoutContainer: _LayoutContainer_ });
-  //  }));
-  //
-  //  it('should expose the options and the element', function () {
-  //    expect(ctrl).toEqual({ opts: jasmine.any(Object), element: element });
-  //  });
-  //});
-
 });

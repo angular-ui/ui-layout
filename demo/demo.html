@@ -142,12 +142,15 @@ vendor_js=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.js']
     <div class="col-md-6">
       <div style="position: relative; height: 600px;">
         <div ui-layout class="layout-mock">
-          <header class="north-back"></header>
-          <div class="center-back" size="10%"></div>
-          <footer ui-layout="{ flow : 'column', sizes: [ '300px' ] }" >
-            <div class="west-back"></div>
-            <div class="south-back"></div>
-            <div size="100px"></div>
+          <header ui-layout-container class="north-back"></header>
+          <div ui-layout-container class="center-back" size="10%"></div>
+          <footer ui-layout-container>
+            <div ui-layout="{ flow : 'column', sizes: [ '300px' ] }">
+              <div ui-layout-container class="west-back"></div>
+              <div ui-layout-container class="south-back"></div>
+              <div ui-layout-container size="100px"></div>
+            </div>
+
           </footer>
         </div>
       </div>
@@ -169,12 +172,14 @@ vendor_js=['https://rawgithub.com/angular-ui/ui-layout/master/src/ui-layout.js']
         <tab heading="Markup">
           <div plunker-content="markup">
 <pre class="prettyprint">&lt;div ui-layout class=&quot;layout-mock&quot;&gt;
-  &lt;header class=&quot;north-back&quot;&gt;&lt;/header&gt;
-  &lt;div class=&quot;center-back&quot; size=&quot;10%&quot;&gt;&lt;/div&gt;
-  &lt;footer ui-layout=&quot;{ flow : &#39;column&#39;, sizes: [ &#39;300px&#39; ] }&quot; &gt;
-    &lt;div class=&quot;west-back&quot;&gt;&lt;/div&gt;
-    &lt;div class=&quot;south-back&quot;&gt;&lt;/div&gt;
-    &lt;div size=&quot;100px&quot;&gt;&lt;/div&gt;
+  &lt;header ui-layout-container class=&quot;north-back&quot;&gt;&lt;/header&gt;
+  &lt;div ui-layout-container class=&quot;center-back&quot; size=&quot;10%&quot;&gt;&lt;/div&gt;
+  &lt;footer ui-layout-container &gt;
+    &lt;div ui-layout=&quot;{ flow : &#39;column&#39;, sizes: [ &#39;300px&#39; ] }&quot; &gt;
+      &lt;div ui-layout-container class=&quot;west-back&quot;&gt;&lt;/div&gt;
+      &lt;div ui-layout-container class=&quot;south-back&quot;&gt;&lt;/div&gt;
+      &lt;div ui-layout-container size=&quot;100px&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
   &lt;/footer&gt;
 &lt;/div&gt;</pre>
           </div>
