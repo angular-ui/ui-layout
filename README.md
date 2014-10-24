@@ -57,7 +57,25 @@ Default: `'row'`
 
 A fake [flex-direction property](http://www.w3.org/TR/css3-flexbox/#flex-direction). It specifies how the child elements are placed in the layout container, by setting the direction of the flex container's main axis. This determines the direction that child elements are laid out in.
 
+### dividerSize
+
+Type: `Integer`
+Default: `10`
+
+The size in pixels that you want the divider/splitbar to be.
+
 ## Child Attributes
+
+### uiLayoutContainer
+
+Required on all child elements of the ui-layout element.
+
+```
+<div ui-layout>
+    <div ui-layout-container></div>    
+    <div ui-layout-container></div>    
+</div>
+```
 
 ### size
 Type: `String`
@@ -67,12 +85,12 @@ Sets the default placement of the splitbar.
 ```
 pixels
 <div ui-layout>
-    <div size="100px"></div>
+    <div ui-layout-container size="100px"></div>
 </div>
 
 percentage
 <div ui-layout>
-    <div size="10%"></div>
+    <div ui-layout-container size="10%"></div>
 </div>
 ```
 
@@ -86,12 +104,12 @@ Specifices the minimum size the child element can be set to. Defaults to the wid
 ```
 pixels
 <div ui-layout>
-    <div min-size="100px"></div>
+    <div ui-layout-container min-size="100px"></div>
 </div>
 
 percentage
 <div ui-layout>
-    <div min-size="10%"></div>
+    <div ui-layout-container min-size="10%"></div>
 </div>
 ```
 
@@ -104,12 +122,12 @@ Specifices the maxium size the child element can be set to.
 ```
 pixels
 <div ui-layout>
-    <div max-size="100px"></div>
+    <div ui-layout-container max-size="100px"></div>
 </div>
 
 percentage
 <div ui-layout>
-    <div max-size="10%"></div>
+    <div ui-layout-container max-size="10%"></div>
 </div>
 ```
 
