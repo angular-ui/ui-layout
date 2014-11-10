@@ -9,6 +9,8 @@ This directive allows you to split stuff !
 
 **NOTE :** if you use IE<=9, iOS<7 or Android<4 please include the [requestAnimationFrame polyfill](https://github.com/darius/requestAnimationFrame/blob/master/requestAnimationFrame.js) in your application.
 
+**NOTE :** version 1.x is only compatible with IE>=10. If you use IE<=9 you need to use version 0.x
+
 
 ## Usage
 
