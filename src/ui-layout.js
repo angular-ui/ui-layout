@@ -263,6 +263,8 @@ angular.module('ui.layout', [])
 
           c.collapsed = c.collapsed || opts.collapsed[i];
 
+          //TODO: adjust size if autosize is greater than the maxSize
+
           if(!LayoutContainer.isSplitbar(c)) {
             var newSize = (opts.sizes[i] === 'auto') ? autoSize : opts.sizes[i];
 
@@ -418,14 +420,19 @@ angular.module('ui.layout', [])
     return ctrl;
   }])
 
-  .directive('uiLayout', function() {
+  .directive('uiLayout', function($window) {
     return {
       restrict: 'AE',
       controller: 'uiLayoutCtrl',
-
       link: function(scope, element, attrs, ctrl) {
         scope.$watch(element[0][ctrl.sizeProperties.offsetName], function() {
           ctrl.updateDisplay();
+        });
+
+        angular.element($window).bind('resize', function() {
+          scope.$apply(function() {
+            ctrl.updateDisplay();
+          });
         });
       }
     };
