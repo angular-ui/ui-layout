@@ -429,10 +429,16 @@ angular.module('ui.layout', [])
           ctrl.updateDisplay();
         });
 
-        angular.element($window).bind('resize', function() {
+        function onResize() {
           scope.$apply(function() {
             ctrl.updateDisplay();
           });
+        }
+
+        angular.element($window).bind('resize', onResize);
+
+        scope.$on('$destroy', function() {
+          angular.element($window).unbind('resize', onResize);
         });
       }
     };
