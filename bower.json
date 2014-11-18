@@ -1,7 +1,7 @@
 {
   "name": "angular-ui-layout",
-  "main": "ui-layout.js",
-  "version": "0.0.1",
+  "main": ["src/ui-layout.js", "src/ui-layout.css"],
+  "version": "1.0.0",
   "homepage": "https://angular-ui.github.io/ui-layout/",
   "authors": [
     "https://github.com/angular-ui/ui-layout/contributors"

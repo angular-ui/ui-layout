@@ -1,8 +1,10 @@
 'use strict';
 
+
 describe('Directive: uiLayout', function () {
   var element, scope, compile,
-    validTemplate = '<div ui-layout></div>';
+      validTemplate = '<div ui-layout></div>',
+      defaultDividerSize = 10;
 
   function createDirective(data, template) {
     var elm;
@@ -16,6 +18,24 @@ describe('Directive: uiLayout', function () {
 
     return elm;
   }
+
+  beforeEach(function() {
+    jasmine.addMatchers({
+      toBeAbout: function() {
+        return {
+          compare: function(actual, expected, precision) {
+            precision = parseInt(precision)|| 1;
+            actual = parseInt(actual);
+            expected = parseInt(expected);
+
+            return {
+              pass: Math.abs(actual - expected) <= precision
+            };
+          }
+        };
+      }
+    });
+  });
 
   beforeEach(function () {
 
@@ -71,7 +91,7 @@ describe('Directive: uiLayout', function () {
       var children, splitBarElm;
 
       // Try with 2 elements
-      element = createDirective(null, '<div ui-layout><article></article><section></section></div>');
+      element = createDirective(null, '<div ui-layout><article ui-layout-container></article><section ui-layout-container></section></div>');
       children = element.children();
       expect(children.length).toEqual(2 + 1); // add one slide
       expect(children[0].tagName).toEqual('ARTICLE');
@@ -84,7 +104,8 @@ describe('Directive: uiLayout', function () {
 
       // Try with 4 elements
       element.remove();
-      element = createDirective(null, '<div ui-layout><header></header><article></article><section></section><footer></footer></div>');
+      var dirHtml = '<div ui-layout><header ui-layout-container></header><article ui-layout-container></article><section ui-layout-container></section><footer ui-layout-container></footer></div>';
+      element = createDirective(null, dirHtml);
       children = element.children();
       expect(children.length).toEqual(4 + 3); // add three slide
 
@@ -106,9 +127,10 @@ describe('Directive: uiLayout', function () {
   describe('when using size option', function () {
 
     var $header, $footer;
+    var layoutBounds, headerBounds;
 
     function createSizedDirective(notation) {
-      element = createDirective(null, '<div ui-layout><header size="' + notation + '"></header><footer></footer></div>');
+      element = createDirective(null, '<div ui-layout><header ui-layout-container size="' + notation + '"></header><footer ui-layout-container></footer></div>');
 
       $header = element.children().eq(0)[0];
       $footer = element.children().eq(2)[0];
@@ -116,12 +138,24 @@ describe('Directive: uiLayout', function () {
       return element;
     }
 
-    function testSizeNotation(notation, middlePosition) {
+    function testSizeNotation(notation, actualSize) {
       element = createSizedDirective(notation);
-      expect($header.style.top).toEqual('0%');
-      expect($header.style.bottom).toEqual((100 - middlePosition || 50) + '%');
-      expect($footer.style.top).toEqual((middlePosition || 50) + '%');
-      expect($footer.style.bottom).toEqual('0%');
+
+      layoutBounds = element[0].getBoundingClientRect();
+      headerBounds = $header.getBoundingClientRect();
+
+      expect(parseFloat($header.style.top)).toEqual(0);
+
+      if(notation.indexOf('%') >= 0 && actualSize != null && !isNaN(actualSize)) {
+        expect(parseFloat($header.style.height)).toBeAbout(layoutBounds.height * (actualSize / 100));
+        expect(parseFloat($footer.style.height)).toBeAbout(layoutBounds.height - headerBounds.height - defaultDividerSize);
+        expect(parseFloat($footer.style.top)).toEqual((headerBounds.height + defaultDividerSize));
+      } else if(notation.indexOf('px') && actualSize != null && !isNaN(actualSize)) {
+        expect(parseFloat($header.style.height)).toEqual(actualSize);
+        expect(parseFloat($footer.style.height)).toEqual(layoutBounds.height - actualSize - defaultDividerSize);
+        expect(parseFloat($footer.style.top)).toEqual(actualSize + defaultDividerSize);
+      }
+
       element.remove();
     }
 
@@ -141,18 +175,7 @@ describe('Directive: uiLayout', function () {
     });
 
     it('should support pixel type', function () {
-      var pixelPosition = 10;
-      element = createSizedDirective(pixelPosition + 'px');
-
-      var expectedMiddle = +(pixelPosition / _jQuery(element[0]).height() * 100).toFixed(5);
-
-      expect(parseFloat($header.style.top)).toEqual(0);
-      expect(parseFloat($header.style.bottom)).toBeCloseTo(100 - expectedMiddle);
-
-      expect(parseFloat($footer.style.top)).toBeCloseTo(expectedMiddle);
-      expect($footer.style.bottom).toEqual('0%');
-
-      element.remove();
+      testSizeNotation('10px', 10);
     });
 
     it('should handle useless spaces', function () {
@@ -165,9 +188,10 @@ describe('Directive: uiLayout', function () {
 
   describe('when using the min-size option', function() {
     var $header, $footer;
+    var layoutBounds, headerBounds;
 
     function createSizedDirective(notation) {
-      element = createDirective(null, '<div ui-layout><header size="1%" min-size="' + notation + '"></header><footer></footer></div>');
+      element = createDirective(null, '<div ui-layout><header ui-layout-container size="1px" min-size="' + notation + '"></header><footer ui-layout-container></footer></div>');
 
       $header = element.children().eq(0)[0];
       $footer = element.children().eq(2)[0];
@@ -177,30 +201,31 @@ describe('Directive: uiLayout', function () {
 
     function testSizeNotation(notation, minSize) {
       element = createSizedDirective(notation);
-      expect($header.style.top).toEqual('0%');
-      expect($header.style.bottom).toEqual((100 - minSize) + '%');
-      expect($footer.style.top).toEqual((minSize) + '%');
-      expect($footer.style.bottom).toEqual('0%');
+
+      layoutBounds = element[0].getBoundingClientRect();
+      headerBounds = $header.getBoundingClientRect();
+
+      expect(parseFloat($header.style.top)).toEqual(0);
+
+      if(notation.indexOf('%') >= 0 && minSize != null && !isNaN(minSize)) {
+        expect(parseFloat($header.style.height)).toBeAbout(layoutBounds.height * (minSize / 100));
+        expect(parseFloat($footer.style.height)).toBeAbout(layoutBounds.height - headerBounds.height - defaultDividerSize);
+        expect(parseFloat($footer.style.top)).toEqual((headerBounds.height + defaultDividerSize));
+      } else if(notation.indexOf('px') && minSize != null && !isNaN(minSize)) {
+        expect(parseFloat($header.style.height)).toEqual(minSize);
+        expect(parseFloat($footer.style.height)).toEqual(layoutBounds.height - minSize - defaultDividerSize);
+        expect(parseFloat($footer.style.top)).toEqual(minSize + defaultDividerSize);
+      }
+
       element.remove();
     }
 
-    it('should support percent type', function() {
+    it('should support percent type', function () {
       testSizeNotation('10%', 10);
     });
 
-    it('should support pixel type', function() {
-      var pixelPosition = 10;
-      element = createSizedDirective(pixelPosition + 'px');
-
-      var expectedMiddle = +(pixelPosition / _jQuery(element[0]).height() * 100).toFixed(5);
-
-      expect(parseFloat($header.style.top)).toEqual(0);
-      expect(parseFloat($header.style.bottom)).toBeCloseTo(100 - expectedMiddle);
-
-      expect(parseFloat($footer.style.top)).toBeCloseTo(expectedMiddle);
-      expect($footer.style.bottom).toEqual('0%');
-
-      element.remove();
+    it('should support pixel type', function () {
+      testSizeNotation('10px', 10);
     });
 
     it('should handle useless spaces', function () {
@@ -213,9 +238,10 @@ describe('Directive: uiLayout', function () {
 
   describe('when using the max-size option', function() {
     var $header, $footer;
+    var layoutBounds, headerBounds;
 
     function createSizedDirective(notation) {
-      element = createDirective(null, '<div ui-layout><header size="100%" max-size="' + notation + '"></header><footer></footer></div>');
+      element = createDirective(null, '<div ui-layout><header ui-layout-container size="100%" max-size="' + notation + '"></header><footer ui-layout-container></footer></div>');
 
       $header = element.children().eq(0)[0];
       $footer = element.children().eq(2)[0];
@@ -225,30 +251,31 @@ describe('Directive: uiLayout', function () {
 
     function testSizeNotation(notation, maxSize) {
       element = createSizedDirective(notation);
-      expect($header.style.top).toEqual('0%');
-      expect($header.style.bottom).toEqual((100 - maxSize) + '%');
-      expect($footer.style.top).toEqual((maxSize) + '%');
-      expect($footer.style.bottom).toEqual('0%');
+
+      layoutBounds = element[0].getBoundingClientRect();
+      headerBounds = $header.getBoundingClientRect();
+
+      expect(parseFloat($header.style.top)).toEqual(0);
+
+      if(notation.indexOf('%') >= 0 && maxSize != null && !isNaN(maxSize)) {
+        expect(parseFloat($header.style.height)).toBeAbout(layoutBounds.height * (maxSize / 100));
+        expect(parseFloat($footer.style.height)).toBeAbout(layoutBounds.height - headerBounds.height - defaultDividerSize);
+        expect(parseFloat($footer.style.top)).toEqual((headerBounds.height + defaultDividerSize));
+      } else if(notation.indexOf('px') && maxSize != null && !isNaN(maxSize)) {
+        expect(parseFloat($header.style.height)).toEqual(maxSize);
+        expect(parseFloat($footer.style.height)).toEqual(layoutBounds.height - maxSize - defaultDividerSize);
+        expect(parseFloat($footer.style.top)).toEqual(maxSize + defaultDividerSize);
+      }
+
       element.remove();
     }
 
-    it('should support percent type', function() {
+    it('should support percent type', function () {
       testSizeNotation('10%', 10);
     });
 
-    it('should support pixel type', function() {
-      var pixelPosition = 10;
-      element = createSizedDirective(pixelPosition + 'px');
-
-      var expectedMiddle = +(pixelPosition / _jQuery(element[0]).height() * 100).toFixed(5);
-
-      expect(parseFloat($header.style.top)).toEqual(0);
-      expect(parseFloat($header.style.bottom)).toBeCloseTo(100 - expectedMiddle);
-
-      expect(parseFloat($footer.style.top)).toBeCloseTo(expectedMiddle);
-      expect($footer.style.bottom).toEqual('0%');
-
-      element.remove();
+    it('should support pixel type', function () {
+      testSizeNotation('10px', 10);
     });
 
     it('should handle useless spaces', function () {
@@ -259,17 +286,25 @@ describe('Directive: uiLayout', function () {
     });
   });
 
+  describe('when using the collapse option', function() {
+
+  });
+
   describe('when using column flow', function () {
 
     var $header, $sidebar, $footer;
+    var layoutBounds, headerBounds;
 
     describe('when created', function () {
       beforeEach(function () {
-        element = createDirective(null, '<div ui-layout="{ flow : \'column\' }"><header></header><footer></footer></div>');
+        element = createDirective(null, '<div ui-layout="{ flow : \'column\' }"><header ui-layout-container></header><footer ui-layout-container></footer></div>');
 
         $header = element.children().eq(0)[0];
         $sidebar = element.children().eq(1)[0];
         $footer = element.children().eq(2)[0];
+
+        layoutBounds = element[0].getBoundingClientRect();
+        headerBounds = $header.getBoundingClientRect();
       });
 
       it('should have a "ui-layout-column" class', function () {
@@ -277,36 +312,43 @@ describe('Directive: uiLayout', function () {
       });
 
       it('should initialise with equal width', function () {
-        expect($header.style.left).toEqual('0%');
-        expect($header.style.right).toEqual('50%');
-        expect($footer.style.left).toEqual('50%');
-        expect($footer.style.right).toEqual('0%');
+        var expectedWidth = Math.floor((layoutBounds.width - defaultDividerSize) / 2);
+        expect($header.style.left).toEqual('0px');
+        expect($header.style.width).toEqual(expectedWidth + 'px');
+        expect($footer.style.left).toEqual((expectedWidth + defaultDividerSize) + 'px');
+        expect($footer.style.width).toEqual(expectedWidth + 'px');
       });
 
       it('should have a split bar at the middle', function () {
-        expect($sidebar.style.left).toEqual('50%');
+        var middle = Math.floor((layoutBounds.width - defaultDividerSize) / 2);
+        expect($sidebar.style.left).toEqual(middle + 'px');
       });
     });
 
     it('should initialise a sidebar at 10%', function () {
-      element = createDirective(null, '<div ui-layout="{ flow : \'column\' }"><header size="10%"></header><footer></footer></div>');
+      element = createDirective(null, '<div ui-layout="{ flow : \'column\' }"><header ui-layout-container size="10%"></header><footer ui-layout-container></footer></div>');
       $sidebar = element.children().eq(1)[0];
-      expect($sidebar.style.left).toEqual('10%');
+      var expectedPos = Math.floor(layoutBounds.width * 0.1);
+      expect($sidebar.style.left).toBeAbout(expectedPos);
     });
   });
 
   describe('in row flow', function () {
 
     var $header, $sidebar, $footer;
+    var layoutBounds, headerBounds;
 
     describe('when created', function () {
       beforeEach(function () {
 
-        element = createDirective(null, '<div ui-layout><header></header><footer></footer></div>');
+        element = createDirective(null, '<div ui-layout><header ui-layout-container></header><footer ui-layout-container></footer></div>');
 
         $header = element.children().eq(0)[0];
         $sidebar = element.children().eq(1)[0];
         $footer = element.children().eq(1)[0];
+
+        layoutBounds = element[0].getBoundingClientRect();
+        headerBounds = $header.getBoundingClientRect();
 
       });
 
@@ -322,29 +364,16 @@ describe('Directive: uiLayout', function () {
       });
 
       it('should have a split bar at the middle', function () {
-        expect($sidebar.style.top).toEqual('50%');
+        var expectedMiddle = Math.floor((layoutBounds.height - defaultDividerSize) / 2);
+        expect($sidebar.style.top).toEqual(expectedMiddle + 'px');
       });
     });
 
     it('should initialise a sidebar at 10%', function () {
-      element = createDirective(null, '<div ui-layout><header size="10%"></header><footer></footer></div>');
+      element = createDirective(null, '<div ui-layout><header ui-layout-container size="10%"></header><footer ui-layout-container></footer></div>');
       $sidebar = element.children().eq(1)[0];
-      expect($sidebar.style.top).toEqual('10%');
+      var expectedPos = Math.floor(layoutBounds.height * 0.1);
+      expect($sidebar.style.top).toBeAbout(expectedPos);
     });
   });
-
-
-  describe('controller', function () {
-    var ctrl;
-
-    beforeEach(inject(function (_$controller_) {
-      element = createDirective();
-      ctrl = _$controller_('uiLayoutCtrl', { $scope: scope, $element: element, $attrs: element[0].attributes });
-    }));
-
-    it('should expose the options and the element', function () {
-      expect(ctrl).toEqual({ opts: jasmine.any(Object), element: element });
-    });
-  });
-
 });

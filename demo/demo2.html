@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html ng-app="x">
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+
+  <title></title>
+
+  <!-- Le css -->
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="../src/ui-layout.css"/>
+
+  <!-- Le javascript -->
+  <script type="application/javascript" src="../bower_components/angular/angular.js"></script>
+  <script type="application/javascript" src="../src/ui-layout.js"></script>
+  <script type="application/javascript">
+
+    var app = angular.module('x', ['ui.layout']);
+    app.controller('DemoController', function($scope) {
+      $scope.config = {
+        flow: 'column'
+      }
+    });
+
+  </script>
+  <style>
+    .red {
+      background-color: red;
+    }
+    .green {
+      background-color: green;
+    }
+    .ui-splitbar {
+      background-color: red;
+    }
+    .ui-layout-container {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body ng-controller="DemoController">
+  <div ui-layout="config">
+    <div ui-layout-container max-size="50%">
+      One
+      <br/>
+      <button ng-click="updateDisplay()">Update Display</button>
+    </div>
+    <div ui-layout-container collapsed="false">Two</div>
+    <div ui-layout-container>
+      <!--Three-->
+      <div ui-layout="{ flow:'row', dividerSize:'12' }">
+        <div ui-layout-container>Three</div>
+        <div ui-layout-container>
+          <div ng-include="demo/testinclude.html"></div>
+        </div>
+      </div>
+    </div>
+    <div ui-layout-container>
+      Four
+    </div>
+  </div>
+</body>
+</html>

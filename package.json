@@ -1,6 +1,6 @@
 {
   "name": "angular-ui-layout",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "This directive allows you to split !",
   "devDependencies": {
     "gulp": "^3",
