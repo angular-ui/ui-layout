@@ -1,7 +1,7 @@
 {
   "name": "angular-ui-layout",
-  "version": "1.0.0",
-  "main": "src/ui-layout.js,src/ui-layout.css",
+  "version": "1.0.1",
+  "main": "ui-layout.js,ui-layout.css",
   "dependencies": {
     "angular": "^1",
     "raf": "https://gist.githubusercontent.com/paulirish/1579671/raw/3d42a3a76ed09890434a07be2212f376959e616f/rAF.js"
