@@ -97,8 +97,13 @@ gulp.task('clean:dist', function () {
 });
 
 gulp.task('ngmin', function () {
+  var options = {
+    remove: true,
+    add: true,
+    single_quotes: true
+  };
   return gulp.src('*.js', { cwd: './src' })
-    .pipe($.ngmin())
+    .pipe($.ngAnnotate(options))
     .pipe(gulp.dest('./dist'));
 });
 

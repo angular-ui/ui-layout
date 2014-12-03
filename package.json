@@ -3,32 +3,27 @@
   "version": "1.0.2",
   "description": "This directive allows you to split !",
   "devDependencies": {
+    "angular-ui-publisher": "~1.2",
     "gulp": "^3",
-    "gulp-util": "^2",
+    "gulp-jshint": "^1",
     "gulp-load-plugins": "^0",
+    "gulp-ng-annotate": "^0.4.0",
+    "gulp-plumber": "^0",
     "gulp-rename": "^0",
     "gulp-rimraf": "^0",
-
     "gulp-ruby-sass": "^0",
-    "gulp-plumber": "^0",
-
-    "gulp-jshint": "^1",
-    "jshint-stylish": "^0",
-
     "gulp-uglify": "^0",
-    "gulp-ngmin": "^0",
-
+    "gulp-util": "^2",
+    "jshint-stylish": "^0",
     "karma": "^0",
-    "karma-jasmine": "^0.2",
+    "karma-chrome-launcher": "^0",
     "karma-coverage": "^0",
     "karma-firefox-launcher": "^0",
-    "karma-chrome-launcher": "^0",
+    "karma-jasmine": "^0.2",
     "karma-phantomjs-launcher": "^0",
-
-    "node-karma-wrapper": "^0",
-    "lodash.assign": "^2",
     "lodash.after": "^2",
-    "angular-ui-publisher": "~1.2"
+    "lodash.assign": "^2",
+    "node-karma-wrapper": "^0"
   },
   "main": "ui-layout.js",
   "repository": {
