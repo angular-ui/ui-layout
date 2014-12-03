@@ -18,8 +18,8 @@ angular.module('ui.layout', [])
     ctrl.bounds = $element[0].getBoundingClientRect();
     ctrl.isUsingColumnFlow = opts.flow === 'column';
     ctrl.sizeProperties = !ctrl.isUsingColumnFlow ?
-    { sizeProperty: 'height', offsetName: 'offsetHeight', flowProperty: 'top', oppositeFlowProperty: 'bottom', mouseProperty: 'clientY', flowPropertyPosition: 'y' } :
-    { sizeProperty: 'width', offsetName: 'offsetWidth', flowProperty: 'left', oppositeFlowProperty: 'right', mouseProperty: 'clientX', flowPropertyPosition: 'x' };
+    { sizeProperty: 'height', offsetSize: 'offsetHeight', offsetPos: 'top', flowProperty: 'top', oppositeFlowProperty: 'bottom', mouseProperty: 'clientY', flowPropertyPosition: 'y' } :
+    { sizeProperty: 'width', offsetSize: 'offsetWidth', offsetPos: 'left', flowProperty: 'left', oppositeFlowProperty: 'right', mouseProperty: 'clientX', flowPropertyPosition: 'x' };
 
     $element
       // Force the layout to fill the parent space
@@ -44,7 +44,7 @@ angular.module('ui.layout', [])
     function draw() {
       var position = ctrl.sizeProperties.flowProperty;
       var dividerSize = parseInt(opts.dividerSize);
-      var elementSize = $element[0][ctrl.sizeProperties.offsetName];
+      var elementSize = $element[0][ctrl.sizeProperties.offsetSize];
 
       if(ctrl.movingSplitbar !== null) {
         var splitbarIndex = ctrl.containers.indexOf(ctrl.movingSplitbar);
@@ -97,6 +97,17 @@ angular.module('ui.layout', [])
       animationFrameRequested = null;
     }
 
+    function offset(element) {
+      var rawDomNode = element[0];
+      var body = document.documentElement || document.body;
+      var scrollX = window.pageXOffset || body.scrollLeft;
+      var scrollY = window.pageYOffset || body.scrollTop;
+      var clientRect = rawDomNode.getBoundingClientRect();
+      var x = clientRect.left + scrollX;
+      var y = clientRect.top + scrollY;
+      return { left: x, top: y };
+    }
+
     //================================================================================
     // Public Controller Functions
     //================================================================================
@@ -108,9 +119,11 @@ angular.module('ui.layout', [])
     };
 
     ctrl.mouseMoveHandler = function(mouseEvent) {
-      lastPos = mouseEvent[ctrl.sizeProperties.mouseProperty] ||
-      (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
-      (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0);
+      var mousePos = mouseEvent[ctrl.sizeProperties.mouseProperty] ||
+        (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
+        (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0);
+
+      lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
 
       //Cancel previous rAF call
       if(animationFrameRequested) {
@@ -425,7 +438,7 @@ angular.module('ui.layout', [])
       restrict: 'AE',
       controller: 'uiLayoutCtrl',
       link: function(scope, element, attrs, ctrl) {
-        scope.$watch(element[0][ctrl.sizeProperties.offsetName], function() {
+        scope.$watch(element[0][ctrl.sizeProperties.offsetSize], function() {
           ctrl.updateDisplay();
         });
 
