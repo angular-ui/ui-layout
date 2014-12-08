@@ -1,6 +1,6 @@
 {
   "name": "angular-ui-layout",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": ["ui-layout.js", "ui-layout.css"],
   "dependencies": {
     "angular": "^1",
