@@ -35,5 +35,8 @@
   "bugs": {
     "url": "https://github.com/angular-ui/ui-layout/issues"
   },
-  "homepage": "https://github.com/angular-ui/ui-layout"
+  "homepage": "https://github.com/angular-ui/ui-layout",
+  "scripts": {
+    "prepublish": "gulp dist"
+  }
 }
