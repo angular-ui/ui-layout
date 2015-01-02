@@ -433,7 +433,7 @@ angular.module('ui.layout', [])
     return ctrl;
   }])
 
-  .directive('uiLayout', function($window) {
+  .directive('uiLayout', ['$window', function($window) {
     return {
       restrict: 'AE',
       controller: 'uiLayoutCtrl',
@@ -455,9 +455,9 @@ angular.module('ui.layout', [])
         });
       }
     };
-  })
+  }])
 
-  .directive('uiSplitbar', function(LayoutContainer) {
+  .directive('uiSplitbar', ['LayoutContainer', function(LayoutContainer) {
     // Get all the page.
     var htmlElement = angular.element(document.body.parentElement);
 
@@ -637,9 +637,9 @@ angular.module('ui.layout', [])
       }
     };
 
-  })
+  }])
 
-  .directive('uiLayoutContainer', function(LayoutContainer) {
+  .directive('uiLayoutContainer', ['LayoutContainer', function(LayoutContainer) {
     return {
       restrict: 'AE',
       require: '^uiLayout',
@@ -672,7 +672,7 @@ angular.module('ui.layout', [])
         };
       }
     };
-  })
+  }])
 
   .factory('LayoutContainer', function() {
 
