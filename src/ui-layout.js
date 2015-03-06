@@ -4,14 +4,16 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer) {
+  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', 'LayoutContainer', '$compile', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer, $compile) {
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
     var numOfSplitbars = 0;
-    var lastDividerRemoved = false;
     //var cache = {};
     var animationFrameRequested;
     var lastPos;
+
+    // regex to verify size is properly set to pixels or percent
+    var sizePattern = /\d+\s*(px|%)\s*$/i;
 
     ctrl.containers = [];
     ctrl.movingSplitbar = null;
@@ -106,6 +108,19 @@ angular.module('ui.layout', [])
       var x = clientRect.left + scrollX;
       var y = clientRect.top + scrollY;
       return { left: x, top: y };
+    }
+
+    /**
+     * Returns the current value for an option
+     * @param  option   The option to get the value for
+     * @return The value of the option. Returns null if there was no option set.
+     */
+    function optionValue(option) {
+      if (typeof option == 'number' || typeof option == 'string' && option.match(sizePattern)) {
+        return option;
+      } else {
+        return null;
+      }
     }
 
     //================================================================================
@@ -204,29 +219,21 @@ angular.module('ui.layout', [])
       var numOfAutoContainers = 0;
 
       if(ctrl.containers.length > 0 && $element.children().length > 0) {
-        // remove the last splitbar container from DOM
-        if(!lastDividerRemoved && ctrl.containers.length === $element.children().length) {
-          var lastContainerIndex = ctrl.containers.length - 1;
-          ctrl.containers[lastContainerIndex].element.remove();
-          ctrl.containers.splice(lastContainerIndex, 1);
-          lastDividerRemoved = true;
-          numOfSplitbars--;
-        }
 
         // calculate sizing for ctrl.containers
         for(i=0; i < ctrl.containers.length; i++) {
           if(!LayoutContainer.isSplitbar(ctrl.containers[i])) {
+
             var child = ctrl.containers[i].element;
             opts.maxSizes[i] = child.attr('max-size') || opts.maxSizes[i] || null;
             opts.minSizes[i] = child.attr('min-size') || opts.minSizes[i] || null;
             opts.sizes[i] = child.attr('size') || opts.sizes[i] || 'auto';
             //opts.collapsed[i] = child.attr('collapsed') || opts.collapsed[i] || false;
 
-            // verify size is properly set to pixels or percent
-            var sizePattern = /\d+\s*(px|%)\s*$/i;
-            opts.sizes[i] = (opts.sizes[i] != 'auto' && opts.sizes[i].match(sizePattern)) ? opts.sizes[i] : 'auto';
-            opts.minSizes[i] = (opts.minSizes[i] && opts.minSizes[i].match(sizePattern)) ? opts.minSizes[i] : null;
-            opts.maxSizes[i] = (opts.maxSizes[i] && opts.maxSizes[i].match(sizePattern)) ? opts.maxSizes[i] : null;
+
+            opts.sizes[i] = optionValue(opts.sizes[i]) || 'auto';
+            opts.minSizes[i] = optionValue(opts.minSizes[i]);
+            opts.maxSizes[i] = optionValue(opts.maxSizes[i]);;
 
             if(opts.sizes[i] != 'auto') {
               if(ctrl.isPercent(opts.sizes[i])) {
@@ -289,8 +296,6 @@ angular.module('ui.layout', [])
           usedSpace += c.size;
         }
       }
-
-
     };
 
     /**
@@ -298,13 +303,58 @@ angular.module('ui.layout', [])
      * @param container
      */
     ctrl.addContainer = function(container) {
-      ctrl.containers.push(container);
+      if (!LayoutContainer.isSplitbar(container)) {
+        if (ctrl.containers.length > 0) {
+          // Add a split bar after the previous container
+          var splitbar = angular.element('<div ui-splitbar><a><span class="glyphicon"></span></a><a><span class="glyphicon"></span></a></div>');
+          var lastContainer = ctrl.containers[ctrl.containers.length - 1];
+          var element = lastContainer.element;
 
-      if(LayoutContainer.isSplitbar(container)) {
+          element.after(splitbar);
+
+          $compile(splitbar)($scope);
+        }
+      } else {
         numOfSplitbars++;
       }
 
+      ctrl.containers.push(container);
+
       ctrl.updateDisplay();
+    };
+
+    /**
+     * Remove a container from the list of layout ctrl.containers.
+     * @param  container
+     */
+    ctrl.removeContainer = function(container) {
+      var index = ctrl.containers.indexOf(container);
+      if (index >= 0) {
+        if (!LayoutContainer.isSplitbar(container)) {
+          if (ctrl.containers.length > 2) {
+            // Assume there's a sidebar between each container
+            // We need to remove this container and the sidebar next to it
+            if (index == ctrl.containers.length - 1) {
+              // We're removing the last element, the side bar is on the left
+              ctrl.containers[index-1].element.remove();
+            } else {
+              // The side bar is on the right
+              ctrl.containers[index+1].element.remove();
+            }
+          }
+        } else {
+          numOfSplitbars--;
+        }
+
+        // Need to re-check the index, as a side bar may have been removed
+        var newIndex = ctrl.containers.indexOf(container);
+        if (newIndex >= 0) {
+          ctrl.containers.splice(newIndex, 1);
+        }
+        ctrl.updateDisplay();
+      } else {
+        console.error("removeContainer for container that did not exist!");
+      }
     };
 
     /**
@@ -465,6 +515,7 @@ angular.module('ui.layout', [])
       restrict: 'EAC',
       require: '^uiLayout',
       scope: {},
+
       link: function(scope, element, attrs, ctrl) {
         if(!element.hasClass('stretch')) element.addClass('stretch');
         if(!element.hasClass('ui-splitbar')) element.addClass('ui-splitbar');
@@ -634,6 +685,12 @@ angular.module('ui.layout', [])
 
         //Add splitbar to layout container list
         ctrl.addContainer(scope.splitbar);
+
+        // Listen for when it's destroyed to remove it from the container list
+        element.on('$destroy', function() {
+          ctrl.removeContainer(scope.splitbar);
+          scope.$apply();
+        });
       }
     };
 
@@ -646,15 +703,16 @@ angular.module('ui.layout', [])
       scope: {},
 
       compile: function(element) {
-        //TODO: add ability to disable auto-adding a splitbar after the container
-        var splitbar = angular.element('<div ui-splitbar><a><span class="glyphicon"></span></a><a><span class="glyphicon"></span></a></div>');
-        element.after(splitbar);
-
         return {
           pre: function(scope, element, attrs, ctrl) {
             scope.container = LayoutContainer.Container();
             scope.container.element = element;
             ctrl.addContainer(scope.container);
+
+            element.on('$destroy', function() {
+              ctrl.removeContainer(scope.container);
+              scope.$apply();
+            });
           },
           post: function(scope, element, attrs, ctrl) {
             if(!element.hasClass('stretch')) element.addClass('stretch');
