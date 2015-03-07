@@ -233,7 +233,7 @@ angular.module('ui.layout', [])
 
             opts.sizes[i] = optionValue(opts.sizes[i]) || 'auto';
             opts.minSizes[i] = optionValue(opts.minSizes[i]);
-            opts.maxSizes[i] = optionValue(opts.maxSizes[i]);;
+            opts.maxSizes[i] = optionValue(opts.maxSizes[i]);
 
             if(opts.sizes[i] != 'auto') {
               if(ctrl.isPercent(opts.sizes[i])) {
@@ -702,7 +702,7 @@ angular.module('ui.layout', [])
       require: '^uiLayout',
       scope: {},
 
-      compile: function(element) {
+      compile: function() {
         return {
           pre: function(scope, element, attrs, ctrl) {
             scope.container = LayoutContainer.Container();
