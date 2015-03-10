@@ -4,7 +4,7 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', 'LayoutContainer', '$compile', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer, $compile) {
+  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer) {
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
     var numOfSplitbars = 0;
@@ -116,7 +116,7 @@ angular.module('ui.layout', [])
      * @return The value of the option. Returns null if there was no option set.
      */
     function optionValue(option) {
-      if (typeof option == 'number' || typeof option == 'string' && option.match(sizePattern)) {
+      if(typeof option == 'number' || typeof option == 'string' && option.match(sizePattern)) {
         return option;
       } else {
         return null;
@@ -300,25 +300,20 @@ angular.module('ui.layout', [])
 
     /**
      * Adds a container to the list of layout ctrl.containers.
-     * @param container
+     * @param container The container to add
      */
     ctrl.addContainer = function(container) {
-      if (!LayoutContainer.isSplitbar(container)) {
-        if (ctrl.containers.length > 0) {
-          // Add a split bar after the previous container
-          var splitbar = angular.element('<div ui-splitbar><a><span class="glyphicon"></span></a><a><span class="glyphicon"></span></a></div>');
-          var lastContainer = ctrl.containers[ctrl.containers.length - 1];
-          var element = lastContainer.element;
+      var index = ctrl.indexOfElement(container.element);
+      if(!angular.isDefined(index) || index < 0 || ctrl.containers.length < index) {
+        console.error("Invalid index to add container; i=" + index + ", len=", ctrl.containers.length);
+        return;
+      }
 
-          element.after(splitbar);
-
-          $compile(splitbar)($scope);
-        }
-      } else {
+      if(LayoutContainer.isSplitbar(container)) {
         numOfSplitbars++;
       }
 
-      ctrl.containers.push(container);
+      ctrl.containers.splice(index, 0, container);
 
       ctrl.updateDisplay();
     };
@@ -329,12 +324,12 @@ angular.module('ui.layout', [])
      */
     ctrl.removeContainer = function(container) {
       var index = ctrl.containers.indexOf(container);
-      if (index >= 0) {
-        if (!LayoutContainer.isSplitbar(container)) {
-          if (ctrl.containers.length > 2) {
+      if(index >= 0) {
+        if(!LayoutContainer.isSplitbar(container)) {
+          if(ctrl.containers.length > 2) {
             // Assume there's a sidebar between each container
             // We need to remove this container and the sidebar next to it
-            if (index == ctrl.containers.length - 1) {
+            if(index == ctrl.containers.length - 1) {
               // We're removing the last element, the side bar is on the left
               ctrl.containers[index-1].element.remove();
             } else {
@@ -348,7 +343,7 @@ angular.module('ui.layout', [])
 
         // Need to re-check the index, as a side bar may have been removed
         var newIndex = ctrl.containers.indexOf(container);
-        if (newIndex >= 0) {
+        if(newIndex >= 0) {
           ctrl.containers.splice(newIndex, 1);
         }
         ctrl.updateDisplay();
@@ -478,6 +473,64 @@ angular.module('ui.layout', [])
         return null;
       }
       return null;
+    };
+
+    /**
+     * Checks whether the container before this one is a split bar
+     * @param  {container}  container The container to check
+     * @return {Boolean}    true if the element before is a splitbar, false otherwise
+     */
+    ctrl.hasSplitbarBefore = function(container) {
+      var index = ctrl.containers.indexOf(container);
+      if(1 <= index) {
+        return LayoutContainer.isSplitbar(ctrl.containers[index-1]);
+      }
+
+      return false;
+    };
+
+    /**
+     * Checks whether the container after this one is a split bar
+     * @param  {container}  container The container to check
+     * @return {Boolean}    true if the element after is a splitbar, false otherwise
+     */
+    ctrl.hasSplitbarAfter = function(container) {
+      var index = ctrl.containers.indexOf(container);
+      if(index < ctrl.containers.length - 1) {
+        return LayoutContainer.isSplitbar(ctrl.containers[index+1]);
+      }
+      
+      return false;
+    };
+
+    /**
+     * Checks whether the passed in element is a ui-layout type element.
+     * @param  {element}  element The element to check
+     * @return {Boolean}          true if the element is a layout element, false otherwise.
+     */
+    ctrl.isLayoutElement = function(element) {
+      return element.hasAttribute('ui-layout-container') || element.hasAttribute('ui-splitbar');
+    };
+
+    /**
+     * Retrieve the index of an element within it's parents context.
+     * @param  {element} element The element to get the index of  
+     * @return {int}             The index of the element within it's parent
+     */
+    ctrl.indexOfElement = function(element) {
+      var parent = element.parent();
+      var children = parent.children();
+      var containerIndex = 0;
+      for(var i = 0; i < children.length; i++) {
+        var child = children[i];
+        if(ctrl.isLayoutElement(child)) {
+          if(element[0] == children[i]) {
+            return containerIndex;
+          }
+          containerIndex++;
+        }
+      }
+      return -1;
     };
 
     return ctrl;
@@ -683,20 +736,18 @@ angular.module('ui.layout', [])
           element.css(ctrl.sizeProperties.flowProperty, newValue + 'px');
         });
 
-        //Add splitbar to layout container list
         ctrl.addContainer(scope.splitbar);
 
-        // Listen for when it's destroyed to remove it from the container list
         element.on('$destroy', function() {
           ctrl.removeContainer(scope.splitbar);
-          scope.$apply();
+          scope.$evalAsync();
         });
       }
     };
 
   }])
 
-  .directive('uiLayoutContainer', ['LayoutContainer', function(LayoutContainer) {
+  .directive('uiLayoutContainer', ['LayoutContainer', '$compile', function(LayoutContainer, $compile) {
     return {
       restrict: 'AE',
       require: '^uiLayout',
@@ -707,11 +758,12 @@ angular.module('ui.layout', [])
           pre: function(scope, element, attrs, ctrl) {
             scope.container = LayoutContainer.Container();
             scope.container.element = element;
+            
             ctrl.addContainer(scope.container);
 
             element.on('$destroy', function() {
               ctrl.removeContainer(scope.container);
-              scope.$apply();
+              scope.$evalAsync();
             });
           },
           post: function(scope, element, attrs, ctrl) {
@@ -726,6 +778,17 @@ angular.module('ui.layout', [])
               element.css(ctrl.sizeProperties.flowProperty, newValue + 'px');
             });
 
+            var parent = element.parent();
+            var children = parent.children();
+            var index = ctrl.indexOfElement(element);
+            var splitbar = angular.element('<div ui-splitbar><a><span class="glyphicon"></span></a><a><span class="glyphicon"></span></a></div>');
+            if(0 < index && !ctrl.hasSplitbarBefore(scope.container)) {
+              angular.element(children[index-1]).after(splitbar);
+              $compile(splitbar)(scope);
+            } else if(index < children.length - 1) {
+              element.after(splitbar);
+              $compile(splitbar)(scope);
+            }
           }
         };
       }
@@ -733,7 +796,6 @@ angular.module('ui.layout', [])
   }])
 
   .factory('LayoutContainer', function() {
-
     // Base container that can be locked and resized
     function BaseContainer() {
       this.size = 0;
