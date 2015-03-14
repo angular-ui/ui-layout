@@ -123,7 +123,7 @@ angular.module('ui.layout', [])
         (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
         (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0);
 
-      lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
+      lastPos = mousePos - opts.dividerSize / 2 - offset($element)[ctrl.sizeProperties.offsetPos];
 
       //Cancel previous rAF call
       if(animationFrameRequested) {
