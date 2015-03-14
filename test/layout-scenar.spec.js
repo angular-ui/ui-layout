@@ -102,8 +102,8 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
         expect(window.requestAnimationFrame).toHaveBeenCalled();
 
-        var expextedPos = Math.floor(element_bb.height / 4 - defaultDividerSize / 2);
-        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expextedPos);
+        var expectedPos = Math.floor(element_bb.height / 4 - defaultDividerSize / 2);
+        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
 
         browserTrigger(document.body, endEvent);
       });
@@ -130,7 +130,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         browserTrigger($splitbar, moveEvent, { y: Math.random() * element_bb.width });
         browserTrigger($splitbar, endEvent);
 
-        var expectedPos = Math.floor(element_bb.height / 4);
+        var expectedPos = Math.floor(element_bb.height / 4 - defaultDividerSize / 2);
         expect(window.requestAnimationFrame.calls.count()).toEqual(1);
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
       });
