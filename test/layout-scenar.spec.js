@@ -102,7 +102,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
         expect(window.requestAnimationFrame).toHaveBeenCalled();
 
-        var expextedPos = Math.floor(element_bb.height / 4);
+        var expextedPos = Math.floor(element_bb.height / 4 - defaultDividerSize / 2);
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expextedPos);
 
         browserTrigger(document.body, endEvent);
