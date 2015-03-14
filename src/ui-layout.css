@@ -33,12 +33,14 @@
   text-align: center;
   justify-content: center;
   align-items: center;
+  overflow-y: hidden;
 }
 .ui-layout-column > .ui-splitbar{
   width: 8px; height: 100%;
   cursor: col-resize;
   -webkit-flex-direction: column;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .ui-layout-column > .ui-splitbar > a,
