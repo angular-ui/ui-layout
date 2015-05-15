@@ -1,3 +1,3 @@
-require('./src/ui-layout.css');
-require('./src/ui-layout.js');
+require('./src/ui-layout');
 module.exports = 'ui.layout';
+
