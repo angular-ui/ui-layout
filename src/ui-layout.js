@@ -37,7 +37,6 @@ angular.module('ui.layout', [])
     ctrl.opts = opts;
 
     $scope.updateDisplay = function() {
-      console.log(ctrl.containers);
       ctrl.updateDisplay();
     };
 
