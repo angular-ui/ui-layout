@@ -1,6 +1,6 @@
 {
   "name": "angular-ui-layout",
-  "version": "1.0.5",
+  "version": "1.0.5-requirejs",
   "description": "This directive allows you to split !",
   "devDependencies": {
     "angular-ui-publisher": "~1.2",
