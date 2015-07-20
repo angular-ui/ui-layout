@@ -433,7 +433,7 @@ angular.module('ui.layout', [])
     return ctrl;
   }])
 
-  .directive('uiLayout', ['$window','$timeout' function($window,$timeout) {
+  .directive('uiLayout', ['$window','$timeout', function($window,$timeout) {
     return {
       restrict: 'AE',
       controller: 'uiLayoutCtrl',
