@@ -15,7 +15,7 @@
     "gulp-uglify": "^0",
     "gulp-util": "^2",
     "jshint-stylish": "^0",
-    "karma": "^0",
+    "karma": "^0.12",
     "karma-chrome-launcher": "^0",
     "karma-coverage": "^0",
     "karma-firefox-launcher": "^0",
