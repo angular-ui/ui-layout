@@ -744,6 +744,11 @@ angular.module('ui.layout', [])
           element.css(ctrl.sizeProperties.flowProperty, newValue + 'px');
         });
 
+        scope.$on('$destroy', function() {
+          htmlElement.off('mouseup touchend mousemove touchmove');
+        });
+
+        //Add splitbar to layout container list
         ctrl.addContainer(scope.splitbar);
 
         element.on('$destroy', function() {
