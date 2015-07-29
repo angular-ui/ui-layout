@@ -4,7 +4,7 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer) {
+  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, $timeout, LayoutContainer) {
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
     var numOfSplitbars = 0;
@@ -41,6 +41,7 @@ angular.module('ui.layout', [])
       ctrl.updateDisplay();
     };
 
+    var debounceEvent;
     function draw() {
       var position = ctrl.sizeProperties.flowProperty;
       var dividerSize = parseInt(opts.dividerSize);
@@ -88,7 +89,12 @@ angular.module('ui.layout', [])
             // move the splitbar
             ctrl.movingSplitbar[position] = newPosition;
 
-            //TODO: dispatch container resize event
+            // broadcast an event that resize happened (debounced to 50ms)
+            if(debounceEvent) $timeout.cancel(debounceEvent);
+            debounceEvent = $timeout(function() {
+                $scope.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
+                debounceEvent = null;
+            }, 50);
           }
         }
       }
@@ -350,6 +356,7 @@ angular.module('ui.layout', [])
           }
         }
       });
+      $scope.$broadcast('ui.layout.toggle', c);
 
       return c.collapsed;
     };
@@ -394,6 +401,7 @@ angular.module('ui.layout', [])
           if(prevContainer) prevContainer.size -= (c.actualSize + endDiff);
         }
       });
+      $scope.$broadcast('ui.layout.toggle', c);
 
       return c.collapsed;
     };
