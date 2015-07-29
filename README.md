@@ -133,6 +133,30 @@ percentage
 </div>
 ```
 
+## Events
+
+Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container. 
+
+### ui.layout.toggle
+
+Dispatched when a container is opened or closed using the chevron buttons.
+'''
+$scope.$on('ui.layout.toggle', function(e, container){
+  if ( container.size > 0 ){
+     console.log('container is open!');
+  }
+});
+'''
+
+### ui.layout.resize
+
+Dispatched as a splitbar is dragged, debounced to occur only every 50ms.
+   
+'''
+$scope.$on('ui.layout.resize', function(e, beforeContainer, afterContainer){});
+'''
+
+
 ## Testing
 
 We use Karma and jshint to ensure the quality of the code.  The easiest way to run these checks is to use grunt:
