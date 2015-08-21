@@ -778,6 +778,7 @@ angular.module('ui.layout', [])
               element.css(ctrl.sizeProperties.flowProperty, newValue + 'px');
             });
 
+            //TODO: add ability to disable auto-adding a splitbar after the container
             var parent = element.parent();
             var children = parent.children();
             var index = ctrl.indexOfElement(element);
