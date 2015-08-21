@@ -499,7 +499,7 @@ angular.module('ui.layout', [])
       if(index < ctrl.containers.length - 1) {
         return LayoutContainer.isSplitbar(ctrl.containers[index+1]);
       }
-      
+
       return false;
     };
 
@@ -514,7 +514,7 @@ angular.module('ui.layout', [])
 
     /**
      * Retrieve the index of an element within it's parents context.
-     * @param  {element} element The element to get the index of  
+     * @param  {element} element The element to get the index of
      * @return {int}             The index of the element within it's parent
      */
     ctrl.indexOfElement = function(element) {
@@ -758,7 +758,7 @@ angular.module('ui.layout', [])
           pre: function(scope, element, attrs, ctrl) {
             scope.container = LayoutContainer.Container();
             scope.container.element = element;
-            
+
             ctrl.addContainer(scope.container);
 
             element.on('$destroy', function() {
