@@ -140,21 +140,22 @@ Events are broadcast on the scope where ui-layout is attached. This means they a
 ### ui.layout.toggle
 
 Dispatched when a container is opened or closed using the chevron buttons.
-'''
+
+```javascript
 $scope.$on('ui.layout.toggle', function(e, container){
   if ( container.size > 0 ){
      console.log('container is open!');
   }
 });
-'''
+```
 
 ### ui.layout.resize
 
 Dispatched as a splitbar is dragged, debounced to occur only every 50ms.
-   
-'''
+
+```javascript
 $scope.$on('ui.layout.resize', function(e, beforeContainer, afterContainer){});
-'''
+```
 
 
 ## Testing
