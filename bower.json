@@ -4,7 +4,7 @@
     "src/ui-layout.js",
     "src/ui-layout.css"
   ],
-  "version": "1.0.5",
+  "version": "1.1.0",
   "homepage": "https://angular-ui.github.io/ui-layout/",
   "authors": [
     "https://github.com/angular-ui/ui-layout/contributors"
