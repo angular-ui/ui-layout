@@ -25,7 +25,7 @@
     "lodash.assign": "^2",
     "node-karma-wrapper": "^0"
   },
-  "main": "ui-layout.js",
+  "main": "src/ui-layout.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/angular-ui/ui-layout.git"
