@@ -517,7 +517,7 @@ angular.module('ui.layout', [])
      * @return {Boolean}          true if the element is a layout element, false otherwise.
      */
     ctrl.isLayoutElement = function(element) {
-      return element.hasAttribute('ui-layout-container') || element.hasAttribute('ui-splitbar');
+      return element.hasAttribute('ui-layout-container') || element.hasAttribute('ui-splitbar') || element.nodeName === 'UI-LAYOUT-CONTAINER';
     };
 
     /**
