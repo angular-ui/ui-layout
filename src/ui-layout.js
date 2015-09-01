@@ -586,25 +586,25 @@ angular.module('ui.layout', [])
         scope.splitbar = LayoutContainer.Splitbar();
         scope.splitbar.element = element;
 
-        //chevron <a> elements
+        //icon <a> elements
         var prevButton = angular.element(element.children()[0]);
         var afterButton = angular.element(element.children()[1]);
 
-        //chevron <span> elements
-        var prevChevron = angular.element(prevButton.children()[0]);
-        var afterChevron = angular.element(afterButton.children()[0]);
+        //icon <span> elements
+        var prevIcon = angular.element(prevButton.children()[0]);
+        var afterIcon = angular.element(afterButton.children()[0]);
 
-        //chevron bootstrap classes
-        var chevronLeft = 'glyphicon-chevron-left';
-        var chevronRight = 'glyphicon-chevron-right';
-        var chevronUp = 'glyphicon-chevron-up';
-        var chevronDown = 'glyphicon-chevron-down';
+        //icon classes
+        var iconLeft = 'ui-splitbar-icon-left';
+        var iconRight = 'ui-splitbar-icon-right';
+        var iconUp = 'ui-splitbar-icon-up';
+        var iconDown = 'ui-splitbar-icon-down';
 
-        var prevChevronClass = ctrl.isUsingColumnFlow ? chevronLeft : chevronUp;
-        var afterChevronClass = ctrl.isUsingColumnFlow ? chevronRight : chevronDown;
+        var prevIconClass = ctrl.isUsingColumnFlow ? iconLeft : iconUp;
+        var afterIconClass = ctrl.isUsingColumnFlow ? iconRight : iconDown;
 
-        prevChevron.addClass(prevChevronClass);
-        afterChevron.addClass(afterChevronClass);
+        prevIcon.addClass(prevIconClass);
+        afterIcon.addClass(afterIconClass);
 
         prevButton.on('click', function() {
           var prevSplitbarBeforeButton, prevSplitbarAfterButton;
@@ -619,8 +619,8 @@ angular.module('ui.layout', [])
           if(ctrl.isUsingColumnFlow) {
             if(result) {
               afterButton.css('display', 'none');
-              prevChevron.removeClass(chevronLeft);
-              prevChevron.addClass(chevronRight);
+              prevIcon.removeClass(iconLeft);
+              prevIcon.addClass(iconRight);
 
               // hide previous splitbar buttons
               if(previousSplitbar !== null) {
@@ -629,10 +629,10 @@ angular.module('ui.layout', [])
               }
             } else {
               afterButton.css('display', 'inline');
-              prevChevron.removeClass(chevronRight);
-              prevChevron.addClass(chevronLeft);
+              prevIcon.removeClass(iconRight);
+              prevIcon.addClass(iconLeft);
 
-              // show previous splitbar chevrons
+              // show previous splitbar icons
               if(previousSplitbar !== null) {
                 prevSplitbarBeforeButton.css('display', 'inline');
                 prevSplitbarAfterButton.css('display', 'inline');
@@ -641,8 +641,8 @@ angular.module('ui.layout', [])
           } else {
             if(result) {
               afterButton.css('display', 'none');
-              prevChevron.removeClass(chevronUp);
-              prevChevron.addClass(chevronDown);
+              prevIcon.removeClass(iconUp);
+              prevIcon.addClass(iconDown);
 
               // hide previous splitbar buttons
               if(previousSplitbar !== null) {
@@ -651,10 +651,10 @@ angular.module('ui.layout', [])
               }
             } else {
               afterButton.css('display', 'inline');
-              prevChevron.removeClass(chevronDown);
-              prevChevron.addClass(chevronUp);
+              prevIcon.removeClass(iconDown);
+              prevIcon.addClass(iconUp);
 
-              // show previous splitbar chevrons
+              // show previous splitbar icons
               if(previousSplitbar !== null) {
                 prevSplitbarBeforeButton.css('display', 'inline');
                 prevSplitbarAfterButton.css('display', 'inline');
@@ -676,8 +676,8 @@ angular.module('ui.layout', [])
           if(ctrl.isUsingColumnFlow) {
             if(result) {
               prevButton.css('display', 'none');
-              afterChevron.removeClass(chevronRight);
-              afterChevron.addClass(chevronLeft);
+              afterIcon.removeClass(iconRight);
+              afterIcon.addClass(iconLeft);
 
               // hide next splitbar buttons
               if(nextSplitbar !== null) {
@@ -686,8 +686,8 @@ angular.module('ui.layout', [])
               }
             } else {
               prevButton.css('display', 'inline');
-              afterChevron.removeClass(chevronLeft);
-              afterChevron.addClass(chevronRight);
+              afterIcon.removeClass(iconLeft);
+              afterIcon.addClass(iconRight);
 
               // show next splitbar buttons
               if(nextSplitbar !== null) {
@@ -698,8 +698,8 @@ angular.module('ui.layout', [])
           } else {
             if(result) {
               prevButton.css('display', 'none');
-              afterChevron.removeClass(chevronDown);
-              afterChevron.addClass(chevronUp);
+              afterIcon.removeClass(iconDown);
+              afterIcon.addClass(iconUp);
 
               // hide next splitbar buttons
               if(nextSplitbar !== null) {
@@ -708,8 +708,8 @@ angular.module('ui.layout', [])
               }
             } else {
               prevButton.css('display', 'inline');
-              afterChevron.removeClass(chevronUp);
-              afterChevron.addClass(chevronDown);
+              afterIcon.removeClass(iconUp);
+              afterIcon.addClass(iconDown);
 
               // show next splitbar buttons
               if(nextSplitbar !== null) {
@@ -797,7 +797,7 @@ angular.module('ui.layout', [])
             var parent = element.parent();
             var children = parent.children();
             var index = ctrl.indexOfElement(element);
-            var splitbar = angular.element('<div ui-splitbar><a><span class="glyphicon"></span></a><a><span class="glyphicon"></span></a></div>');
+            var splitbar = angular.element('<div ui-splitbar><a><span class="ui-splitbar-icon"></span></a><a><span class="ui-splitbar-icon"></span></a></div>');
             if(0 < index && !ctrl.hasSplitbarBefore(scope.container)) {
               angular.element(children[index-1]).after(splitbar);
               $compile(splitbar)(scope);
