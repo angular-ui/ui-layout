@@ -33,19 +33,68 @@
   text-align: center;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(to bottom, #fff 0%, #eee 100%);
 }
 .ui-layout-column > .ui-splitbar{
   width: 8px; height: 100%;
   cursor: col-resize;
   -webkit-flex-direction: column;
   flex-direction: column;
+  background: linear-gradient(to right, #fff 0%, #eee 100%);
 }
 
 .ui-layout-column > .ui-splitbar > a,
 .ui-layout-row > .ui-splitbar > a {
-  color: #fff;
   cursor: pointer;
-  font-size: 9px;
+  text-align: center;
+  font-size: 16px;
+  color: #aaa;
+}
+
+.ui-layout-column > .ui-splitbar > a:nth-child(2){
+  margin-top: 0.35rem;
+}
+
+.ui-layout-row > .ui-splitbar > a:nth-child(2){
+  margin-left: 0.35rem;
+}
+
+
+/**
+* Icons
+**/
+
+.ui-splitbar-icon {
+  width: 0;
+  height: 0;
+  display: inline-block;
+}
+
+.ui-splitbar-icon-up {
+  border-left: 0.45em solid transparent;
+  border-right: 0.45em solid transparent;
+  border-bottom: 0.45em solid;
+}
+
+.ui-splitbar-icon-down {
+  border-left: 0.45em solid transparent;
+  border-right: 0.45em solid transparent;
+  border-top: 0.45em solid;
+  margin-right: 0.45em;
+}
+
+.ui-splitbar-icon-right {
+  border-top: 0.45em solid transparent;
+  border-bottom: 0.45em solid transparent;
+  border-left: 0.45em solid;
+
+}
+
+.ui-splitbar-icon-left {
+  border-top: 0.45em solid transparent;
+  border-bottom: 0.45em solid transparent;
+  border-right: 0.45em solid;
+  margin-top: 0.45em;
 }
 
 @media print {
