@@ -39,6 +39,9 @@
   cursor: col-resize;
   -webkit-flex-direction: column;
   flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .ui-layout-column > .ui-splitbar > a,
