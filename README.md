@@ -12,9 +12,21 @@ This directive allows you to split stuff !
 **NOTE :** version 1.x is only compatible with IE>=10. If you use IE<=9 you need to use version 0.x
 
 
-## Usage
+## Installing
 
-You can get it from [Bower](http://bower.io/)
+### Browserify/WebPack
+
+```sh
+npm install --save angular-ui-layout
+```
+
+`module.exports` of `index.js` is the string `'ui.layout'` so you can include it as such:
+
+```javascript
+angular.module('myApp', [require('angular-ui-layout')]);
+```
+
+### [Bower](http://bower.io/)
 
 ```sh
 bower install angular-ui-layout\#bower
@@ -39,8 +51,9 @@ Add the UI.Layout module as a dependency to your application module:
 var myAppModule = angular.module('MyApp', ['ui.layout']);
 ```
 
-Finally, add the directive to your html:
+## Usage
 
+Add the directive like so:
 
 ```xml
 <div ui-layout="{ flow : 'row' }"></div>
