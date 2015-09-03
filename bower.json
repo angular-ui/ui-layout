@@ -1,7 +1,10 @@
 {
   "name": "angular-ui-layout",
-  "main": ["src/ui-layout.js", "src/ui-layout.css"],
-  "version": "1.0.5",
+  "main": [
+    "src/ui-layout.js",
+    "src/ui-layout.css"
+  ],
+  "version": "1.1.0",
   "homepage": "https://angular-ui.github.io/ui-layout/",
   "authors": [
     "https://github.com/angular-ui/ui-layout/contributors"
@@ -16,11 +19,11 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "^1",
-    "raf": "https://gist.githubusercontent.com/paulirish/1579671/raw/3d42a3a76ed09890434a07be2212f376959e616f/rAF.js"
+    "angular": "^1"
   },
   "devDependencies": {
     "angular-mocks": "^1",
-    "jquery": "^2"
+    "jquery": "^2",
+    "requestAnimationFrame": "~0.0.22"
   }
 }

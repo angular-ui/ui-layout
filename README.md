@@ -12,9 +12,21 @@ This directive allows you to split stuff !
 **NOTE :** version 1.x is only compatible with IE>=10. If you use IE<=9 you need to use version 0.x
 
 
-## Usage
+## Installing
 
-You can get it from [Bower](http://bower.io/)
+### Browserify/WebPack
+
+```sh
+npm install --save angular-ui-layout
+```
+
+`module.exports` of `index.js` is the string `'ui.layout'` so you can include it as such:
+
+```javascript
+angular.module('myApp', [require('angular-ui-layout')]);
+```
+
+### [Bower](http://bower.io/)
 
 ```sh
 bower install angular-ui-layout\#bower
@@ -39,8 +51,9 @@ Add the UI.Layout module as a dependency to your application module:
 var myAppModule = angular.module('MyApp', ['ui.layout']);
 ```
 
-Finally, add the directive to your html:
+## Usage
 
+Add the directive like so:
 
 ```xml
 <div ui-layout="{ flow : 'row' }"></div>
@@ -132,6 +145,31 @@ percentage
     <div ui-layout-container max-size="10%"></div>
 </div>
 ```
+
+## Events
+
+Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container. 
+
+### ui.layout.toggle
+
+Dispatched when a container is opened or closed using the chevron buttons.
+
+```javascript
+$scope.$on('ui.layout.toggle', function(e, container){
+  if ( container.size > 0 ){
+     console.log('container is open!');
+  }
+});
+```
+
+### ui.layout.resize
+
+Dispatched as a splitbar is dragged, debounced to occur only every 50ms.
+
+```javascript
+$scope.$on('ui.layout.resize', function(e, beforeContainer, afterContainer){});
+```
+
 
 ## Testing
 
