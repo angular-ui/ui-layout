@@ -35,5 +35,12 @@
   "bugs": {
     "url": "https://github.com/angular-ui/ui-layout/issues"
   },
-  "homepage": "https://github.com/angular-ui/ui-layout"
+  "homepage": "https://github.com/angular-ui/ui-layout",
+  "jspm" : {
+    "format" : "global",
+    "directories" : {
+      "lib" : "src"
+    },
+    "main" : "ui-layout"
+  }
 }
