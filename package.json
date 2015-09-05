@@ -1,6 +1,6 @@
 {
   "name": "angular-ui-layout",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "This directive allows you to split !",
   "devDependencies": {
     "angular-ui-publisher": "~1.2",
@@ -36,11 +36,11 @@
     "url": "https://github.com/angular-ui/ui-layout/issues"
   },
   "homepage": "https://github.com/angular-ui/ui-layout",
-  "jspm" : {
-    "format" : "global",
-    "directories" : {
-      "lib" : "src"
+  "jspm": {
+    "format": "global",
+    "directories": {
+      "lib": "src"
     },
-    "main" : "ui-layout"
+    "main": "ui-layout"
   }
 }
