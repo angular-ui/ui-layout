@@ -4,7 +4,7 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, $timeout, LayoutContainer) {
+  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', '$window', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, $timeout, $window, LayoutContainer) {
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
     var numOfSplitbars = 0;
@@ -141,7 +141,10 @@ angular.module('ui.layout', [])
     ctrl.mouseMoveHandler = function(mouseEvent) {
       var mousePos = mouseEvent[ctrl.sizeProperties.mouseProperty] ||
         (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
-        (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0);
+        // jQuery does touches weird, see #82
+        ($window.jQuery ?
+          (mouseEvent.originalEvent ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0) :
+          (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0));
 
       lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
 
