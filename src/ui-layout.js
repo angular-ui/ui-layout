@@ -30,6 +30,13 @@ angular.module('ui.layout', [])
       // set the layout css class
       .addClass('ui-layout-' + (opts.flow || 'row'));
 
+    if (opts.disableToggle) {
+      $element.addClass('no-toggle');
+    }
+    if (opts.disableMobileToggle) {
+      $element.addClass('no-mobile-toggle');
+    }
+
     // Initial global size definition
     opts.sizes = opts.sizes || [];
     opts.maxSizes = opts.maxSizes || [];

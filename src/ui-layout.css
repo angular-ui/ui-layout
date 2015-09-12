@@ -99,6 +99,17 @@
   margin-top: 0.45em;
 }
 
+/* Allow disabling of icons */
+.no-toggle .ui-splitbar-icon {
+  display: none;
+}
+
+@media only screen and (max-device-width: 480px) {
+  .no-mobile-toggle .ui-splitbar-icon {
+    display: none;
+  }
+}
+
 @media print {
   .ui-splitbar {
     display: none;

@@ -79,6 +79,20 @@ Default: `10`
 
 The size in pixels that you want the divider/splitbar to be.
 
+### disableToggle
+
+Type: `Boolean`
+Default: `false`
+
+Set to `true` if you don't want the toggle arrows appearing in the splitbar.
+
+### disableMobileToggle
+
+Type: `Boolean`
+Default: `false`
+
+Like `disableToggle` above but only removes the arrows on mobile devices (max-device-width: 480px).
+
 ## Child Attributes
 
 ### uiLayoutContainer
