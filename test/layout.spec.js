@@ -138,9 +138,27 @@ describe('Directive: uiLayout', function () {
       return element;
     }
 
+    function createDataSizedDirective(notation) {
+      element = createDirective(null, '<div ui-layout><header ui-layout-container data-size="' + notation + '"></header><footer ui-layout-container></footer></div>');
+
+      $header = element.children().eq(0)[0];
+      $footer = element.children().eq(2)[0];
+
+      return element;
+    }
+
+
     function testSizeNotation(notation, actualSize) {
       element = createSizedDirective(notation);
+      test(element, notation, actualSize);
+      element.remove();
 
+      element = createDataSizedDirective(notation);
+      test(element, notation, actualSize);
+      element.remove();
+    }
+
+    function test(element, notation, actualSize) {
       layoutBounds = element[0].getBoundingClientRect();
       headerBounds = $header.getBoundingClientRect();
 
@@ -156,7 +174,6 @@ describe('Directive: uiLayout', function () {
         expect(parseFloat($footer.style.top)).toEqual(actualSize + defaultDividerSize);
       }
 
-      element.remove();
     }
 
     describe('when using dummy input', function () {
@@ -199,9 +216,27 @@ describe('Directive: uiLayout', function () {
       return element;
     }
 
+    function createDataSizedDirective(notation) {
+      element = createDirective(null, '<div ui-layout><header ui-layout-container size="1px" data-min-size="' + notation + '"></header><footer ui-layout-container></footer></div>');
+
+      $header = element.children().eq(0)[0];
+      $footer = element.children().eq(2)[0];
+
+      return element;
+    }
+
     function testSizeNotation(notation, minSize) {
       element = createSizedDirective(notation);
+      test(element, notation, minSize);
+      element.remove();
 
+      element = createDataSizedDirective(notation);
+      test(element, notation, minSize);
+      element.remove();
+
+    }
+
+    function test(element, notation, minSize) {
       layoutBounds = element[0].getBoundingClientRect();
       headerBounds = $header.getBoundingClientRect();
 
@@ -216,8 +251,6 @@ describe('Directive: uiLayout', function () {
         expect(parseFloat($footer.style.height)).toEqual(layoutBounds.height - minSize - defaultDividerSize);
         expect(parseFloat($footer.style.top)).toEqual(minSize + defaultDividerSize);
       }
-
-      element.remove();
     }
 
     it('should support percent type', function () {
@@ -249,9 +282,26 @@ describe('Directive: uiLayout', function () {
       return element;
     }
 
+    function createDataSizedDirective(notation) {
+      element = createDirective(null, '<div ui-layout><header ui-layout-container size="100%" data-max-size="' + notation + '"></header><footer ui-layout-container></footer></div>');
+
+      $header = element.children().eq(0)[0];
+      $footer = element.children().eq(2)[0];
+
+      return element;
+    }
+
     function testSizeNotation(notation, maxSize) {
       element = createSizedDirective(notation);
+      test(element, notation, maxSize);
+      element.remove();
 
+      element = createDataSizedDirective(notation);
+      test(element, notation, maxSize);
+      element.remove();
+    }
+
+    function test(element, notation, maxSize) {
       layoutBounds = element[0].getBoundingClientRect();
       headerBounds = $header.getBoundingClientRect();
 
@@ -267,7 +317,6 @@ describe('Directive: uiLayout', function () {
         expect(parseFloat($footer.style.top)).toEqual(maxSize + defaultDividerSize);
       }
 
-      element.remove();
     }
 
     it('should support percent type', function () {

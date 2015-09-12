@@ -233,9 +233,9 @@ angular.module('ui.layout', [])
           if(!LayoutContainer.isSplitbar(ctrl.containers[i])) {
 
             var child = ctrl.containers[i].element;
-            opts.maxSizes[i] = child.attr('max-size') || opts.maxSizes[i] || null;
-            opts.minSizes[i] = child.attr('min-size') || opts.minSizes[i] || null;
-            opts.sizes[i] = child.attr('size') || opts.sizes[i] || 'auto';
+            opts.maxSizes[i] = child.attr('max-size') || child.attr('data-max-size') || opts.maxSizes[i] || null;
+            opts.minSizes[i] = child.attr('min-size') || child.attr('data-min-size') || opts.minSizes[i] || null;
+            opts.sizes[i] = child.attr('size') || child.attr('data-size') || opts.sizes[i] || 'auto';
             //opts.collapsed[i] = child.attr('collapsed') || opts.collapsed[i] || false;
 
 
