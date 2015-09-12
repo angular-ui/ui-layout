@@ -557,7 +557,7 @@ angular.module('ui.layout', [])
         });
 
         function onResize() {
-          scope.$apply(function() {
+          scope.$evalAsync(function() {
             ctrl.updateDisplay();
           });
         }
