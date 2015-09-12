@@ -550,7 +550,9 @@ angular.module('ui.layout', [])
       restrict: 'AE',
       controller: 'uiLayoutCtrl',
       link: function(scope, element, attrs, ctrl) {
-        scope.$watch(element[0][ctrl.sizeProperties.offsetSize], function() {
+        scope.$watch(function () {
+          return element[0][ctrl.sizeProperties.offsetSize];
+        }, function() {
           ctrl.updateDisplay();
         });
 
