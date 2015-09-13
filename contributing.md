@@ -61,3 +61,5 @@ Once you have NPM installed you'll want to follow these simple steps:
 ## Run Tests
 
 * Run all tests continously `gulp continuousMode`
+* Run all tests once `gulp karma`
+* Run all tests and linter once `gulp default`
