@@ -1,0 +1,1001 @@
+[33mcommit 41bdc3e9135002933518fb72fa1ec4d18597bd7b[m
+Author: bob <sirkemera@gmail.com>
+Date:   Sat Sep 12 17:35:34 2015 -0700
+
+    docs(contributing): addressed deficiencies in PR
+
+[33mcommit 5e5ab5d4204b2809ead491b7c3fd9a8e0f6dfc56[m
+Author: bob <sirkemera@gmail.com>
+Date:   Sat Sep 12 17:31:54 2015 -0700
+
+    docs(contributing): forgot the reference bower install in setup
+
+[33mcommit 6fb48b3b6576ef36af3e240517c98414e66e8202[m
+Author: bob <sirkemera@gmail.com>
+Date:   Sat Sep 12 17:24:31 2015 -0700
+
+    docs(contributing): updated the contributing.md file
+
+[33mcommit f2af3f1afbdffd4c3be802c44df7d718cbd8bba4[m
+Author: bob <sirkemera@gmail.com>
+Date:   Sat Sep 12 17:10:57 2015 -0700
+
+    docs(contributing): add contributing file
+
+[33mcommit 8418ea5eaeab317363b0812b65f323fdfcedfc01[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Sat Sep 12 11:49:55 2015 -0700
+
+    fix(jQuery touchdrag): special-case jQuery touch drag events
+    
+    Previously, jQuery altered the event object so we thought the mousePosition was always zero.
+    Special-case jQuery so that we're grabbing the correct mousePosition.
+    
+    Fixes #82
+
+[33mcommit c295344087e2232e5683fcfdde4150e6093911c6[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Sat Sep 12 10:13:00 2015 -0700
+
+    fix(multipledigests): use evalAsync for resize calls
+
+[33mcommit 8aafd44efbdaae1b0b9962d30ace27767eed19c7[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Sat Sep 12 09:26:51 2015 -0700
+
+    1.2.2
+
+[33mcommit 23d8cf41f919b6e72e2ca7c534340a71587cc42c[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Sat Sep 12 09:22:43 2015 -0700
+
+    fix(nesting): resizing a parent pane also triggers a resize in child
+    
+    Implements #90, Fixes #102
+
+[33mcommit 8660e4670d3503fc411e770037885ea14e2dab56[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Fri Sep 4 20:02:47 2015 -0700
+
+    1.2.1
+
+[33mcommit a368047b80c86dafda9a35ab6ce9f82bc073943f[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Thu Sep 10 22:42:02 2015 -0700
+
+    chore(demo): Remove confusing superfluous property
+
+[33mcommit 199429cfbc1cc7e7a2471cb4e44c2315910fbe06[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Fri Sep 4 20:02:17 2015 -0700
+
+    chore(jspm): Added jspm details to package.json
+
+[33mcommit 051b16408646b7bbd4710a83f0b4311e37f01a5a[m
+Author: Leo Baschy <srguiwiz12@nrvr.com>
+Date:   Sat Mar 14 00:38:16 2015 -0700
+
+    Fix extraneous scrollbar
+    
+    In Chrome 39.0.2171.65 (64-bit) and Version 41.0.2272.89 m
+    sometimes in splitbars there is an artifact, which is a scrollbar
+    squished beyond recognition, which shouldn't be there.
+    
+    More often seen if adding CSS
+    
+    .ui-splitbar { border: thin solid grey; }
+    
+    This commit removes that scrollbar by overflow.
+    
+    Conflicts:
+    	src/ui-layout.css
+
+[33mcommit 06afdf9f6e1b965e61120a4ef51275a576090859[m
+Author: Aaron Roberson <aaronaroberson@gmail.com>
+Date:   Thu Sep 3 13:36:14 2015 -0700
+
+    fix(require): fix directory path in require
+    
+    The relative path to ui-layout.js was missing the forward slash to make it relative to the current directory. The Devils is in the details.
+
+[33mcommit 39ed18cc0fa46affdf8d961e0db72657fa311b06[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Wed Sep 2 20:04:42 2015 -0700
+
+    1.2.0
+
+[33mcommit dc90fc95d0263a8c1433097abed910fa23fa841a[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Wed Sep 2 13:44:39 2015 -0700
+
+    chore: remove console.log
+
+[33mcommit 72da419f0b40ea7d9630a61148191925e9a30daa[m
+Author: Jim Wright <jim@anow.com>
+Date:   Tue Sep 1 16:19:06 2015 -0600
+
+    fix #122 fix #69 deal with chevrons, remove bootstrap css dependency, namespace icons to anow
+
+[33mcommit 34189d73b1f834a503d8032c1e66a12b72dfece1[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Wed Sep 2 11:08:23 2015 -0700
+
+    chore(docs): update readme with browserify/webpack instructions
+
+[33mcommit 45eea6fb95b375372a36f2a5ce4e20854ce1b1f5[m
+Author: Aaron Roberson <aaronaroberson@gmail.com>
+Date:   Tue May 19 13:12:34 2015 -0700
+
+    refactor(package): Added support for commonjs
+
+[33mcommit 298ff5bfb03b41332a6220a223607b434e90ae58[m
+Author: Dan Quinn <dan@danquinndesign.com>
+Date:   Sun Aug 30 21:11:58 2015 -0700
+
+    Fixes #116 by collapsing sibling container when removing container from DOM
+
+[33mcommit 560b53d2412be86bdca057cdce068a48cb2d2931[m
+Author: Jim Wright <jim@anow.com>
+Date:   Sun Aug 30 19:44:52 2015 -0600
+
+    allowing element name for ui-layout-container
+
+[33mcommit 1439c4197d9b9af10c36525d2bf2bc6bfb26132a[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Sun Aug 30 16:27:44 2015 -0700
+
+    chore: added barebones spec file for uiLayoutController
+
+[33mcommit dbc835fb461e5eb6eed6168fa5af9bbefbef7db8[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Tue Aug 25 18:52:55 2015 -0700
+
+    chore(version bump): update version numbers
+
+[33mcommit 8749953bbdc0b94a732fcf0a5fb17b4cb78bd04b[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Tue Aug 25 18:31:29 2015 -0700
+
+    use requestAnimationFrame that is in bower registry, move to dev deps
+
+[33mcommit 648b7c862d04d776d67a4999f5971f45ab537040[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Tue Aug 25 15:34:03 2015 -0700
+
+    correct formatting in README
+
+[33mcommit 43dbb9ec4ec9a77b94b3e8c01454a0bacd6dfa15[m
+Author: Nischit Ranganath <nranganath@placester.com>
+Date:   Sat Jul 25 11:24:20 2015 -0400
+
+    Cleaning up listeners when scope is destroyed
+    
+    Conflicts:
+    	src/ui-layout.js
+
+[33mcommit 7072de0da821d375695776b1e465740f7385ed3e[m
+Author: Daniel Darabos <darabos.daniel@gmail.com>
+Date:   Sun Aug 23 15:55:18 2015 +0200
+
+    Add print rules.
+
+[33mcommit 24e4a54758868abbc79cb66dfe5c3f22ab70bd8c[m
+Author: ndudenhoeffer <ndudenhoeffer@gmail.com>
+Date:   Wed Jul 29 06:58:47 2015 -0500
+
+    feat(events): Broadcast events on resize and toggle
+    
+    Events are now broadcast on the ui-layout controller scope when on both resize and toggle.
+    closes #34
+
+[33mcommit 504d35d55554ece44884c5f658e00cadcf867c50[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Fri Aug 21 12:53:01 2015 -0700
+
+    chore: add TODO back after #86
+
+[33mcommit 4d1029e3254ceb5679a397ad6ec09da1c1458e51[m
+Author: SomeKittens <rkoutnik@gmail.com>
+Date:   Fri Aug 21 12:51:50 2015 -0700
+
+    chore(whitespace): Delete trailing whitespace
+
+[33mcommit f31f1e135f0e979cd09262db7dbeb6c09b16b06f[m
+Author: Mike Bender <bender@redcurrent.com>
+Date:   Fri Mar 6 15:07:30 2015 -0500
+
+    Fix(ng-if): resize based on ng-if elements getting added and removed.
+    
+    Previously, dynamically added/removed elements would not be recognized by the ui-layout system.  Allow for items to be added/removed from the system and resize as appropriate.
+    All unit tests pass.  Fix up js-hint.  Fix it up so that ng-if/ng-repeat can be used before or after other
+    elements.
+    
+    Fixes #84
+
+[33mcommit 2de7d4b380f7ed9450e274c9b6d6ff2827fcf2c3[m
+Merge: 0840ffb 84dea08
+Author: Remy Alain Ticona Carbajal <realtica@gmail.com>
+Date:   Tue Jan 6 16:21:33 2015 -0500
+
+    Merge pull request #77 from ebuildy/patch-1
+    
+    Fix uglify mangle error
+
+[33mcommit 84dea089100ab19bfdb5081873fd7e06078c3778[m
+Author: eBuildy <ebuildy@gmail.com>
+Date:   Fri Jan 2 19:56:05 2015 +0100
+
+    Fix uglify mangle error
+    
+    Not a big improvement ^^ But I think it can help lot of people who deploy code with uglify and mangle option set to true.
+
+[33mcommit 0840ffb1ac3af873896b858617d5b3d9c187763d[m
+Merge: 352bd3c 0d80fc9
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri Dec 19 17:40:51 2014 -0700
+
+    Merge pull request #74 from neilrees/master
+    
+    Update holy grail plunkr to use latest version of ui-layout
+
+[33mcommit 0d80fc96afc47ac19e6fa337ec047bbd5add8c1f[m
+Author: Neil Rees <neil@neilrees.net>
+Date:   Fri Dec 19 15:56:29 2014 +0000
+
+    Update holy grail plunkr to use latest version
+
+[33mcommit 352bd3c67f2cd5af2be4ab884b91903946409e99[m
+Merge: 56af39f f67ba39
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Sun Dec 7 23:52:54 2014 -0700
+
+    Merge pull request #68 from jbroquist/master
+    
+    refactor(~): tagging 1.0.5
+
+[33mcommit f67ba39b75cee812023473607352a436d0479703[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Sun Dec 7 23:51:28 2014 -0700
+
+    refactor(~): tagging 1.0.5
+
+[33mcommit 56af39f3ef708e167e8dccbd505dc8f8bc8ac664[m
+Merge: 129d241 1cac54a
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Sun Dec 7 23:42:28 2014 -0700
+
+    Merge pull request #67 from mindjuice/issue52-fix
+    
+    Take element offset into account when resizing
+
+[33mcommit 1cac54a7b36b0417e3c7caa5335adbdafe8d424c[m
+Author: mindjuice <kenc@Kens-MacBook-Pro-3.local>
+Date:   Wed Dec 3 11:05:22 2014 -0800
+
+    Take element offset into account when resizing
+    
+    Take the element offset and scroll position into account when dragging
+    a splitbar.  Fixes #52.
+
+[33mcommit 129d24185db02a68209c225cb33f712a17bd348e[m
+Merge: d0808d0 d670223
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Dec 3 12:23:49 2014 -0700
+
+    Merge pull request #64 from jbroquist/master
+    
+    fix(~): fix versioning to work with ui-publisher
+
+[33mcommit d6702234fc92ce5fad5a273c2c0a64bbed2dbbb1[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Dec 3 12:21:41 2014 -0700
+
+    fix(~): fix versioning to work with ui-publisher
+    
+    Add proper versioning to package.json and bower.json for release.
+
+[33mcommit d0808d0476d8fa6d5e208158b17a4d6406bfaa26[m
+Merge: b21dac6 0c78fb8
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Tue Dec 2 19:30:34 2014 -0700
+
+    Merge pull request #61 from jbroquist/minfix
+    
+    chore(ngmin): replace deprectated ngmin lib with ngannotate
+
+[33mcommit 0c78fb86e7416e9bb6c248879f59f54b0518e448[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Tue Dec 2 19:19:02 2014 -0700
+
+    chore(ngmin): replace deprectated ngmin lib with ngannotate
+    
+    Replace the deprecated ngmin library with ngAnnotate to ensure all constructor functions are properly annotated for distribution.
+    
+    Resolves #57, Closes #59
+
+[33mcommit b21dac6d02f41196e4326a3137fa1630bd3975bf[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Fri Nov 21 01:05:54 2014 +0100
+
+    chore(release): v 1.0.2
+    
+    Fix bower main files with angular-ui-publisher ~1.2.7
+
+[33mcommit e6084df36dfb7716337aa7e8234ebb358ae43ba6[m
+Merge: 47a1ac8 861d164
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Nov 19 21:13:28 2014 -0700
+
+    Merge pull request #26 from PeterDaveHello/patch-2
+    
+    make CI build faster
+
+[33mcommit 47a1ac834a3f79a71a36db7f3573e119e570fceb[m
+Merge: c86fe9b 96fcb00
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Nov 19 20:51:20 2014 -0700
+
+    Merge pull request #54 from jbroquist/master
+    
+    chore(~): fix bower main property
+
+[33mcommit 96fcb00a7b1f6efdc5730e4300e1bcbba75c66ff[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Nov 19 20:47:00 2014 -0700
+
+    chore(~): bump version to 1.0.1
+    
+    Change the version to 1.0.1.
+
+[33mcommit ffbb1f49ecd10988de47a34e045e74970a5e7d51[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Nov 19 20:40:26 2014 -0700
+
+    chore(~): fix bower main property
+    
+    Set the main property in the bower.json file automatically generated by the angular-ui publishing system to the proper path and values.
+    
+    Resolves #51
+
+[33mcommit c86fe9bb7546823db79a38179d79f1867cee1d9e[m
+Merge: 8bff5f7 a95b7ff
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Mon Nov 17 17:29:59 2014 -0700
+
+    Merge pull request #45 from jbroquist/v1-beta
+    
+    Version 1.0
+
+[33mcommit a95b7ff9225d21541b19353654184895046df3f0[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Mon Nov 17 17:20:28 2014 -0700
+
+    chore(~): bump version
+    
+    Change the version of the package.json and bower.json files to 1.0
+
+[33mcommit 564d6fa4a54435a251ef98e5619696171b7ce39d[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Tue Nov 11 08:06:40 2014 -0700
+
+    fix(uiLayout): remove event listeners from destroyed elements
+    
+    Removes the event listener for the window resize event when the element's scope is destroyed.
+
+[33mcommit b8c0a3e0cfbf22f409012d3e81b52db1ed4861cf[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Sun Nov 9 20:31:23 2014 -0700
+
+    docs(~): update readme browser requirements
+    
+    Update the requirements section to show that version 1.x does not currently support IE9.
+
+[33mcommit a31c3ed7c2c94fa30380511574415e06e9b645f9[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Sun Nov 9 19:26:33 2014 -0700
+
+    fix(uiLayout): resize layout on window resize
+    
+    This change will reset the size of the layout when a window resize occurs to ensure the layout fits within the new window constraints.
+    
+    Resolves #47
+
+[33mcommit 8d2c4c0772f1f7c7f723f2ef03b6dd820f332cbb[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Tue Nov 4 10:51:57 2014 -0700
+
+    fix(bower): change main property to improve integration with yeoman
+    
+    Improve integration with yeoman automated build process when the module is referenced directly from the github repo.
+
+[33mcommit f60dfaac0abe5ed3b9ef9abeda68374304186c19[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Oct 29 12:47:34 2014 -0700
+
+    fix(~): change bower main property to better integrate with yeoman and grunt
+    
+    This change allows for Yeoman/Grunt to properly include the ui-layout.css file when injecting dependencies into html files.
+    
+    Resolves #35, Resolves #36, Resolves #40
+
+[33mcommit 14efc49e24f628dcb616bfa7c7fe733d42ab3890[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri Oct 24 10:25:59 2014 -0700
+
+    Release cleanup
+
+[33mcommit 0379948c45e9779aa6f90483b38c290b4dee00e4[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Thu Oct 23 23:19:54 2014 -0700
+
+    Updated readme with new options
+
+[33mcommit 688debcb5221df6eef0a7fe09c4a6021a0b9ae3f[m
+Merge: 5e14649 eee7796
+Author: Jonathan Broquist <jbro@Jonathans-MacBook-Air.local>
+Date:   Thu Oct 23 22:49:56 2014 -0700
+
+    Merge branch 'master' of https://github.com/jbroquist/ui-layout
+
+[33mcommit 5e146499dc4ed414c362cee68d8fc36e92802555[m
+Author: Jonathan Broquist <jbro@Jonathans-MacBook-Air.local>
+Date:   Thu Oct 23 22:17:46 2014 -0700
+
+    Fixed linting errors
+
+[33mcommit eee7796c0bda6035fb2075f469c79ec455c01810[m
+Author: Jonathan Broquist <jbro@Jonathans-MacBook-Air.local>
+Date:   Thu Oct 23 22:17:46 2014 -0700
+
+    Added use strict statement
+
+[33mcommit cba0eda03285844eb1774f92a1c739382b11c96a[m
+Author: Jonathan Broquist <jbro@Jonathans-MacBook-Air.local>
+Date:   Thu Oct 23 21:49:16 2014 -0700
+
+    Added unit tests for container toggling
+
+[33mcommit f7208cc3be2e4e6cd221bffd809a9e3c5591cad1[m
+Author: Jonathan Broquist <jbro@Jonathans-MacBook-Air.local>
+Date:   Thu Oct 23 19:42:59 2014 -0700
+
+    Updated unit tests to work with current version
+
+[33mcommit d421053ebb7f4702f5279ba93146ec5134498232[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Oct 15 16:11:06 2014 -0700
+
+    Removed un-used container functions
+
+[33mcommit 768268ae7fa5c2ce7efd55eef292aa0e7726d249[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Oct 15 16:06:43 2014 -0700
+
+    Fixed collapsed spacing on last container. Hides buttons on previous/next splitbar when collapsed.
+
+[33mcommit 157c7155a97c16f29b9c20424adf562bf15a94c5[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Sun Oct 12 18:09:39 2014 -0700
+
+    Chevron direction now based on flow property. Fixed chevron alignment.
+
+[33mcommit 66c85fa8ebd122d8bf9c241fe46742a55c19d1e4[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Thu Oct 9 03:45:41 2014 -0700
+
+    Added the ability to toggle containers
+
+[33mcommit 41152715a59714f9aa5d59c2f141991b82247530[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Wed Sep 24 23:42:36 2014 -0700
+
+    Moving layout construction to Controller
+
+[33mcommit 8bff5f72d619d93e0c3219d3bfed37481a7ef386[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Sep 4 10:25:03 2014 +0200
+
+    Update README.md
+    
+    Closes #31
+
+[33mcommit 17998f1d4d2bc34696a944f7ebfb394f8e50fcea[m
+Merge: 3f7fb0a 0ad904d
+Author: Jonathan Broquist <jonathan@jbro.io>
+Date:   Wed Aug 27 15:38:08 2014 -0700
+
+    Merge pull request #28 from Axosoft/master
+    
+    Fix misspelled words
+
+[33mcommit 3f7fb0ad2213e626fb53f17eda2fa7553d53bc52[m
+Merge: 0b9bec8 f687233
+Author: Jonathan Broquist <jonathan@jbro.io>
+Date:   Wed Aug 27 15:30:59 2014 -0700
+
+    Merge pull request #25 from PeterDaveHello/patch-1
+    
+    Use svg instead of png to get better image quality
+
+[33mcommit 0ad904d3b3955eb82cd2056be5f0aea868f748a5[m
+Author: Max Korp <Maxkorp@8bytealchemy.com>
+Date:   Wed Aug 27 11:04:14 2014 -0700
+
+    add .editorconfig to make dealing with different tabbing easier
+
+[33mcommit fa74112bd502c7bf5d103f877d67c46e3ef2b5c0[m
+Author: Max Korp <Maxkorp@8bytealchemy.com>
+Date:   Wed Aug 27 09:53:10 2014 -0700
+
+    fix misspelled words
+
+[33mcommit 861d1642e7c403a78629561cebe681c2efffc06f[m
+Author: Peter Dave Hello <hsu@peterdavehello.org>
+Date:   Tue Aug 26 00:49:40 2014 +0800
+
+    make CI build faster
+
+[33mcommit f687233570a7cd0f7f71b6cdcc29a2d2d4382e24[m
+Author: Peter Dave Hello <hsu@peterdavehello.org>
+Date:   Tue Aug 26 00:49:22 2014 +0800
+
+    Use svg instead of png to get better image quality
+
+[33mcommit 0b9bec8aa4329d8afcf27a84dc9ee409331fdfc8[m
+Merge: 5ea4bee 7417223
+Author: Jonathan Broquist <jonathan@jbro.io>
+Date:   Mon Jul 14 11:47:27 2014 -0700
+
+    Merge pull request #20 from jbroquist/master
+    
+    Tagging 0.0.1
+
+[33mcommit 74172236a4576c5d59c5c728b7c009487db76838[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Mon Jul 14 11:41:45 2014 -0700
+
+    Tagging 0.0.1
+
+[33mcommit 5ea4beed045e97bedb6b930768f65fea455077ae[m
+Merge: c281bde 50ba428
+Author: Jonathan Broquist <jonathan@jbro.io>
+Date:   Sun Jul 13 18:46:14 2014 -0700
+
+    Merge pull request #19 from jbroquist/master
+    
+    Added size attribute to README
+
+[33mcommit 50ba4282a5b7e5aeb75730a9c0d6e6101b2ed944[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Sun Jul 13 18:42:54 2014 -0700
+
+    Added size attribute to README
+
+[33mcommit c281bdebb3cfb12a4dfdbfbab9e7d651d25618cc[m
+Merge: 32f95da 1742f9f
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Jul 8 01:53:37 2014 +0200
+
+    Merge pull request #18 from jbroquist/master
+    
+    Added min/max-size options
+
+[33mcommit 1742f9f2b60d7ad1ef064823f16be34c3a874113[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Sun May 25 05:28:40 2014 -0700
+
+    Added 'dividerSize' property to adjust the size of the divider without altering CSS
+
+[33mcommit 2dce9d439d130f6053a4d00d9fc563a633b5180b[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri May 23 20:39:05 2014 -0700
+
+    Updated readme with min/max-size usage
+
+[33mcommit 65e3ec670b26b1940aa617b6972a95096e26fada[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri May 23 19:59:15 2014 -0700
+
+    Fixed sizing issue when flow was set to 'row'
+
+[33mcommit f64d725771d8c3146f59c1a1f97449c1fe2d1448[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri May 23 19:27:24 2014 -0700
+
+    Ensures the splitbars can't overlap
+
+[33mcommit efde04c17c1edf475d80e53ab74302d7344e58f8[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri May 23 05:49:55 2014 -0700
+
+    Removed console logs
+
+[33mcommit bc4dc53c3a64cd5b70048b8d394088d51beba4b4[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri May 23 05:40:45 2014 -0700
+
+    Changed fixbar css back to original color
+
+[33mcommit 140d0a0ff72d6eb1f98f445ccc839c52d686cecd[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri May 23 05:30:35 2014 -0700
+
+    code cleanup
+
+[33mcommit 7e929995200ddcf1441e3234c255ac5270b21458[m
+Merge: 32f95da 079c226
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri May 23 05:19:52 2014 -0700
+
+    Merge branch 'minmax'
+    
+    Merging min/max-size options into master branch
+
+[33mcommit 079c22659ba89dd0711759d2485b6e9cc0fd4c5c[m
+Author: Jonathan Broquist <jonnybro@gmail.com>
+Date:   Fri May 23 05:06:38 2014 -0700
+
+    Added min/max size options
+
+[33mcommit 32f95da63b5ee7648a67ee4097acb592b5dc8edd[m
+Merge: 5777b28 849c997
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu May 15 16:24:07 2014 +0200
+
+    Merge pull request #16 from angular-ui/fix-touch-detection
+    
+    fix(touch): correct event property
+    
+    Closes #12
+
+[33mcommit 849c99725db2e622ebff62255dc9ba28ede40c45[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed May 14 19:27:59 2014 +0200
+
+    fix(touch): correct event property
+
+[33mcommit 5777b280a3d1b2abcbab6cb59990263cb1847ffd[m
+Merge: 9d9b892 86d8cdf
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu May 15 16:16:59 2014 +0200
+
+    Merge pull request #15 from angular-ui/refacto-tests
+    
+    Refacto(tests): To Da Max !
+
+[33mcommit 86d8cdf5391d9feb2ab0ea4125a6b3c2e4d03b8b[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu May 15 16:09:08 2014 +0200
+
+    fix(gulp): copy *.css files to the dist
+
+[33mcommit e40a27964e9bc80e62fe36db45fca1bd9c7a3612[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu May 15 16:06:33 2014 +0200
+
+    chore: README update
+
+[33mcommit 14783c18df886ada32b2b95f118a644e5608994b[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu May 15 16:05:31 2014 +0200
+
+    fix(gulp): no scss here
+    
+    Travis don't like it
+
+[33mcommit beb11ef15eb0689687065670e93c9bd848201758[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu May 15 12:56:38 2014 +0200
+
+    feat(test): add coverage info
+
+[33mcommit 1ee4bb6ac8ff4ff7fdb671f4436a300124e478d1[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu May 15 12:55:30 2014 +0200
+
+    chore(dep): add rAF polyfill bower dependency
+
+[33mcommit ab5e096a9187405c389f166182f11818e2a23b1a[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue May 13 16:52:30 2014 +0200
+
+    refacto(test): unit test update !
+
+[33mcommit 4b0c39db6880a85c45d4d97c98355bf8054fcd80[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu May 15 14:23:09 2014 +0200
+
+    refacto: gulp the thing
+
+[33mcommit 9d9b892d065376d3ead411369d6790345e188779[m
+Merge: 3bcd42e e27f82c
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Jan 9 04:23:20 2014 -0800
+
+    Merge pull request #9 from hamxiaoz/master
+    
+    Fix a typo in the referenced js file.
+
+[33mcommit e27f82c0d55965f04ee1cb5a9bb278240c819c02[m
+Author: Andrew Zheng <hamxiaoz@users.noreply.github.com>
+Date:   Wed Jan 8 09:15:00 2014 -0800
+
+    Fix typo
+
+[33mcommit 3bcd42e34e2392fe3955dd75f54a97f075c9f2b3[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Jan 2 17:09:44 2014 +0100
+
+    chore(demo): add an initial size demo
+
+[33mcommit 56527096bf817207eff75fda2a8ea0e7fcd5662b[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Jan 2 17:00:54 2014 +0100
+
+    chore(layout): enhance and test the initial split size
+    
+    We can now add a **size** attr to a area that can be described in pixels or percentage.
+    
+    Closes #5
+
+[33mcommit 9bcd3236de623110d2c1d221e14ca2021e97157c[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Jan 2 16:58:01 2014 +0100
+
+    fix(test): use default flow value
+
+[33mcommit 0b555225718f6507b5a5e0ceac6642219a0d506c[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Jan 2 16:56:50 2014 +0100
+
+    fix(demo): the east is at the right... sorry
+
+[33mcommit 5987d851f48cc8f3ad70ff7908bd028dd2e63b6a[m
+Author: Anonymous <anonymous>
+Date:   Thu Jan 2 10:06:41 2014 +0100
+
+    feat(layout): setting slip size option
+
+[33mcommit 43889b39c89d6b2a2d9c40d7209579424ebf933b[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Jan 1 21:37:36 2014 +0100
+
+    chore(README): describe flow option
+
+[33mcommit 5dcad807a63c83d7fb7570de199f542ade562c21[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Jan 1 20:20:50 2014 +0100
+
+    feat(travis): add github encoded deploy key
+
+[33mcommit 19bb4db8ddfe02abac7c744984e5a30002d28306[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Jan 1 20:16:17 2014 +0100
+
+    feat(travis): run Angular UI Publisher scripts
+
+[33mcommit 832936584db5016d09c6f4435132b9ff2bbe3b75[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Jan 1 20:14:01 2014 +0100
+
+    chore(README): correct testing commands
+
+[33mcommit 35f638aeb65d46f1a3ea856fde3d7a848a6bee45[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Jan 1 20:09:46 2014 +0100
+
+    chore(README): update README
+
+[33mcommit d18a7d1e4a11a13828b18362800541f3b914548a[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Jan 1 19:48:46 2014 +0100
+
+    feat(grunt): use Angular UI publisher
+
+[33mcommit a9e641dcb3bdb77a2f906c8499e962fbba186604[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Jan 1 19:16:01 2014 +0100
+
+    fix(layout): use clientX/Y coordinates
+    
+    pageX/Y are relative to the html element when clientX/Y are relative to the viewport.
+
+[33mcommit 55ad52596fc9fae81cd0a0f5b1a173437b3f0e5f[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 18:08:57 2013 +0100
+
+    feat(test): test not moving before startevent or after endevent
+
+[33mcommit 620e84774543717970894a13c8ddec0988c5abcf[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 17:58:52 2013 +0100
+
+    fix(test): get the original event when using jquery
+
+[33mcommit 9198b89e7b79dfc52d3591a40102fdda5eb58367[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 17:57:17 2013 +0100
+
+    feat(layout): add touch event support
+
+[33mcommit 161d88f479eb683a3bfad9b485dc3915113c9590[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 15:03:21 2013 +0100
+
+    fix(layout): replace event property name to `page*`
+    
+    use event.pageX and event.pageY
+    
+    Closes #8
+
+[33mcommit 383fed75672b5f71aca95beb39131295e3e32ae0[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 15:02:17 2013 +0100
+
+    feat(test): add initial e2e test
+
+[33mcommit 4aa8f73ebfc03dced0bcb6bd38c80949e716b536[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 14:21:24 2013 +0100
+
+    fix(test): with jQuery, .css(top/left) returns px instead of %
+
+[33mcommit 7e88f490599ea3afe1f258241e04f61e1d9300c7[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 13:43:17 2013 +0100
+
+    feat(test): Run tests with jQuery present
+    
+    Following #8
+
+[33mcommit 43490d99a4834beb450fb8278ebdc3cb78e9b5d2[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 11:58:05 2013 +0100
+
+    fix(test): mesure odd elements only
+    
+    the even elements are split bar here
+
+[33mcommit 396279560fb4061248747bfb6022a910f18083e5[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 11:57:24 2013 +0100
+
+    chore(test): remove the current element before append
+
+[33mcommit cbf3b97a2ec3e3b57d190aefd0b049913ad15f7e[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 11:56:42 2013 +0100
+
+    style(test): add comments and always remove the element
+
+[33mcommit a702ecf0ed61833db40bafd440ecf92b375c85c1[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 11:42:52 2013 +0100
+
+    chore(ui-layout): remove unnecessary predefined css position
+
+[33mcommit 952775f2f41cfd4354f8e52024244518312f9f85[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 11:35:01 2013 +0100
+
+    style(ui-layout): remove local scope and reorder code
+    
+    Describe the most important part first
+
+[33mcommit 1896da6fd6e372614f536987c9db1a6e9ea98823[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 11:33:20 2013 +0100
+
+    style(ui-layout): correct typo on comments
+
+[33mcommit c8845b4036ebe28b1130559034dfc67f59fc4c71[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 11:32:45 2013 +0100
+
+    style(jshint): add global strict
+
+[33mcommit 2fae0b13db08e6f03096ec7e9fabebb559c46dfd[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 11:26:51 2013 +0100
+
+    chore(grunt): update jshint rules
+
+[33mcommit 486d3ab77fa0f97611213cc22c394f40559b71aa[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 10:42:51 2013 +0100
+
+    chore(grunt): use ngmin to build the src files
+
+[33mcommit ebd294d578658bedb4077e241142b03530076258[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Dec 31 09:54:25 2013 +0100
+
+    chore(dep): update devDependencies
+
+[33mcommit 9ae0dd5e5b048ab1db3bedcc74f059da4e5f4a70[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Mon Dec 23 23:49:43 2013 +0100
+
+    chore(grunt):  use a jshint config file
+
+[33mcommit be4137abdc8d6202be2abc5e5b276cde5a5623c8[m
+Merge: dc5469f d7d5de4
+Author: Nate Abele <nate.abele@gmail.com>
+Date:   Wed Dec 4 13:54:50 2013 -0800
+
+    Merge pull request #6 from PascalPrecht/grunt-conventional-changelog
+    
+    chore(grunt): adds grunt-conventional-changelog plugin
+
+[33mcommit d7d5de4489aa9fa3869276e83c0042d73a908f34[m
+Author: Pascal Precht <pascal.precht@googlemail.com>
+Date:   Wed Dec 4 22:51:08 2013 +0100
+
+    chore(grunt): adds grunt-conventional-changelog plugin
+    
+    see http://github.com/btford/grunt-conventional-changelog
+
+[33mcommit dc5469f07ecf66a88fd13f2a44725f430349c4a2[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Nov 21 19:50:09 2013 +0100
+
+    force travis build
+
+[33mcommit 6e48a963980b374d2f949ccb72d76d5045b766a3[m
+Merge: 5334126 a2a6c68
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Nov 21 10:47:47 2013 -0800
+
+    Merge pull request #2 from douglasduteil/ft-project-root
+    
+    Initial proposal
+
+[33mcommit a2a6c681cbf015af21ac8a064cf946ead73a2cbf[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Nov 21 19:24:31 2013 +0100
+
+    chore(~):  add some tests
+
+[33mcommit f6c26f03bb6bdfdee7af9bd12994b398fb445237[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Nov 21 19:23:25 2013 +0100
+
+    style(layout):  linted and ctrl extracted
+
+[33mcommit 8b792bf44ac3738830a006f6e58461fabfed22fc[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Thu Nov 21 00:00:42 2013 +0100
+
+    chore(demo): update the demo
+
+[33mcommit 529839676b256765b8ba6ceb62ce7db3f616c14d[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Nov 20 23:58:12 2013 +0100
+
+    feat(layout): add element and attribute support.
+    
+    you can now create a layout like :
+    
+    ```html
+    <div ui-layout="{ flow : 'row' }"></div>
+    or
+    <ui-layout options="{ flow : 'row' }"></ui-layout>
+    ```
+
+[33mcommit 6da2196b1cd0b2cbf5c1b8825e27f3df0cc71d76[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Wed Nov 20 14:26:46 2013 +0100
+
+    style(layout): just jshint stuff.
+
+[33mcommit d7f79b3de4d173cc6377b21c3da3e1b2f27fe57a[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Nov 19 21:08:49 2013 +0100
+
+    chore(~): initial proposal.
+
+[33mcommit 53341269ea7e4356d19bf6d8b89750297fc6a724[m
+Author: Douglas Duteil <douglasduteil@gmail.com>
+Date:   Tue Nov 19 20:16:29 2013 +0100
+
+    chore(~): Initial commit to make the repo fork-able
