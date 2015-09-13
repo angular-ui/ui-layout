@@ -52,6 +52,7 @@ Once you have NPM installed you'll want to follow these simple steps:
  * Clone it to your local machine
  * Install global dev dependencies: `npm install -g gulp karma bower`
  * Install local dev dependencies: `npm install` while current directory is ui-layout
+ * Install bower dependencies: `bower install` while current directory is ui-layout
 
 ## Build 
 
