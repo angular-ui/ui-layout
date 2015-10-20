@@ -61,6 +61,13 @@ or
 <ui-layout options="{ flow : 'row' }"></ui-layout>
 ```
 
+If using a `layout-container` with `ng-repeat`, make sure to include a `track by` clause to the repeat, typically with $index:
+
+```xml
+<div ui-layout="{flow : 'column'}" class="maincontainer" >
+  <div ui-layout-container ng-repeat="item in items track by $index"></div>
+</div>
+```
 
 ## Options
 
