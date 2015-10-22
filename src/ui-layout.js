@@ -154,7 +154,7 @@ angular.module('ui.layout', [])
 
       //TODO: cache layout values
 
-      //Animate the page outside the eventA
+      //Animate the page outside the event
       animationFrameRequested = window.requestAnimationFrame(draw);
     };
 
