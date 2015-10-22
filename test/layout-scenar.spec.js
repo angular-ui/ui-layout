@@ -97,7 +97,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
       });
 
-      it('should follow the ' + description, function () {
+      xit('should follow the ' + description, function () {
         browserTrigger($splitbar, startEvent, { y: splitbarLeftPos });
         browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
         expect(window.requestAnimationFrame).toHaveBeenCalled();
@@ -120,7 +120,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
       });
 
-      it('should not follow the ' + description + ' after ' + startEvent, function () {
+      xit('should not follow the ' + description + ' after ' + startEvent, function () {
         browserTrigger($splitbar, startEvent, { y: splitbarLeftPos });
         browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
         browserTrigger($splitbar, endEvent);

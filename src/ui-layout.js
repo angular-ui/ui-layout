@@ -10,11 +10,12 @@ angular.module('ui.layout', [])
     var numOfSplitbars = 0;
     //var cache = {};
     var animationFrameRequested;
-    var lastPos;
 
     // regex to verify size is properly set to pixels or percent
     var sizePattern = /\d+\s*(px|%)\s*$/i;
 
+    ctrl.startPos = 0;
+    ctrl.lastPos = 0;
     ctrl.containers = [];
     ctrl.movingSplitbar = null;
     ctrl.bounds = $element[0].getBoundingClientRect();
@@ -60,7 +61,7 @@ angular.module('ui.layout', [])
 
           if(!beforeContainer.collapsed && !afterContainer.collapsed) {
             // calculate container positons
-            var difference = ctrl.movingSplitbar[position] - lastPos;
+            var difference = ctrl.movingSplitbar[position] - ctrl.lastPos;
             var newPosition = ctrl.movingSplitbar[position] - difference;
 
             // Keep the bar in the window (no left/top 100%)
@@ -72,9 +73,9 @@ angular.module('ui.layout', [])
 
             // Keep the bar from going past the next element min/max values
             if(afterContainer !== null &&
-               angular.isNumber(afterContainer.afterMinValue) &&
-               newPosition > (afterContainer.afterMinValue - dividerSize))
-                newPosition = afterContainer.afterMinValue - dividerSize;
+              angular.isNumber(afterContainer.afterMinValue) &&
+              newPosition > (afterContainer.afterMinValue - dividerSize))
+              newPosition = afterContainer.afterMinValue - dividerSize;
             if(afterContainer !== null && angular.isNumber(afterContainer.afterMaxValue) && newPosition < afterContainer.afterMaxValue) newPosition = afterContainer.afterMaxValue;
 
             // resize the before container
@@ -94,8 +95,8 @@ angular.module('ui.layout', [])
             // broadcast an event that resize happened (debounced to 50ms)
             if(debounceEvent) $timeout.cancel(debounceEvent);
             debounceEvent = $timeout(function() {
-                $scope.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
-                debounceEvent = null;
+              $scope.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
+              debounceEvent = null;
             }, 50);
           }
         }
@@ -141,10 +142,10 @@ angular.module('ui.layout', [])
 
     ctrl.mouseMoveHandler = function(mouseEvent) {
       var mousePos = mouseEvent[ctrl.sizeProperties.mouseProperty] ||
-        (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
+        (mouseEvent.originalEvent && mouseEvent.originalEvent.targetTouches ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0) || // jQuery present?
         (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0);
 
-      lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
+      ctrl.lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
 
       //Cancel previous rAF call
       if(animationFrameRequested) {
@@ -153,7 +154,7 @@ angular.module('ui.layout', [])
 
       //TODO: cache layout values
 
-      //Animate the page outside the event
+      //Animate the page outside the eventA
       animationFrameRequested = window.requestAnimationFrame(draw);
     };
 
@@ -569,8 +570,6 @@ angular.module('ui.layout', [])
   }])
 
   .directive('uiSplitbar', ['LayoutContainer', function(LayoutContainer) {
-    // Get all the page.
-    var htmlElement = angular.element(document.body.parentElement);
 
     return {
       restrict: 'EAC',
@@ -722,18 +721,47 @@ angular.module('ui.layout', [])
           ctrl.movingSplitbar = scope.splitbar;
           ctrl.processSplitbar(scope.splitbar);
 
+          if (e.originalEvent && e.originalEvent.changedTouches) {
+            // jQuery present
+            ctrl.startPos = e.originalEvent.changedTouches[0][ctrl.sizeProperties.mouseProperty];
+            ctrl.lastPos = ctrl.startPos;
+
+          } else if (e.changedTouches) {
+            ctrl.startPos = e.changedTouches[0][ctrl.sizeProperties.mouseProperty];
+            ctrl.lastPos = ctrl.startPos;
+          }
+
           e.preventDefault();
           e.stopPropagation();
 
-          htmlElement.on('mousemove touchmove', function(event) {
+          element.on('mousemove touchmove', function(event) {
             scope.$apply(angular.bind(ctrl, ctrl.mouseMoveHandler, event));
           });
           return false;
         });
 
-        htmlElement.on('mouseup touchend', function(event) {
+        element.on('mouseup touchend', function(event) {
           scope.$apply(angular.bind(ctrl, ctrl.mouseUpHandler, event));
-          htmlElement.off('mousemove touchmove');
+          element.off('mousemove touchmove');
+
+          if (event.type === "touchend") {
+            var touchMoveDistance = Math.abs(ctrl.lastPos - ctrl.startPos);
+
+            if (event.target.tagName === "A" &&
+              event.target.children.length === 1 &&
+              event.target.children[0].className.indexOf("glyphicon-chevron") !== -1 &&
+              touchMoveDistance < 5) {
+
+              event.target.click();
+
+            } else if (event.target.tagName === "SPAN" &&
+              event.target.className.indexOf("glyphicon-chevron") !== -1 &&
+              touchMoveDistance < 5) {
+
+              event.target.parentNode.click();
+            }
+          }
+          return false;
         });
 
         scope.$watch('splitbar.size', function(newValue) {
@@ -745,7 +773,7 @@ angular.module('ui.layout', [])
         });
 
         scope.$on('$destroy', function() {
-          htmlElement.off('mouseup touchend mousemove touchmove');
+          element.off('mouseup touchend mousemove touchmove');
         });
 
         //Add splitbar to layout container list
