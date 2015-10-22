@@ -570,6 +570,8 @@ angular.module('ui.layout', [])
   }])
 
   .directive('uiSplitbar', ['LayoutContainer', function(LayoutContainer) {
+    // Get all the page.
+    var htmlElement = angular.element(document.body.parentElement);
 
     return {
       restrict: 'EAC',
@@ -721,46 +723,58 @@ angular.module('ui.layout', [])
           ctrl.movingSplitbar = scope.splitbar;
           ctrl.processSplitbar(scope.splitbar);
 
-          if (e.originalEvent && e.originalEvent.changedTouches) {
-            // jQuery present
-            ctrl.startPos = e.originalEvent.changedTouches[0][ctrl.sizeProperties.mouseProperty];
-            ctrl.lastPos = ctrl.startPos;
-
-          } else if (e.changedTouches) {
-            ctrl.startPos = e.changedTouches[0][ctrl.sizeProperties.mouseProperty];
-            ctrl.lastPos = ctrl.startPos;
-          }
-
           e.preventDefault();
           e.stopPropagation();
 
-          element.on('mousemove touchmove', function(event) {
-            scope.$apply(angular.bind(ctrl, ctrl.mouseMoveHandler, event));
-          });
+          if (event.type === "touchstart") {
+            if (e.originalEvent && e.originalEvent.changedTouches) {
+              // jQuery present
+              ctrl.startPos = e.originalEvent.changedTouches[0][ctrl.sizeProperties.mouseProperty];
+              ctrl.lastPos = ctrl.startPos;
+
+            } else if (e.changedTouches) {
+              ctrl.startPos = e.changedTouches[0][ctrl.sizeProperties.mouseProperty];
+              ctrl.lastPos = ctrl.startPos;
+            }
+
+            element.on('touchmove', function (event) {
+              scope.$apply(angular.bind(ctrl, ctrl.mouseMoveHandler, event));
+            });
+
+          } else {
+            htmlElement.on('mousemove', function(event) {
+              scope.$apply(angular.bind(ctrl, ctrl.mouseMoveHandler, event));
+            });
+          }
+
           return false;
         });
 
-        element.on('mouseup touchend', function(event) {
+        htmlElement.on('mouseup', function(event) {
           scope.$apply(angular.bind(ctrl, ctrl.mouseUpHandler, event));
-          element.off('mousemove touchmove');
+          htmlElement.off('mousemove');
+        });
 
-          if (event.type === "touchend") {
-            var touchMoveDistance = Math.abs(ctrl.lastPos - ctrl.startPos);
+        element.on('touchend', function(event) {
+          scope.$apply(angular.bind(ctrl, ctrl.mouseUpHandler, event));
+          element.off('touchmove');
 
-            if (event.target.tagName === "A" &&
-              event.target.children.length === 1 &&
-              event.target.children[0].className.indexOf("glyphicon-chevron") !== -1 &&
-              touchMoveDistance < 5) {
+          var touchMoveDistance = Math.abs(ctrl.lastPos - ctrl.startPos);
 
-              event.target.click();
+          if (event.target.tagName === "A" &&
+            event.target.children.length === 1 &&
+            event.target.children[0].className.indexOf("glyphicon-chevron") !== -1 &&
+            touchMoveDistance < 5) {
 
-            } else if (event.target.tagName === "SPAN" &&
-              event.target.className.indexOf("glyphicon-chevron") !== -1 &&
-              touchMoveDistance < 5) {
+            event.target.click();
 
-              event.target.parentNode.click();
-            }
+          } else if (event.target.tagName === "SPAN" &&
+            event.target.className.indexOf("glyphicon-chevron") !== -1 &&
+            touchMoveDistance < 5) {
+
+            event.target.parentNode.click();
           }
+
           return false;
         });
 
@@ -773,7 +787,8 @@ angular.module('ui.layout', [])
         });
 
         scope.$on('$destroy', function() {
-          element.off('mouseup touchend mousemove touchmove');
+          htmlElement.off('mouseup mousemove');
+          element.off('touchend touchmove');
         });
 
         //Add splitbar to layout container list
