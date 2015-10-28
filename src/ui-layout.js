@@ -808,7 +808,7 @@ angular.module('ui.layout', [])
             if(!element.hasClass('ui-layout-container')) element.addClass('ui-layout-container');
 
             scope.$watch('collapsed', function (val, old) {
-              if (old !== undefined && val !== old) {
+              if (angular.isDefined(old) && val !== old) {
                 var index = scope.container.index;
                 var splitter = ctrl.containers[index + 1],
                   el,
