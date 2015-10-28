@@ -42,7 +42,7 @@ angular.module('ui.layout', [])
     opts.maxSizes = opts.maxSizes || [];
     opts.minSizes = opts.minSizes || [];
 
-    opts.dividerSize = opts.dividerSize === undefined ? 10 : opts.dividerSize; //default divider size set to 10
+    opts.dividerSize = opts.dividerSize || 10;
     opts.collapsed = opts.collapsed || [];
     ctrl.opts = opts;
 
@@ -811,23 +811,29 @@ angular.module('ui.layout', [])
               if (old !== undefined && val !== old) {
                 var index = scope.container.index;
                 var splitter = ctrl.containers[index + 1],
-                  el;
+                  el,
+                  beforeContainer,
+                  afterContainer;
 
                 if (splitter) {
                   el = splitter.element[0].children[0];
+                  beforeContainer = scope.container;
+                  afterContainer = ctrl.containers[index + 2];
+
                 } else {
                   splitter = ctrl.containers[index - 1];
                   el = splitter.element[0].children[1];
+                  beforeContainer = ctrl.containers[index - 2];
+                  afterContainer = scope.container;
                 }
 
 
                 $timeout(function(){
                   angular.element(el).trigger('click');
-                });
-
-                $timeout(function(){
-                  scope.$root.$broadcast('ui.layout.resize', scope.container, scope.container);
-                }, 100);
+                }).then(
+                  function(){
+                    scope.$root.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
+                  });
 
               }
             });
