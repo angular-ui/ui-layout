@@ -209,54 +209,92 @@ describe('toggle programmatically', function() {
 
   function compileDirective(before, after) {
     var template = '' +
-      '<div ui-layout="{flow: \'column\'}">' +
+      '<div ui-layout="{flow: \'column\'}" ui-layout-loaded>' +
       '  <div ui-layout-container data-collapsed="layout.beforeContainer" size="100px">One</div>' +
       '  <div ui-layout-container data-collapsed="layout.afterContainer" size="200px">Two</div>' +
       '</div>';
 
-    var layout = {
+    scope.layout = {
       beforeContainer: before,
       afterContainer: after
     };
 
     var elm = angular.element(template);
     angular.element(document.body).prepend(elm);
-    scope.layout = layout;
     $compile(elm)(scope);
     scope.$digest();
 
     return elm;
   }
 
-  it('should collapse open beforeContainer', function () {
+  it('should collapse open beforeContainer', function() {
     var elm = compileDirective(false, false);
 
     var divs = elm.find('div'),
-      containerOne = divs[0],
-      containerTwo = divs[2];
-    expect(containerOne.style.width).toEqual('100px');
-    expect(containerTwo.style.width).toEqual('200px');
+      beforeContainer = divs[0],
+      afterContainer = divs[2];
+    expect(beforeContainer.style.width).toEqual('100px');
+    expect(afterContainer.style.width).toEqual('200px');
 
-    elm.scope().layout.beforeContainer = true;
+    scope.layout.beforeContainer = true;
     scope.$apply();
     $timeout.flush();
 
-    expect(containerOne.style.width).toEqual('0px');
+    expect(beforeContainer.style.width).toEqual('0px');
   });
 
-  it('should open collapsed beforeContainer', function () {
+  it('should open collapsed beforeContainer', function() {
     var elm = compileDirective(true, false);
 
     var divs = elm.find('div'),
-      containerOne = divs[0],
-      containerTwo = divs[2];
-    expect(containerOne.style.width).toEqual('0px');
-    expect(containerTwo.style.width).toEqual('200px');
+      beforeContainer = divs[0],
+      afterContainer = divs[2];
+    expect(beforeContainer.style.width).toEqual('0px');
+    expect(afterContainer.style.width).toEqual('200px');
 
-    elm.scope().layout.beforeContainer = false;
+    scope.layout.beforeContainer = false;
     scope.$apply();
     $timeout.flush();
 
-    expect(containerOne.style.width).toEqual('100px');
+    expect(beforeContainer.style.width).toEqual('100px');
   });
+
+  it('should collapse open afterContainer', function() {
+    var elm = compileDirective(false, false);
+
+    var divs = elm.find('div'),
+      beforeContainer = divs[0],
+      afterContainer = divs[2];
+    expect(beforeContainer.style.width).toEqual('100px');
+    expect(afterContainer.style.width).toEqual('200px');
+
+    scope.layout.afterContainer = true;
+    scope.$apply();
+    $timeout.flush();
+
+    expect(afterContainer.style.width).toEqual('0px');
+  });
+
+  it('should open collapsed afterContainer', function() {
+    var elm = compileDirective(false, true);
+
+    var divs = elm.find('div'),
+      beforeContainer = divs[0],
+      afterContainer = divs[2];
+    expect(beforeContainer.style.width).toEqual('100px');
+    expect(afterContainer.style.width).toEqual('0px');
+
+    scope.layout.afterContainer = false;
+    scope.$apply();
+    $timeout.flush();
+
+    expect(afterContainer.style.width).toEqual('200px');
+  });
+
+  it('should broadcast ui.layout.loaded after all ui.layout directives have been loaded', function () {
+    spyOn(scope, '$broadcast');
+    var elm = compileDirective(false, false);
+    expect(scope.$broadcast).toHaveBeenCalledWith('ui.layout.loaded');
+  });
+
 });
