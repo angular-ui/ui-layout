@@ -293,7 +293,7 @@ describe('toggle programmatically', function() {
 
   it('should broadcast ui.layout.loaded after all ui.layout directives have been loaded', function () {
     spyOn(scope, '$broadcast');
-    var elm = compileDirective(false, false);
+    compileDirective(false, false);
     expect(scope.$broadcast).toHaveBeenCalledWith('ui.layout.loaded');
   });
 

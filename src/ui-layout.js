@@ -858,7 +858,7 @@ angular.module('ui.layout', [])
       link: function($scope){
         $scope.$broadcast('ui.layout.loaded');
       }
-    }
+    };
   })
 
   .factory('LayoutContainer', function() {
