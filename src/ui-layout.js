@@ -829,7 +829,7 @@ angular.module('ui.layout', [])
 
 
                 $timeout(function(){
-                  angular.element(el).trigger('click');
+                  angular.element(el).triggerHandler('click');
                 }).then(
                   function(){
                     scope.$root.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
