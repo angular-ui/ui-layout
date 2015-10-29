@@ -41,7 +41,8 @@ angular.module('ui.layout', [])
     opts.sizes = opts.sizes || [];
     opts.maxSizes = opts.maxSizes || [];
     opts.minSizes = opts.minSizes || [];
-    opts.dividerSize = opts.dividerSize || 10; //default divider size set to 10
+
+    opts.dividerSize = opts.dividerSize || 10;
     opts.collapsed = opts.collapsed || [];
     ctrl.opts = opts;
 
@@ -239,14 +240,14 @@ angular.module('ui.layout', [])
         for(i=0; i < ctrl.containers.length; i++) {
           if(!LayoutContainer.isSplitbar(ctrl.containers[i])) {
 
-            var child = ctrl.containers[i].element;
+            var container = ctrl.containers[i],
+              child = container.element;
             opts.maxSizes[i] = child.attr('max-size') || child.attr('data-max-size') || opts.maxSizes[i] || null;
             opts.minSizes[i] = child.attr('min-size') || child.attr('data-min-size') || opts.minSizes[i] || null;
-            opts.sizes[i] = child.attr('size') || child.attr('data-size') || opts.sizes[i] || 'auto';
-            //opts.collapsed[i] = child.attr('collapsed') || opts.collapsed[i] || false;
 
-
+            opts.sizes[i] = child.attr('size') || child.attr('data-size') || opts.sizes[i];
             opts.sizes[i] = optionValue(opts.sizes[i]) || 'auto';
+
             opts.minSizes[i] = optionValue(opts.minSizes[i]);
             opts.maxSizes[i] = optionValue(opts.maxSizes[i]);
 
@@ -304,10 +305,14 @@ angular.module('ui.layout', [])
             var newSize = (opts.sizes[i] === 'auto') ? autoSize : opts.sizes[i];
 
             c.size = (newSize !== null) ? newSize : autoSize;
+
           } else {
             c.size = dividerSize;
           }
-
+          if (c.collapsed) {
+            c.actualSize = c.size;
+            c.size = 0;
+          }
           usedSpace += c.size;
         }
       }
@@ -328,6 +333,7 @@ angular.module('ui.layout', [])
         numOfSplitbars++;
       }
 
+      container.index = index;
       ctrl.containers.splice(index, 0, container);
 
       ctrl.updateDisplay();
@@ -773,17 +779,20 @@ angular.module('ui.layout', [])
 
   }])
 
-  .directive('uiLayoutContainer', ['LayoutContainer', '$compile', function(LayoutContainer, $compile) {
+  .directive('uiLayoutContainer', ['LayoutContainer', '$compile', '$timeout', function(LayoutContainer, $compile, $timeout) {
     return {
       restrict: 'AE',
       require: '^uiLayout',
-      scope: {},
+      scope: {
+        collapsed: '='
+      },
 
       compile: function() {
         return {
           pre: function(scope, element, attrs, ctrl) {
             scope.container = LayoutContainer.Container();
             scope.container.element = element;
+            scope.container.collapsed = scope.collapsed;
 
             ctrl.addContainer(scope.container);
 
@@ -795,6 +804,26 @@ angular.module('ui.layout', [])
           post: function(scope, element, attrs, ctrl) {
             if(!element.hasClass('stretch')) element.addClass('stretch');
             if(!element.hasClass('ui-layout-container')) element.addClass('ui-layout-container');
+
+            scope.$watch('collapsed', function (val, old) {
+              if (angular.isDefined(old) && val !== old) {
+                var index = scope.container.index;
+                var splitter = ctrl.containers[index + 1],
+                  el;
+
+                if (splitter) {
+                  el = splitter.element[0].children[0];
+                } else {
+                  splitter = ctrl.containers[index - 1];
+                  el = splitter.element[0].children[1];
+                }
+                
+                $timeout(function(){
+                  angular.element(el).triggerHandler('click');
+                });
+
+              }
+            });
 
             scope.$watch('container.size', function(newValue) {
               element.css(ctrl.sizeProperties.sizeProperty, newValue + 'px');
@@ -821,6 +850,16 @@ angular.module('ui.layout', [])
       }
     };
   }])
+
+  .directive('uiLayoutLoaded', function() {
+    return {
+      restrict: 'A',
+      priority: -100,
+      link: function($scope){
+        $scope.$broadcast('ui.layout.loaded');
+      }
+    };
+  })
 
   .factory('LayoutContainer', function() {
     // Base container that can be locked and resized
