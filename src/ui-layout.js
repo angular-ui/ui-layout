@@ -245,15 +245,9 @@ angular.module('ui.layout', [])
             opts.maxSizes[i] = child.attr('max-size') || child.attr('data-max-size') || opts.maxSizes[i] || null;
             opts.minSizes[i] = child.attr('min-size') || child.attr('data-min-size') || opts.minSizes[i] || null;
 
-            if (container.collapsed) {
-              opts.sizes[i] = '0px';
-            } else {
-              opts.sizes[i] = child.attr('size') || child.attr('data-size') || opts.sizes[i] || 'auto';
-            }
-            //opts.collapsed[i] = child.attr('collapsed') || opts.collapsed[i] || false;
-
-
+            opts.sizes[i] = child.attr('size') || child.attr('data-size') || opts.sizes[i];
             opts.sizes[i] = optionValue(opts.sizes[i]) || 'auto';
+
             opts.minSizes[i] = optionValue(opts.minSizes[i]);
             opts.maxSizes[i] = optionValue(opts.maxSizes[i]);
 
@@ -311,10 +305,14 @@ angular.module('ui.layout', [])
             var newSize = (opts.sizes[i] === 'auto') ? autoSize : opts.sizes[i];
 
             c.size = (newSize !== null) ? newSize : autoSize;
+
           } else {
             c.size = dividerSize;
           }
-
+          if (c.collapsed) {
+            c.actualSize = c.size;
+            c.size = 0;
+          }
           usedSpace += c.size;
         }
       }

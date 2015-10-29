@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
 
-  <title></title>
+  <title>Angular UI Layout Demo 2</title>
 
   <!-- Le css -->
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css" />-->
   <link rel="stylesheet" type="text/css" href="../src/ui-layout.css"/>
 
   <!-- Le javascript -->
@@ -19,7 +19,26 @@
     app.controller('DemoController', function($scope) {
       $scope.config = {
         flow: 'column'
+      };
+
+      $scope.layout = {
+        one: true,
+        four: false
+      };
+
+      $scope.toggle = function(which) {
+        $scope.layout[which] = !$scope.layout[which];
+      };
+
+      $scope.close = function(which) {
+        $scope.layout[which] = true;
+      };
+
+      $scope.open = function(which) {
+        $scope.layout[which] = false;
       }
+
+
     });
 
   </script>
@@ -40,24 +59,38 @@
 </head>
 <body ng-controller="DemoController">
   <div ui-layout="config">
-    <div ui-layout-container max-size="50%">
+    <div ui-layout-container size="100px" max-size="50%" collapsed="layout.one">
       One
       <br/>
       <button ng-click="updateDisplay()">Update Display</button>
     </div>
-    <div ui-layout-container>Two</div>
+    <div ui-layout-container>Two
+      <p>
+      <button ng-click="toggle('one')">Toggle One</button></br>
+      <button ng-click="close('one')">Close One</button></br>
+      <button ng-click="open('one')">Open One</button></br>
+      </p>
+
+      <p>
+        <button ng-click="toggle('four')">Toggle Four</button></br>
+        <button ng-click="close('four')">Close Four</button></br>
+        <button ng-click="open('four')">Open Four</button></br>
+      </p>
+    </div>
     <div ui-layout-container>
       <!--Three-->
       <div ui-layout="{ flow:'row', dividerSize:'12' }">
-        <div ui-layout-container>Three</div>
+        <div ui-layout-container>Three-One</div>
         <div ui-layout-container>
+          Three-Two
           <div ng-include="demo/testinclude.html"></div>
         </div>
       </div>
     </div>
-    <div ui-layout-container>
+    <div ui-layout-container collapsed="layout.four">
       Four
     </div>
   </div>
+
 </body>
 </html>

@@ -192,3 +192,71 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
   });
 }
+
+describe('toggle programmatically', function() {
+  var scope, $controller, $compile, $timeout;
+  beforeEach(function () {
+
+    module('ui.layout');
+
+    inject(function ($rootScope, _$controller_, _$compile_, _$timeout_) {
+      scope = $rootScope.$new();
+      $controller = _$controller_;
+      $compile = _$compile_;
+      $timeout = _$timeout_;
+    });
+  });
+
+  function compileDirective(before, after) {
+    var template = '' +
+      '<div ui-layout="{flow: \'column\'}">' +
+      '  <div ui-layout-container data-collapsed="layout.beforeContainer" size="100px">One</div>' +
+      '  <div ui-layout-container data-collapsed="layout.afterContainer" size="200px">Two</div>' +
+      '</div>';
+
+    var layout = {
+      beforeContainer: before,
+      afterContainer: after
+    };
+
+    var elm = angular.element(template);
+    angular.element(document.body).prepend(elm);
+    scope.layout = layout;
+    $compile(elm)(scope);
+    scope.$digest();
+
+    return elm;
+  }
+
+  it('should collapse open beforeContainer', function () {
+    var elm = compileDirective(false, false);
+
+    var divs = elm.find('div'),
+      containerOne = divs[0],
+      containerTwo = divs[2];
+    expect(containerOne.style.width).toEqual('100px');
+    expect(containerTwo.style.width).toEqual('200px');
+
+    elm.scope().layout.beforeContainer = true;
+    scope.$apply();
+    $timeout.flush();
+
+    expect(containerOne.style.width).toEqual('0px');
+  });
+
+  it('should open collapsed beforeContainer', function () {
+    var elm = compileDirective(true, false);
+
+    var divs = elm.find('div'),
+      containerOne = divs[0],
+      containerTwo = divs[2];
+    expect(containerOne.style.width).toEqual('0px');
+    expect(containerTwo.style.width).toEqual('200px');
+
+    elm.scope().layout.beforeContainer = false;
+    scope.$apply();
+    $timeout.flush();
+
+    expect(containerOne.style.width).toEqual('100px');
+  });
+});
