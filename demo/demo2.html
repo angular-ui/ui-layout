@@ -16,13 +16,13 @@
   <script type="application/javascript">
 
     var app = angular.module('x', ['ui.layout']);
-    app.controller('DemoController', function($scope) {
+    app.controller('DemoController', function($scope, $timeout) {
       $scope.config = {
         flow: 'column'
       };
 
       $scope.layout = {
-        one: true,
+        one: false,
         four: false
       };
 
@@ -38,7 +38,11 @@
         $scope.layout[which] = false;
       }
 
-
+      $scope.$on('ui.layout.loaded', function(){
+        $timeout(function(){
+          $scope.layout.one = true;
+        });
+      })
     });
 
   </script>
@@ -57,8 +61,8 @@
     }
   </style>
 </head>
-<body ng-controller="DemoController">
-  <div ui-layout="config">
+<body ng-controller="DemoController" >
+  <div ui-layout="config" ui-layout-loaded>
     <div ui-layout-container size="100px" max-size="50%" collapsed="layout.one">
       One
       <br/>

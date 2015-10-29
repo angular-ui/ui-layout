@@ -862,6 +862,16 @@ angular.module('ui.layout', [])
     };
   }])
 
+  .directive('uiLayoutLoaded', function() {
+    return {
+      restrict: 'A',
+      priority: -100,
+      link: function($scope){
+        $scope.$broadcast('ui.layout.loaded');
+      }
+    }
+  })
+
   .factory('LayoutContainer', function() {
     // Base container that can be locked and resized
     function BaseContainer() {
