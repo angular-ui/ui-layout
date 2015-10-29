@@ -811,29 +811,18 @@ angular.module('ui.layout', [])
               if (angular.isDefined(old) && val !== old) {
                 var index = scope.container.index;
                 var splitter = ctrl.containers[index + 1],
-                  el,
-                  beforeContainer,
-                  afterContainer;
+                  el;
 
                 if (splitter) {
                   el = splitter.element[0].children[0];
-                  beforeContainer = scope.container;
-                  afterContainer = ctrl.containers[index + 2];
-
                 } else {
                   splitter = ctrl.containers[index - 1];
                   el = splitter.element[0].children[1];
-                  beforeContainer = ctrl.containers[index - 2];
-                  afterContainer = scope.container;
                 }
-
-
+                
                 $timeout(function(){
                   angular.element(el).triggerHandler('click');
-                }).then(
-                  function(){
-                    scope.$root.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
-                  });
+                });
 
               }
             });
