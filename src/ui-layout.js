@@ -41,7 +41,7 @@ angular.module('ui.layout', [])
     opts.sizes = opts.sizes || [];
     opts.maxSizes = opts.maxSizes || [];
     opts.minSizes = opts.minSizes || [];
-    opts.dividerSize = opts.dividerSize || 10; //default divider size set to 10
+    opts.dividerSize = opts.dividerSize === undefined ? 10 : opts.dividerSize;
     opts.collapsed = opts.collapsed || [];
     ctrl.opts = opts;
 

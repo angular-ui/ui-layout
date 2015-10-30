@@ -84,7 +84,7 @@ A fake [flex-direction property](http://www.w3.org/TR/css3-flexbox/#flex-directi
 Type: `Integer`
 Default: `10`
 
-The size in pixels that you want the divider/splitbar to be.
+The size in pixels that you want the divider/splitbar to be. Set to `0` to hide the splitbar, which in turn prevents user resizing the surrounding containers.
 
 ### disableToggle
 
