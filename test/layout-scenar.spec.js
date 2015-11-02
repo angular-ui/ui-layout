@@ -192,3 +192,94 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
   });
 }
+
+describe('toggle programmatically', function() {
+  var scope, $controller, $compile, $timeout;
+  beforeEach(function () {
+
+    module('ui.layout');
+
+    inject(function ($rootScope, _$controller_, _$compile_, _$timeout_) {
+      scope = $rootScope.$new();
+      $controller = _$controller_;
+      $compile = _$compile_;
+      $timeout = _$timeout_;
+    });
+  });
+
+  function compileDirective(before, after, tpl) {
+    var template = tpl || '' +
+      '<div ui-layout="{flow: \'column\'}" ui-layout-loaded>' +
+      '  <div ui-layout-container data-collapsed="layout.beforeContainer" size="100px">One</div>' +
+      '  <div ui-layout-container data-collapsed="layout.afterContainer" size="200px">Two</div>' +
+      '</div>';
+
+    scope.layout = {
+      beforeContainer: before,
+      afterContainer: after
+    };
+
+    var elm = angular.element(template);
+    angular.element(document.body).prepend(elm);
+    $compile(elm)(scope);
+    scope.$digest();
+
+    return elm;
+  }
+
+
+  it('should reset container to uncollapsed state when loaded', function() {
+    //@see explanation for uiLayoutLoaded
+    var elm = compileDirective(true, true);
+
+    var divs = elm.find('div'),
+      beforeContainer = divs[0],
+      afterContainer = divs[2];
+    expect(beforeContainer.style.width).toEqual('100px');
+    expect(afterContainer.style.width).toEqual('200px');
+  });
+
+  it('should collapse and uncollapse beforeContainer', function() {
+    var elm = compileDirective(false, false);
+
+    var divs = elm.find('div'),
+      beforeContainer = divs[0],
+      afterContainer = divs[2];
+    expect(beforeContainer.style.width).toEqual('100px');
+    expect(afterContainer.style.width).toEqual('200px');
+
+    scope.layout.beforeContainer = true;
+    scope.$apply();
+    $timeout.flush();
+
+    expect(beforeContainer.style.width).toEqual('0px');
+
+    scope.layout.beforeContainer = false;
+    scope.$apply();
+    $timeout.flush();
+
+    expect(beforeContainer.style.width).toEqual('100px');
+  });
+
+  it('should collapse and uncollapse afterContainer', function() {
+    var elm = compileDirective(false, false);
+
+    var divs = elm.find('div'),
+      beforeContainer = divs[0],
+      afterContainer = divs[2];
+    expect(beforeContainer.style.width).toEqual('100px');
+    expect(afterContainer.style.width).toEqual('200px');
+
+    scope.layout.afterContainer = true;
+    scope.$apply();
+    $timeout.flush();
+
+    expect(afterContainer.style.width).toEqual('0px');
+
+    scope.layout.afterContainer = false;
+    scope.$apply();
+    $timeout.flush();
+
+    expect(afterContainer.style.width).toEqual('200px');
+  });
+});
