@@ -928,6 +928,11 @@ angular.module('ui.layout', [])
 
                 scope.$watch('container.size', function(newValue) {
                   element.css(ctrl.sizeProperties.sizeProperty, newValue + 'px');
+                  if(newValue === 0) {
+                    element.addClass('ui-layout-hidden');
+                  } else {
+                    element.removeClass('ui-layout-hidden');
+                  }
                 });
 
                 scope.$watch('container.' + ctrl.sizeProperties.flowProperty, function(newValue) {

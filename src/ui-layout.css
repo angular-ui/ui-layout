@@ -152,3 +152,8 @@
     overflow: visible;
   }
 }
+
+/* Make sure hidden elements are in fact not rendered. */
+.ui-layout-hidden {
+  display: none;
+}
