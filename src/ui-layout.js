@@ -268,7 +268,7 @@ angular.module('ui.layout', [])
             opts.minSizes[i] = optionValue(c.minSize);
             opts.maxSizes[i] = optionValue(c.maxSize);
 
-            if(opts.sizes[i] != 'auto') {
+            if(opts.sizes[i] !== 'auto') {
               if(ctrl.isPercent(opts.sizes[i])) {
                 opts.sizes[i] = ctrl.convertToPixels(opts.sizes[i], originalSize);
               } else {
@@ -276,7 +276,7 @@ angular.module('ui.layout', [])
               }
             }
 
-            if(opts.minSizes[i] != null) {
+            if(opts.minSizes[i] !== null) {
               if(ctrl.isPercent(opts.minSizes[i])) {
                 opts.minSizes[i] = ctrl.convertToPixels(opts.minSizes[i], originalSize);
               } else {
@@ -287,7 +287,7 @@ angular.module('ui.layout', [])
               if(!c.collapsed && opts.sizes[i] < opts.minSizes[i]) opts.sizes[i] = opts.minSizes[i];
             }
 
-            if(opts.maxSizes[i] != null) {
+            if(opts.maxSizes[i] !== null) {
               if(ctrl.isPercent(opts.maxSizes[i])) {
                 opts.maxSizes[i] = ctrl.convertToPixels(opts.maxSizes[i], originalSize);
               } else {
@@ -306,8 +306,14 @@ angular.module('ui.layout', [])
           }
         }
 
+        // FIXME: autoSize if frequently Infinity, since numOfAutoContainers is frequently 0, no need to calculate that
         // set the sizing for the ctrl.containers
-        var autoSize = Math.floor(availableSize / numOfAutoContainers);
+        /*
+         * When the parent size is odd, rounding down the `autoSize` leaves a remainder.
+         * This remainder is added to the last auto-sized container in a layout.
+         */
+        var autoSize = Math.floor(availableSize / numOfAutoContainers),
+          remainder = availableSize - autoSize * numOfAutoContainers;
         for(i=0; i < ctrl.containers.length; i++) {
           c = ctrl.containers[i];
           c[ctrl.sizeProperties.flowProperty] = usedSpace;
@@ -317,7 +323,16 @@ angular.module('ui.layout', [])
           //TODO: adjust size if autosize is greater than the maxSize
 
           if(!LayoutContainer.isSplitbar(c)) {
-            var newSize = (opts.sizes[i] === 'auto') ? autoSize : opts.sizes[i];
+            var newSize;
+            if(opts.sizes[i] === 'auto') {
+              newSize = autoSize;
+              // add the rounding down remainder to the last auto-sized container in the layout
+              if (remainder > 0 && i === ctrl.containers.length - 1) {
+                newSize += remainder;
+              }
+            } else {
+              newSize = opts.sizes[i];
+            }
 
             c.size = (newSize !== null) ? newSize : autoSize;
           } else {
@@ -500,8 +515,12 @@ angular.module('ui.layout', [])
           // to offset the lost space when converting from percents to pixels
           endDiff = (isLastContainer) ? ctrl.bounds[sizeProperty] - c[flowProperty] - c.uncollapsedSize : 0;
 
-          if(prevSplitbar) prevSplitbar[flowProperty] += (c.uncollapsedSize + endDiff);
-          if(prevContainer) prevContainer.size += (c.uncollapsedSize + endDiff);
+          if(prevSplitbar) {
+            prevSplitbar[flowProperty] += (c.uncollapsedSize + endDiff);
+          }
+          if(prevContainer) {
+            prevContainer.size += (c.uncollapsedSize + endDiff);
+          }
 
         } else {
           c.size = c.uncollapsedSize;
@@ -510,8 +529,12 @@ angular.module('ui.layout', [])
           // to offset the additional space added when collapsing
           endDiff = (isLastContainer) ? ctrl.bounds[sizeProperty] - c[flowProperty] - c.uncollapsedSize : 0;
 
-          if(prevSplitbar) prevSplitbar[flowProperty] -= (c.uncollapsedSize + endDiff);
-          if(prevContainer) prevContainer.size -= (c.uncollapsedSize + endDiff);
+          if(prevSplitbar) {
+            prevSplitbar[flowProperty] -= (c.uncollapsedSize + endDiff);
+          }
+          if(prevContainer) {
+            prevContainer.size -= (c.uncollapsedSize + endDiff);
+          }
         }
       });
       $scope.$broadcast('ui.layout.toggle', c);
