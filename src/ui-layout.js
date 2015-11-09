@@ -810,7 +810,8 @@ angular.module('ui.layout', [])
             var parent = element.parent();
             var children = parent.children();
             var index = ctrl.indexOfElement(element);
-            var splitbar = angular.element('<div ui-splitbar><a ng-show="!hideprev"><span class="ui-splitbar-icon"></span></a><a ng-show="!hideafter"><span class="ui-splitbar-icon"></span></a></div>');
+            var splitbar = angular.element('<div ui-splitbar><a ng-show="!hideprev"><span class="ui-splitbar-icon"></span></a>
+                                            <a ng-show="!hideafter"><span class="ui-splitbar-icon"></span></a></div>');
             if(0 < index && !ctrl.hasSplitbarBefore(scope.container)) {
               angular.element(children[index-1]).after(splitbar);
               $compile(splitbar)(scope);
