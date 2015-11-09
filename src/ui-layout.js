@@ -784,8 +784,8 @@ angular.module('ui.layout', [])
           pre: function(scope, element, attrs, ctrl) {
             scope.container = LayoutContainer.Container();
             scope.container.element = element;
-            scope.hideprev = element.attr("hideprev") !== undefined
-            scope.hideafter = element.attr("hideafter") !== undefined
+            scope.hideprev = element.attr("hideprev") !== undefined;
+            scope.hideafter = element.attr("hideafter") !== undefined;
 
             ctrl.addContainer(scope.container);
 
