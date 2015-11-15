@@ -784,6 +784,9 @@ angular.module('ui.layout', [])
           pre: function(scope, element, attrs, ctrl) {
             scope.container = LayoutContainer.Container();
             scope.container.element = element;
+            var splitbarOpts = angular.extend({}, scope.$eval(attrs.splitbar));
+            scope.prevButton = splitbarOpts && splitbarOpts.prevButton !== undefined ? splitbarOpts.prevButton : true;
+            scope.nextButton = splitbarOpts && splitbarOpts.nextButton !== undefined ? splitbarOpts.nextButton : true;
 
             ctrl.addContainer(scope.container);
 
@@ -795,6 +798,7 @@ angular.module('ui.layout', [])
           post: function(scope, element, attrs, ctrl) {
             if(!element.hasClass('stretch')) element.addClass('stretch');
             if(!element.hasClass('ui-layout-container')) element.addClass('ui-layout-container');
+
 
             scope.$watch('container.size', function(newValue) {
               element.css(ctrl.sizeProperties.sizeProperty, newValue + 'px');
@@ -808,7 +812,9 @@ angular.module('ui.layout', [])
             var parent = element.parent();
             var children = parent.children();
             var index = ctrl.indexOfElement(element);
-            var splitbar = angular.element('<div ui-splitbar><a><span class="ui-splitbar-icon"></span></a><a><span class="ui-splitbar-icon"></span></a></div>');
+            var splitbar = angular.element('<div ui-splitbar><a ng-show="prevButton"><span class="ui-splitbar-icon"></span></a>'
+                                            + '<a ng-show="nextButton"><span class="ui-splitbar-icon"></span></a></div>');
+
             if(0 < index && !ctrl.hasSplitbarBefore(scope.container)) {
               angular.element(children[index-1]).after(splitbar);
               $compile(splitbar)(scope);
