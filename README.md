@@ -167,6 +167,21 @@ percentage
 </div>
 ```
 
+### splitbar
+
+Type: `Ojbect`
+
+A Javascript object to control the display or previous button and next button.
+
+`prevButton`: Boolean (Default: true).
+`nextButton`: Boolean (Deafutl: true).
+
+
+```
+<div ui-layout-container splitbar="{prevButton: false, nextButton: false}"></div>
+
+```
+
 ## Events
 
 Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container. 
