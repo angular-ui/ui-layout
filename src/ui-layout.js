@@ -124,6 +124,12 @@ angular.module('ui.layout', [])
               afterContainer.uncollapsedSize = afterContainer.size;
             }
 
+            // store the current value in local storage to preserve size also when reloading the window
+            if($window.localStorage !== undefined) {
+              $window.localStorage.setItem(beforeContainer.storageId, beforeContainer.uncollapsedSize + 'px');
+              $window.localStorage.setItem(afterContainer.storageId, afterContainer.uncollapsedSize + 'px');
+            }
+
             // move the splitbar
             ctrl.movingSplitbar[position] = newPosition;
 
@@ -871,8 +877,8 @@ angular.module('ui.layout', [])
   }])
 
   .directive('uiLayoutContainer',
-    ['LayoutContainer', '$compile', '$timeout', 'Layout',
-      function(LayoutContainer, $compile, $timeout, Layout) {
+    ['LayoutContainer', '$compile', '$timeout', '$window', 'Layout',
+      function(LayoutContainer, $compile, $timeout, $window, Layout) {
         return {
           restrict: 'AE',
           require: '^uiLayout',
@@ -892,6 +898,7 @@ angular.module('ui.layout', [])
                 scope.container.element = element;
                 scope.container.id = element.attr('id') || null;
                 scope.container.layoutId = ctrl.id;
+                scope.container.storageId = ctrl.id + ':' + Array.prototype.indexOf.call(element.parent()[0].children, element[0]);
                 scope.container.isCentral = attrs.uiLayoutContainer === 'central';
 
                 if(scope.collapsed === true) {
@@ -907,7 +914,16 @@ angular.module('ui.layout', [])
                   scope.container.resizable = scope.resizable;
                 }
                 scope.container.size = scope.size;
-                scope.container.uncollapsedSize = scope.size;
+
+                // load uncollapsedSize from local storage if available:
+                scope.container.uncollapsedSize = null;
+                if($window.localStorage !== undefined) {
+                  scope.container.uncollapsedSize = $window.localStorage.getItem(scope.container.storageId);
+                }
+                if(scope.container.uncollapsedSize === null) {
+                  scope.container.uncollapsedSize = scope.size;
+                }
+
                 scope.container.minSize = scope.minSize;
                 scope.container.maxSize = scope.maxSize;
                 ctrl.addContainer(scope.container);
