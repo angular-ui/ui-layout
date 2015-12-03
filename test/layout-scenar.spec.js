@@ -8,7 +8,7 @@ splitMoveTests('mouse', 'mousedown', 'mousemove', 'mouseup');
 // Wrapper to abstract over using touch events or mouse events.
 function splitMoveTests(description, startEvent, moveEvent, endEvent) {
   return describe('Directive: uiLayout with ' + description + ' events', function () {
-    var element, scope, compile, $timeout,
+    var element, scope, compile, $timeout, $window,
       validTemplate = '<div ui-layout><header ui-layout-container></header><footer ui-layout-container></footer></div>',
       defaultDividerSize = 10;
 
@@ -29,11 +29,17 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
       module('ui.layout');
 
-      inject(function ($rootScope, $compile, _$timeout_) {
+      inject(function ($rootScope, $compile, _$timeout_, _$window_) {
         scope = $rootScope.$new();
         compile = $compile;
         $timeout = _$timeout_;
+        $window = _$window_;
       });
+    });
+
+    beforeEach(function() {
+      // clear local storage:
+      $window.localStorage.clear();
     });
 
     afterEach(function () {
