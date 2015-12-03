@@ -7,7 +7,7 @@ splitMoveTests('mouse', 'mousedown', 'mousemove', 'mouseup');
 
 // Wrapper to abstract over using touch events or mouse events.
 function splitMoveTests(description, startEvent, moveEvent, endEvent) {
-  return describe('Directive: uiLayout with ' + description + ' events', function () {
+  return describe('Directive: uiLayout with ' + description + ' events', function() {
     var element, scope, compile, $timeout, $window,
       validTemplate = '<div ui-layout><header ui-layout-container></header><footer ui-layout-container></footer></div>',
       defaultDividerSize = 10;
@@ -25,11 +25,11 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
       return elm;
     }
 
-    beforeEach(function () {
+    beforeEach(function() {
 
       module('ui.layout');
 
-      inject(function ($rootScope, $compile, _$timeout_, _$window_) {
+      inject(function($rootScope, $compile, _$timeout_, _$window_) {
         scope = $rootScope.$new();
         compile = $compile;
         $timeout = _$timeout_;
@@ -39,38 +39,40 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
     beforeEach(function() {
       // clear local storage:
-      $window.localStorage.clear();
+      if($window.localStorage !== undefined) {
+        $window.localStorage.clear();
+      }
     });
 
-    afterEach(function () {
-      if (element) element.remove();
+    afterEach(function() {
+      if(element) element.remove();
     });
 
-    describe('require', function () {
-      it('requestAnimationFrame', function () {
+    describe('require', function() {
+      it('requestAnimationFrame', function() {
         expect(window.requestAnimationFrame).toBeDefined();
       });
-      it('cancelAnimationFrame', function () {
+      it('cancelAnimationFrame', function() {
         expect(window.cancelAnimationFrame).toBeDefined();
       });
     });
 
     // Spy on the requestAnimationFrame to directly trigger it
-    beforeEach(function () {
-      spyOn(window, 'requestAnimationFrame').and.callFake(function (fct) {
+    beforeEach(function() {
+      spyOn(window, 'requestAnimationFrame').and.callFake(function(fct) {
         fct();
       });
     });
 
-    afterEach(function () {
-      if (element) element.remove();
+    afterEach(function() {
+      if(element) element.remove();
     });
 
-    describe('the slider', function () {
+    describe('the slider', function() {
 
       var element_bb, leftContainer, $splitbar, splitbar_bb, splitbarLeftPos;
 
-      beforeEach(function () {
+      beforeEach(function() {
         element = createDirective();
 
         element_bb = element[0].getBoundingClientRect();
@@ -81,7 +83,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         splitbarLeftPos = Math.ceil(splitbar_bb.left);
       });
 
-      it('should do nothing when clicking on it', function () {
+      it('should do nothing when clicking on it', function() {
 
         // Click on the splitbar left
         browserTrigger($splitbar, startEvent, { x: splitbarLeftPos });
@@ -93,7 +95,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
-      it('should do nothing when moving around it', function () {
+      it('should do nothing when moving around it', function() {
 
         // Click on the splitbar left
         browserTrigger($splitbar, moveEvent, { x: splitbarLeftPos });
@@ -105,9 +107,9 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
-      it('should follow the ' + description, function () {
+      it('should follow the ' + description, function() {
         browserTrigger($splitbar, startEvent, { y: splitbarLeftPos });
-        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
+        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4 });
         expect(window.requestAnimationFrame).toHaveBeenCalled();
 
         var expectedPos = Math.floor(element_bb.height / 4);
@@ -117,7 +119,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         browserTrigger(document.body, endEvent);
       });
 
-      it('should not follow the ' + description + ' before ' + startEvent, function () {
+      it('should not follow the ' + description + ' before ' + startEvent, function() {
         var expectedPos = Math.floor((element_bb.height - defaultDividerSize) / 2);
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
 
@@ -130,9 +132,9 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
-      it('should not follow the ' + description + ' after ' + startEvent, function () {
+      it('should not follow the ' + description + ' after ' + startEvent, function() {
         browserTrigger($splitbar, startEvent, { y: splitbarLeftPos });
-        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
+        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4 });
         browserTrigger($splitbar, endEvent);
         expect(window.requestAnimationFrame).toHaveBeenCalled();
 
@@ -144,6 +146,45 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect(window.requestAnimationFrame.calls.count()).toEqual(1);
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
         expect($window.localStorage.getItem(leftContainer.container.storageId)).toEqual(expectedPos + 'px');
+      });
+
+      describe('persistent state', function() {
+
+        var leftContainerElement, rightContainerElement, $splitbar, splitbar_bb, splitbarLeftPos;
+
+        beforeEach(function() {
+          leftContainerElement = _jQuery(element[0]).find('header')[0];
+          rightContainerElement = _jQuery(element[0]).find('footer')[0];
+          $splitbar = _jQuery(element[0]).find('.ui-splitbar');
+          splitbar_bb = $splitbar[0].getBoundingClientRect();
+
+          splitbarLeftPos = Math.ceil(splitbar_bb.left);
+        });
+
+        it('should initially respect size from attributes', function() {
+          expect(leftContainerElement.style.width).toEqual('');
+          expect(rightContainerElement.style.width).toEqual('');
+        });
+
+        it('should save the saved splitbar position', function() {
+          browserTrigger($splitbar, 'mousedown', { y: splitbarLeftPos });
+          browserTrigger($splitbar, 'mousemove', { y: 150 });
+          expect(window.requestAnimationFrame).toHaveBeenCalled();
+
+          var expectedPos = Math.floor(150);
+          expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+          expect($window.localStorage.getItem(leftContainer.container.storageId)).toEqual(expectedPos + 'px');
+
+          browserTrigger(document.body, 'mouseup');
+
+          if(element) element.remove();
+          element = createDirective();
+
+          splitbar_bb = $splitbar[0].getBoundingClientRect();
+          splitbarLeftPos = Math.ceil(splitbar_bb.left);
+          expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+        });
+
       });
 
       describe('collapse buttons', function() {
@@ -187,7 +228,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
             expectedLastAutosized = roundedHalf;
 
           // add remainder to the last element when parent size is odd
-          if (element_bb.height % 2 === 1) {
+          if(element_bb.height % 2 === 1) {
             expectedLastAutosized += 1;
           }
           var $footer = element.children().eq(2)[0];
@@ -205,6 +246,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
           expect(toggleBeforeButton.style.display).toBe('inline');
         });
       });
+
     });
 
   });
@@ -212,11 +254,11 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
 describe('toggle programmatically', function() {
   var scope, $controller, $compile, $timeout;
-  beforeEach(function () {
+  beforeEach(function() {
 
     module('ui.layout');
 
-    inject(function ($rootScope, _$controller_, _$compile_, _$timeout_) {
+    inject(function($rootScope, _$controller_, _$compile_, _$timeout_) {
       scope = $rootScope.$new();
       $controller = _$controller_;
       $compile = _$compile_;
