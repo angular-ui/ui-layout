@@ -68,12 +68,13 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
     describe('the slider', function () {
 
-      var element_bb, $splitbar, splitbar_bb, splitbarLeftPos;
+      var element_bb, leftContainer, $splitbar, splitbar_bb, splitbarLeftPos;
 
       beforeEach(function () {
         element = createDirective();
 
         element_bb = element[0].getBoundingClientRect();
+        leftContainer = angular.element(_jQuery(element[0]).find('header')[0]).isolateScope();
         $splitbar = _jQuery(element[0]).find('.ui-splitbar');
         splitbar_bb = $splitbar[0].getBoundingClientRect();
 
@@ -89,7 +90,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
         expect(window.requestAnimationFrame).not.toHaveBeenCalled();
         expect(Math.ceil(splitbar_bb.left)).toEqual(splitbarLeftPos);
-
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
       it('should do nothing when moving around it', function () {
@@ -101,7 +102,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
         expect(window.requestAnimationFrame).not.toHaveBeenCalled();
         expect(Math.ceil(splitbar_bb.left)).toEqual(splitbarLeftPos);
-
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
       it('should follow the ' + description, function () {
@@ -109,8 +110,9 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
         expect(window.requestAnimationFrame).toHaveBeenCalled();
 
-        var expextedPos = Math.floor(element_bb.height / 4);
-        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expextedPos);
+        var expectedPos = Math.floor(element_bb.height / 4);
+        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toEqual(expectedPos + 'px');
 
         browserTrigger(document.body, endEvent);
       });
@@ -125,6 +127,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect(window.requestAnimationFrame).not.toHaveBeenCalled();
 
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
       it('should not follow the ' + description + ' after ' + startEvent, function () {
@@ -140,6 +143,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         var expectedPos = Math.floor(element_bb.height / 4);
         expect(window.requestAnimationFrame.calls.count()).toEqual(1);
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toEqual(expectedPos + 'px');
       });
 
       describe('collapse buttons', function() {

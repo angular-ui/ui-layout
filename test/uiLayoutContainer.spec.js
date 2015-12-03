@@ -59,6 +59,9 @@ describe('Directive: uiLayoutContainer', function () {
     expect(acScope.container.minSize).toBeNull();
     expect(acScope.container.maxSize).toBeNull();
 
+    // every container has a storageId:
+    expect(acScope.container.storageId).not.toBeNull();
+
   });
 
 });
