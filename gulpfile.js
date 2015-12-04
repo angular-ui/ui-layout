@@ -31,7 +31,6 @@ function targetTask(){
   var spawn = require('child_process').spawn;
 
   return function(done){
-    console.log('path:', process.env.PATH);
     // I'm using the global gulp "" ci ""
     spawn('gulp', process.argv.slice(2), {
       cwd : './node_modules/angular-ui-publisher',
