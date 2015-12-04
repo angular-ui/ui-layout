@@ -4,7 +4,8 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', '$window', 'LayoutContainer', 'Layout', function uiLayoutCtrl($scope, $attrs, $element, $timeout, $window, LayoutContainer, Layout) {
+  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', '$window', 'LayoutContainer', 'Layout',
+    function uiLayoutCtrl($scope, $attrs, $element, $timeout, $window, LayoutContainer, Layout) {
 
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
@@ -193,7 +194,7 @@ angular.module('ui.layout', [])
         var c = ctrl.containers[i];
         c.storageId = ctrl.id + ':' + i;
       }
-    };
+    }
 
     //================================================================================
     // Public Controller Functions
