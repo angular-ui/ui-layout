@@ -30,6 +30,7 @@ angular.module('ui.layout', [])
       flowProperty: 'top',
       oppositeFlowProperty: 'bottom',
       mouseProperty: 'clientY',
+      touchProperty: 'pageY',
       flowPropertyPosition: 'y' } :
     { sizeProperty: 'width',
       offsetSize: 'offsetWidth',
@@ -37,6 +38,7 @@ angular.module('ui.layout', [])
       flowProperty: 'left',
       oppositeFlowProperty: 'right',
       mouseProperty: 'clientX',
+      touchProperty: 'pageX',
       flowPropertyPosition: 'x' };
 
     $element
@@ -176,8 +178,8 @@ angular.module('ui.layout', [])
         (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
         // jQuery does touches weird, see #82
         ($window.jQuery ?
-          (mouseEvent.originalEvent ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0) :
-          (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0));
+          (mouseEvent.originalEvent ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.touchProperty] : 0) :
+          (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.touchProperty] : 0));
 
       lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
 
