@@ -395,6 +395,9 @@ angular.module('ui.layout', [])
         var newIndex = ctrl.containers.indexOf(container);
         if(newIndex >= 0) {
           ctrl.containers.splice(newIndex, 1);
+          ctrl.opts.maxSizes.splice(newIndex, 1);
+          ctrl.opts.minSizes.splice(newIndex, 1);
+          ctrl.opts.sizes.splice(newIndex, 1);
         }
         ctrl.calculate();
       } else {
