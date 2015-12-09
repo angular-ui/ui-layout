@@ -39,6 +39,14 @@ angular.module('ui.layout', [])
       mouseProperty: 'clientX',
       flowPropertyPosition: 'x' };
 
+    $scope.$watch($window.getComputedStyle($element[0], null).direction, function() {
+      ctrl.dir = $window.getComputedStyle($element[0], null).direction;
+      if (ctrl.isUsingColumnFlow) {
+        ctrl.sizeProperties.flowProperty = ctrl.sizeProperties.offsetPos = (ctrl.dir === 'rtl') ? 'right' : 'left';
+        ctrl.calculate();
+      }
+    });
+
     $element
       // Force the layout to fill the parent space
       // fix no height layout...
