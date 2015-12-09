@@ -44,7 +44,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
       }
     });
 
-    afterEach(function() {
+    afterEach(function () {
       if(element) element.remove();
     });
 
@@ -59,13 +59,13 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
     // Spy on the requestAnimationFrame to directly trigger it
     beforeEach(function () {
-      spyOn(window, 'requestAnimationFrame').and.callFake(function(fct) {
+      spyOn(window, 'requestAnimationFrame').and.callFake(function (fct) {
         fct();
       });
     });
 
     afterEach(function () {
-      if(element) element.remove();
+      if (element) element.remove();
     });
 
     describe('the slider', function () {

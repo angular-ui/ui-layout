@@ -243,8 +243,8 @@ angular.module('ui.layout', [])
 
       //verify the container was found in the list
       if(index > -1) {
-        var beforeContainer = (index > 0) ? ctrl.containers[index - 1] : null;
-        var afterContainer = ((index+1) <= ctrl.containers.length) ? ctrl.containers[index + 1] : null;
+        var beforeContainer = (index > 0) ? ctrl.containers[index-1] : null;
+        var afterContainer = ((index+1) <= ctrl.containers.length) ? ctrl.containers[index+1] : null;
 
         if(beforeContainer !== null) setValues(beforeContainer);
         if(afterContainer !== null) setValues(afterContainer);
@@ -283,7 +283,7 @@ angular.module('ui.layout', [])
     ctrl.calculate = function() {
       var c, i;
       var dividerSize = parseInt(opts.dividerSize);
-      var elementSize = $element[0].getBoundingClientRect()[ctrl.sizeProperties.sizeProperty]; // width/height
+      var elementSize = $element[0].getBoundingClientRect()[ctrl.sizeProperties.sizeProperty];
       var availableSize = elementSize - (dividerSize * numOfSplitbars);
       var originalSize = availableSize;
       var usedSpace = 0;
@@ -347,7 +347,7 @@ angular.module('ui.layout', [])
           remainder = availableSize - autoSize * numOfAutoContainers;
         for(i=0; i < ctrl.containers.length; i++) {
           c = ctrl.containers[i];
-          c[ctrl.sizeProperties.flowProperty] = usedSpace; // left/top
+          c[ctrl.sizeProperties.flowProperty] = usedSpace;
           c.maxSize = opts.maxSizes[i];
           c.minSize = opts.minSizes[i];
 
@@ -954,7 +954,7 @@ angular.module('ui.layout', [])
                 element.addClass(animationClass);
 
                 scope.$watch('collapsed', function (val, old) {
-                  if(angular.isDefined(old) && val !== old) {
+                  if (angular.isDefined(old) && val !== old) {
                     ctrl.toggleContainer(scope.container.index);
                   }
                 });
