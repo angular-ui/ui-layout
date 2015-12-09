@@ -150,9 +150,11 @@ angular.module('ui.layout', [])
       var scrollX = window.pageXOffset || body.scrollLeft;
       var scrollY = window.pageYOffset || body.scrollTop;
       var clientRect = rawDomNode.getBoundingClientRect();
-      var x = clientRect.left + scrollX;
-      var y = clientRect.top + scrollY;
-      return { left: x, top: y };
+      if (ctrl.isUsingColumnFlow) {
+        return clientRect[ctrl.sizeProperties.offsetPos] + scrollX;
+      } else {
+        return clientRect[ctrl.sizeProperties.offsetPos] + scrollY;
+      }
     }
 
     /**
@@ -186,7 +188,12 @@ angular.module('ui.layout', [])
           (mouseEvent.originalEvent ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0) :
           (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0));
 
-      lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
+      if (ctrl.dir === 'rtl' && ctrl.isUsingColumnFlow) {
+        lastPos = offset($element) - mousePos;
+      } else {
+        lastPos = mousePos - offset($element);
+      }
+
 
       //Cancel previous rAF call
       if(animationFrameRequested) {
