@@ -25,7 +25,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
       return elm;
     }
 
-    beforeEach(function() {
+    beforeEach(function () {
 
       module('ui.layout');
 
@@ -48,31 +48,31 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
       if(element) element.remove();
     });
 
-    describe('require', function() {
-      it('requestAnimationFrame', function() {
+    describe('require', function () {
+      it('requestAnimationFrame', function () {
         expect(window.requestAnimationFrame).toBeDefined();
       });
-      it('cancelAnimationFrame', function() {
+      it('cancelAnimationFrame', function () {
         expect(window.cancelAnimationFrame).toBeDefined();
       });
     });
 
     // Spy on the requestAnimationFrame to directly trigger it
-    beforeEach(function() {
+    beforeEach(function () {
       spyOn(window, 'requestAnimationFrame').and.callFake(function(fct) {
         fct();
       });
     });
 
-    afterEach(function() {
+    afterEach(function () {
       if(element) element.remove();
     });
 
-    describe('the slider', function() {
+    describe('the slider', function () {
 
       var element_bb, leftContainer, $splitbar, splitbar_bb, splitbarLeftPos;
 
-      beforeEach(function() {
+      beforeEach(function () {
         element = createDirective();
 
         element_bb = element[0].getBoundingClientRect();
@@ -83,7 +83,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         splitbarLeftPos = Math.ceil(splitbar_bb.left);
       });
 
-      it('should do nothing when clicking on it', function() {
+      it('should do nothing when clicking on it', function () {
 
         // Click on the splitbar left
         browserTrigger($splitbar, startEvent, { x: splitbarLeftPos });
@@ -95,7 +95,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
-      it('should do nothing when moving around it', function() {
+      it('should do nothing when moving around it', function () {
 
         // Click on the splitbar left
         browserTrigger($splitbar, moveEvent, { x: splitbarLeftPos });
@@ -107,9 +107,9 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
-      it('should follow the ' + description, function() {
+      it('should follow the ' + description, function () {
         browserTrigger($splitbar, startEvent, { y: splitbarLeftPos });
-        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4 });
+        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
         expect(window.requestAnimationFrame).toHaveBeenCalled();
 
         var expectedPos = Math.floor(element_bb.height / 4);
@@ -119,7 +119,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         browserTrigger(document.body, endEvent);
       });
 
-      it('should not follow the ' + description + ' before ' + startEvent, function() {
+      it('should not follow the ' + description + ' before ' + startEvent, function () {
         var expectedPos = Math.floor((element_bb.height - defaultDividerSize) / 2);
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
 
@@ -132,9 +132,9 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
-      it('should not follow the ' + description + ' after ' + startEvent, function() {
+      it('should not follow the ' + description + ' after ' + startEvent, function () {
         browserTrigger($splitbar, startEvent, { y: splitbarLeftPos });
-        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4 });
+        browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
         browserTrigger($splitbar, endEvent);
         expect(window.requestAnimationFrame).toHaveBeenCalled();
 
@@ -228,7 +228,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
             expectedLastAutosized = roundedHalf;
 
           // add remainder to the last element when parent size is odd
-          if(element_bb.height % 2 === 1) {
+          if (element_bb.height % 2 === 1) {
             expectedLastAutosized += 1;
           }
           var $footer = element.children().eq(2)[0];
@@ -246,7 +246,6 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
           expect(toggleBeforeButton.style.display).toBe('inline');
         });
       });
-
     });
 
   });
@@ -254,11 +253,11 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
 describe('toggle programmatically', function() {
   var scope, $controller, $compile, $timeout;
-  beforeEach(function() {
+  beforeEach(function () {
 
     module('ui.layout');
 
-    inject(function($rootScope, _$controller_, _$compile_, _$timeout_) {
+    inject(function ($rootScope, _$controller_, _$compile_, _$timeout_) {
       scope = $rootScope.$new();
       $controller = _$controller_;
       $compile = _$compile_;
