@@ -709,7 +709,7 @@ angular.module('ui.layout', [])
 
         prevButton.on('click', function() {
           var prevSplitbarBeforeButton, prevSplitbarAfterButton;
-          var result = ctrl.toggleBefore(scope.splitbar);
+          var isCollapsed = ctrl.toggleBefore(scope.splitbar);
           var previousSplitbar = ctrl.getPreviousSplitbarContainer(scope.splitbar);
 
           if(previousSplitbar !== null) {
@@ -718,7 +718,7 @@ angular.module('ui.layout', [])
           }
 
           if(ctrl.isUsingColumnFlow) {
-            if(result) {
+            if(isCollapsed) {
               afterButton.css('display', 'none');
               prevIcon.removeClass(iconLeft);
               prevIcon.addClass(iconRight);
@@ -740,7 +740,7 @@ angular.module('ui.layout', [])
               }
             }
           } else {
-            if(result) {
+            if(isCollapsed) {
               afterButton.css('display', 'none');
               prevIcon.removeClass(iconUp);
               prevIcon.addClass(iconDown);
@@ -769,7 +769,7 @@ angular.module('ui.layout', [])
 
         afterButton.on('click', function() {
           var nextSplitbarBeforeButton, nextSplitbarAfterButton;
-          var result = ctrl.toggleAfter(scope.splitbar);
+          var isCollapsed = ctrl.toggleAfter(scope.splitbar);
           var nextSplitbar = ctrl.getNextSplitbarContainer(scope.splitbar);
 
           if(nextSplitbar !== null) {
@@ -778,7 +778,7 @@ angular.module('ui.layout', [])
           }
 
           if(ctrl.isUsingColumnFlow) {
-            if(result) {
+            if(isCollapsed) {
               prevButton.css('display', 'none');
               afterIcon.removeClass(iconRight);
               afterIcon.addClass(iconLeft);
@@ -800,7 +800,7 @@ angular.module('ui.layout', [])
               }
             }
           } else {
-            if(result) {
+            if(isCollapsed) {
               prevButton.css('display', 'none');
               afterIcon.removeClass(iconDown);
               afterIcon.addClass(iconUp);
