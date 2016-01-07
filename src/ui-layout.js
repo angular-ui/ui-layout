@@ -441,39 +441,6 @@ angular.module('ui.layout', [])
       var c = ctrl.containers[index];
       c.collapsed = !ctrl.containers[index].collapsed;
 
-      var nextSplitbar = ctrl.containers[index+1];
-      var nextContainer = ctrl.containers[index+2];
-
-      // uncollapsedSize is undefined in case of 'auto' sized containers.
-      // Perhaps there's a place where we could set... could find it though. @see also toggleBefore
-      if (c.uncollapsedSize === undefined) {
-        c.uncollapsedSize = c.size;
-      } else {
-        c.uncollapsedSize = parseInt(c.uncollapsedSize);
-      }
-      // FIXME: collapse:resize:uncollapse: works well "visually" without the nextSplitbar and nextContainer calculations
-      // but removing those breaks few test
-      $scope.$apply(function() {
-        if(c.collapsed) {
-
-          c.size = 0;
-
-          if(nextSplitbar) nextSplitbar[ctrl.sizeProperties.flowProperty] -= c.uncollapsedSize;
-          if(nextContainer) {
-            nextContainer[ctrl.sizeProperties.flowProperty] -= c.uncollapsedSize;
-            nextContainer.uncollapsedSize += c.uncollapsedSize;
-          }
-
-        } else {
-          c.size = c.uncollapsedSize;
-
-          if(nextSplitbar) nextSplitbar[ctrl.sizeProperties.flowProperty] += c.uncollapsedSize;
-          if(nextContainer) {
-            nextContainer[ctrl.sizeProperties.flowProperty] += c.uncollapsedSize;
-            nextContainer.uncollapsedSize -= c.uncollapsedSize;
-          }
-        }
-      });
       $scope.$broadcast('ui.layout.toggle', c);
       Layout.toggled();
 
@@ -489,58 +456,9 @@ angular.module('ui.layout', [])
     ctrl.toggleAfter = function(splitbar) {
       var index = ctrl.containers.indexOf(splitbar) + 1;
       var c = ctrl.containers[index];
-      var prevSplitbar = ctrl.containers[index-1];
-      var prevContainer = ctrl.containers[index-2];
-      var isLastContainer = index === (ctrl.containers.length - 1);
-      var endDiff;
-      var flowProperty = ctrl.sizeProperties.flowProperty;
-      var sizeProperty = ctrl.sizeProperties.sizeProperty;
-
-      ctrl.bounds = $element[0].getBoundingClientRect();
 
       c.collapsed = !ctrl.containers[index].collapsed;
 
-      // uncollapsedSize is undefined in case of 'auto' sized containers.
-      // Perhaps there's a place where we could set... could find it though. @see also toggleBefore
-      if (c.uncollapsedSize === undefined) {
-        c.uncollapsedSize = c.size;
-      } else {
-        c.uncollapsedSize = parseInt(c.uncollapsedSize);
-      }
-
-      // FIXME: collapse:resize:uncollapse: works well "visually" without the prevSplitbar and prevContainer calculations
-      // but removing those breaks few test
-      $scope.$apply(function() {
-        if(c.collapsed) {
-
-          c.size = 0;
-
-          // adds additional space so the splitbar moves to the very end of the container
-          // to offset the lost space when converting from percents to pixels
-          endDiff = (isLastContainer) ? ctrl.bounds[sizeProperty] - c[flowProperty] - c.uncollapsedSize : 0;
-
-          if(prevSplitbar) {
-            prevSplitbar[flowProperty] += (c.uncollapsedSize + endDiff);
-          }
-          if(prevContainer) {
-            prevContainer.size += (c.uncollapsedSize + endDiff);
-          }
-
-        } else {
-          c.size = c.uncollapsedSize;
-
-          // adds additional space so the splitbar moves back to the proper position
-          // to offset the additional space added when collapsing
-          endDiff = (isLastContainer) ? ctrl.bounds[sizeProperty] - c[flowProperty] - c.uncollapsedSize : 0;
-
-          if(prevSplitbar) {
-            prevSplitbar[flowProperty] -= (c.uncollapsedSize + endDiff);
-          }
-          if(prevContainer) {
-            prevContainer.size -= (c.uncollapsedSize + endDiff);
-          }
-        }
-      });
       $scope.$broadcast('ui.layout.toggle', c);
       Layout.toggled();
       return c.collapsed;

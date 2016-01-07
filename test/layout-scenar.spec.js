@@ -158,12 +158,14 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
           expect($header.getBoundingClientRect().height).toEqual(expectedAutosized);
 
           browserTrigger(toggleBeforeButton, 'click');
+          scope.$digest();
 
           expect(parseInt($splitbar[0].style.top)).toEqual(0);
           expect($header.getBoundingClientRect().height).toEqual(0);
           expect(toggleAfterButton.style.display).toBe('none');
 
           browserTrigger(toggleBeforeButton, 'click');
+          scope.$digest();
 
           expect(parseInt($splitbar[0].style.top)).toEqual(expectedAutosized);
           expect($header.getBoundingClientRect().height).toEqual(expectedAutosized);
@@ -185,11 +187,13 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
           expect($footer.getBoundingClientRect().height).toEqual(expectedLastAutosized);
 
           browserTrigger(toggleAfterButton, 'click');
+          scope.$digest();
           expect(parseInt($splitbar[0].style.top)).toEqual(element_bb.height - defaultDividerSize);
           expect($footer.getBoundingClientRect().height).toEqual(0);
           expect(toggleBeforeButton.style.display).toBe('none');
 
           browserTrigger(toggleAfterButton, 'click');
+          scope.$digest();
           expect(parseInt($splitbar[0].style.top)).toEqual(expectedAutosized);
           expect($footer.getBoundingClientRect().height).toEqual(expectedLastAutosized);
           expect(toggleBeforeButton.style.display).toBe('inline');
