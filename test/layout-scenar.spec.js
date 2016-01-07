@@ -238,18 +238,6 @@ describe('toggle programmatically', function() {
     return elm;
   }
 
-
-  it('should reset container to uncollapsed state when loaded', function() {
-    //@see explanation for uiLayoutLoaded
-    var elm = compileDirective(true, true);
-
-    var divs = elm.find('div'),
-      beforeContainer = divs[0],
-      afterContainer = divs[2];
-    expect(beforeContainer.style.width).toEqual('100px');
-    expect(afterContainer.style.width).toEqual('200px');
-  });
-
   it('should collapse and uncollapse beforeContainer', function() {
     var elm = compileDirective(false, false);
 
@@ -261,13 +249,11 @@ describe('toggle programmatically', function() {
 
     scope.layout.beforeContainer = true;
     scope.$apply();
-    $timeout.flush();
 
     expect(beforeContainer.style.width).toEqual('0px');
 
     scope.layout.beforeContainer = false;
     scope.$apply();
-    $timeout.flush();
 
     expect(beforeContainer.style.width).toEqual('100px');
   });
@@ -283,13 +269,11 @@ describe('toggle programmatically', function() {
 
     scope.layout.afterContainer = true;
     scope.$apply();
-    $timeout.flush();
 
     expect(afterContainer.style.width).toEqual('0px');
 
     scope.layout.afterContainer = false;
     scope.$apply();
-    $timeout.flush();
 
     expect(afterContainer.style.width).toEqual('200px');
   });
