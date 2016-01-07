@@ -4,8 +4,8 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', '$window', 'LayoutContainer', 'Layout',
-  function uiLayoutCtrl($scope, $attrs, $element, $timeout, $window, LayoutContainer, Layout) {
+  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', '$window', 'LayoutContainer',
+  function uiLayoutCtrl($scope, $attrs, $element, $timeout, $window, LayoutContainer) {
 
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
@@ -16,8 +16,6 @@ angular.module('ui.layout', [])
 
     // regex to verify size is properly set to pixels or percent
     var sizePattern = /\d+\s*(px|%)\s*$/i;
-
-    Layout.addLayout(ctrl);
 
     ctrl.containers = [];
     ctrl.movingSplitbar = null;
@@ -416,9 +414,13 @@ angular.module('ui.layout', [])
     ctrl.toggleContainer = function(index) {
       var c = ctrl.containers[index];
       c.collapsed = !ctrl.containers[index].collapsed;
+      ctrl.processToggleContainer(index);
+    };
+
+    ctrl.processToggleContainer = function(index) {
+      var c = ctrl.containers[index];
 
       $scope.$broadcast('ui.layout.toggle', c);
-      Layout.toggled();
 
       var splitbarBefore = ctrl.containers[index - 1];
       var splitbarAfter = ctrl.containers[index + 1];
@@ -707,6 +709,17 @@ angular.module('ui.layout', [])
         //Add splitbar to layout container list
         ctrl.addContainer(scope.splitbar);
 
+        // initialize the button visibility according to the collapsed state of the adjacent containers:
+        var index = ctrl.containers.indexOf(scope.splitbar);
+        var before = ctrl.containers[index - 1];
+        var after = ctrl.containers[index + 1];
+        if (before) {
+          scope.splitbar.notifyToggleBefore(before.collapsed);
+        }
+        if (after) {
+          scope.splitbar.notifyToggleAfter(after.collapsed);
+        }
+
         element.on('$destroy', function() {
           ctrl.removeContainer(scope.splitbar);
           scope.$evalAsync();
@@ -717,8 +730,8 @@ angular.module('ui.layout', [])
   }])
 
   .directive('uiLayoutContainer',
-    ['LayoutContainer', '$compile', '$timeout', 'Layout',
-      function(LayoutContainer, $compile, $timeout, Layout) {
+    ['LayoutContainer', '$compile', '$timeout',
+      function(LayoutContainer, $compile, $timeout) {
         return {
           restrict: 'AE',
           require: '^uiLayout',
@@ -740,14 +753,9 @@ angular.module('ui.layout', [])
                 scope.container.layoutId = ctrl.id;
                 scope.container.isCentral = attrs.uiLayoutContainer === 'central';
 
-                if (scope.collapsed === true) {
-                  scope.collapsed = false;
-                  Layout.addCollapsed(scope.container);
+                if (angular.isDefined(scope.collapsed)) {
+                  scope.container.collapsed = scope.collapsed;
                 }
-                // FIXME: collapsed: @see uiLayoutLoaded for explanation
-                //if (angular.isDefined(scope.collapsed)) {
-                //  scope.container.collapsed = scope.collapsed;
-                //}
 
                 if (angular.isDefined(scope.resizable)) {
                   scope.container.resizable = scope.resizable;
@@ -770,9 +778,10 @@ angular.module('ui.layout', [])
                 var animationClass = ctrl.isUsingColumnFlow ? 'animate-column' : 'animate-row';
                 element.addClass(animationClass);
 
-                scope.$watch('collapsed', function (val, old) {
-                  if (angular.isDefined(old) && val !== old) {
-                    ctrl.toggleContainer(scope.container.index);
+                scope.$watch('collapsed', function (collapsed) {
+                  if (angular.isDefined(scope.collapsed)) {
+                    scope.container.collapsed = scope.collapsed;
+                    ctrl.processToggleContainer(ctrl.containers.indexOf(scope.container));
                   }
                 });
 
@@ -809,94 +818,6 @@ angular.module('ui.layout', [])
           }
         };
       }])
-
-  .directive('uiLayoutLoaded', function($timeout, Layout) {
-    // Currently necessary for programmatic toggling to work with "initially" collapsed containers,
-    // because prog. toggling depends on the logic of prevButton and nextButton (which should be probably refactored out)
-    //
-    // This is how it currently works:
-    // 1. uiLayoutContainer in prelink phase resets @collapsed to false, because layout has to be calculated
-    //    with all containers uncollapsed to get the correct dimensions
-    // 2. layout with ui-layout-loaded attributes broadcasts "ui.layout.loaded"
-    // 3. user changes values of @collapsed which triggers 'click' on either of the buttons
-    // 3. the other button is hidden and container size set to 0
-    return {
-      require: '^uiLayout',
-      restrict: 'A',
-      priority: -100,
-      link: function($scope, el, attrs){
-
-        // negation is safe here, because we are expecting non-empty string
-        if (!attrs['uiLayoutLoaded']) {
-          Layout.toggle().then(
-            function(){
-              $scope.$broadcast('ui.layout.loaded', null);
-            }
-          );
-        } else {
-          $scope.$broadcast('ui.layout.loaded',  attrs['uiLayoutLoaded']);
-        }
-      }
-    };
-  })
-
-  .factory('Layout', ['$q', '$timeout', function($q, $timeout) {
-    var layouts = [],
-      collapsing = [],
-      toBeCollapsed = 0,
-      toggledDeffered =  null;
-
-    function toggleContainer(container) {
-      try {
-        layouts[container.layoutId].toggleContainer(container.index);
-      } catch (e) {
-        e.message = 'Could not toggle container [' + container.layoutId + '/' + container.index + ']: ' + e.message;
-        throw e;
-      }
-    }
-
-    return {
-      addLayout: function (ctrl) {
-        ctrl.id = layouts.length;
-        layouts.push(ctrl);
-      },
-      addCollapsed: function(container) {
-        collapsing.push(container);
-      },
-      hasCollapsed: function() {
-        return collapsing.length > 0;
-      },
-      toggled: function() {
-        // event already dispatched, do nothing
-        if (toBeCollapsed === 0) {
-          if (toggledDeffered) {
-            toggledDeffered.reject();
-          } else {
-            return false;
-          }
-        }
-        toBeCollapsed--;
-        if (toBeCollapsed === 0) {
-          toggledDeffered.resolve();
-        }
-      },
-      toggle: function() {
-        toggledDeffered = $q.defer();
-        toBeCollapsed = collapsing.length;
-        if (toBeCollapsed === 0) {
-          $timeout(function(){
-            toggledDeffered.resolve();
-          });
-        }
-        collapsing.reverse();
-        var c;
-        while(c = collapsing.pop()) {
-          toggleContainer(c);
-        }
-        return toggledDeffered.promise;
-      }
-    };
-  }])
 
   .factory('LayoutContainer', function() {
     function BaseContainer() {
