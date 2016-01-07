@@ -414,20 +414,28 @@ angular.module('ui.layout', [])
     };
 
     ctrl.toggleContainer = function(index) {
+      var c = ctrl.containers[index];
+      c.collapsed = !ctrl.containers[index].collapsed;
 
-      var splitter = ctrl.containers[index + 1],
-        el;
+      $scope.$broadcast('ui.layout.toggle', c);
+      Layout.toggled();
 
-      if (splitter) {
-        el = splitter.element[0].children[0];
-      } else {
-        splitter = ctrl.containers[index - 1];
-        el = splitter.element[0].children[1];
+      var splitbarBefore = ctrl.containers[index - 1];
+      var splitbarAfter = ctrl.containers[index + 1];
+
+      if (splitbarBefore) {
+        splitbarBefore.notifyToggleAfter(c.collapsed);
       }
 
-      $timeout(function(){
-        angular.element(el).triggerHandler('click');
+      if (splitbarAfter) {
+        splitbarAfter.notifyToggleBefore(c.collapsed);
+      }
+
+      $scope.$evalAsync(function() {
+        ctrl.calculate();
       });
+
+      return c.collapsed;
     };
 
     /**
@@ -437,14 +445,7 @@ angular.module('ui.layout', [])
      */
     ctrl.toggleBefore = function(splitbar) {
       var index = ctrl.containers.indexOf(splitbar) - 1;
-
-      var c = ctrl.containers[index];
-      c.collapsed = !ctrl.containers[index].collapsed;
-
-      $scope.$broadcast('ui.layout.toggle', c);
-      Layout.toggled();
-
-      return c.collapsed;
+      return ctrl.toggleContainer(index);
     };
 
 
@@ -455,13 +456,7 @@ angular.module('ui.layout', [])
      */
     ctrl.toggleAfter = function(splitbar) {
       var index = ctrl.containers.indexOf(splitbar) + 1;
-      var c = ctrl.containers[index];
-
-      c.collapsed = !ctrl.containers[index].collapsed;
-
-      $scope.$broadcast('ui.layout.toggle', c);
-      Layout.toggled();
-      return c.collapsed;
+      return ctrl.toggleContainer(index);
     };
 
     /**
@@ -624,17 +619,7 @@ angular.module('ui.layout', [])
         prevIcon.addClass(prevIconClass);
         afterIcon.addClass(afterIconClass);
 
-
-        prevButton.on('click', function() {
-          var prevSplitbarBeforeButton, prevSplitbarAfterButton;
-          var isCollapsed = ctrl.toggleBefore(scope.splitbar);
-          var previousSplitbar = ctrl.getPreviousSplitbarContainer(scope.splitbar);
-
-          if(previousSplitbar !== null) {
-            prevSplitbarBeforeButton = angular.element(previousSplitbar.element.children()[0]);
-            prevSplitbarAfterButton = angular.element(previousSplitbar.element.children()[1]);
-          }
-
+        scope.splitbar.notifyToggleBefore = function(isCollapsed) {
           if(isCollapsed) {
             afterButton.css('display', 'none');
 
@@ -644,12 +629,6 @@ angular.module('ui.layout', [])
             } else {
               prevIcon.removeClass(iconUp);
               prevIcon.addClass(iconDown);
-            }
-
-            // hide previous splitbar buttons
-            if(previousSplitbar !== null) {
-              prevSplitbarBeforeButton.css('display', 'none');
-              prevSplitbarAfterButton.css('display', 'none');
             }
           } else {
             afterButton.css('display', 'inline');
@@ -661,29 +640,10 @@ angular.module('ui.layout', [])
               prevIcon.removeClass(iconDown);
               prevIcon.addClass(iconUp);
             }
-
-            // show previous splitbar icons
-            if(previousSplitbar !== null) {
-              prevSplitbarBeforeButton.css('display', 'inline');
-              prevSplitbarAfterButton.css('display', 'inline');
-            }
           }
+        };
 
-          scope.$evalAsync(function() {
-            ctrl.calculate();
-          });
-        });
-
-        afterButton.on('click', function() {
-          var nextSplitbarBeforeButton, nextSplitbarAfterButton;
-          var isCollapsed = ctrl.toggleAfter(scope.splitbar);
-          var nextSplitbar = ctrl.getNextSplitbarContainer(scope.splitbar);
-
-          if(nextSplitbar !== null) {
-            nextSplitbarBeforeButton = angular.element(nextSplitbar.element.children()[0]);
-            nextSplitbarAfterButton = angular.element(nextSplitbar.element.children()[1]);
-          }
-
+        scope.splitbar.notifyToggleAfter = function(isCollapsed) {
           if(isCollapsed) {
             prevButton.css('display', 'none');
 
@@ -693,12 +653,6 @@ angular.module('ui.layout', [])
             } else {
               afterIcon.removeClass(iconDown);
               afterIcon.addClass(iconUp);
-            }
-
-            // hide next splitbar buttons
-            if(nextSplitbar !== null) {
-              nextSplitbarBeforeButton.css('display', 'none');
-              nextSplitbarAfterButton.css('display', 'none');
             }
           } else {
             prevButton.css('display', 'inline');
@@ -710,17 +664,14 @@ angular.module('ui.layout', [])
               afterIcon.removeClass(iconUp);
               afterIcon.addClass(iconDown);
             }
-
-            // show next splitbar buttons
-            if(nextSplitbar !== null) {
-              nextSplitbarBeforeButton.css('display', 'inline');
-              nextSplitbarAfterButton.css('display', 'inline');
-            }
           }
+        };
 
-          scope.$evalAsync(function() {
-            ctrl.calculate();
-          });
+        prevButton.on('click', function() {
+          ctrl.toggleBefore(scope.splitbar);
+        });
+        afterButton.on('click', function() {
+          ctrl.toggleAfter(scope.splitbar);
         });
 
         element.on('mousedown touchstart', function(e) {
