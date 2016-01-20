@@ -263,7 +263,7 @@ angular.module('ui.layout', [])
           if(!LayoutContainer.isSplitbar(ctrl.containers[i])) {
 
             c = ctrl.containers[i];
-            opts.sizes[i] = c.isCentral ? 'auto' : c.collapsed ? '0px' : optionValue(c.uncollapsedSize) || 'auto';
+            opts.sizes[i] = c.collapsed ? '0px' : c.isCentral ? 'auto' : optionValue(c.uncollapsedSize) || 'auto';
             opts.minSizes[i] = optionValue(c.minSize);
             opts.maxSizes[i] = optionValue(c.maxSize);
 
