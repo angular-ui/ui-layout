@@ -141,7 +141,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
         beforeEach(function() {
           toggleBeforeButton = $splitbar.children()[0];
-          toggleAfterButton = $splitbar.children()[1];
+          toggleAfterButton = $splitbar.children()[2];
         });
 
         it('should exist', function() {

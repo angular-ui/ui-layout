@@ -100,6 +100,13 @@ Default: `false`
 
 Like `disableToggle` above but only removes the arrows on mobile devices (max-device-width: 480px).
 
+### showHandle
+
+Type: `Boolean`
+Default: `false`
+
+Whether to show a handle in the middle of a splitbar. If toggle is enabled at the same time, the handle is shown between
+the two toggle buttons. The handle has the css class `.ui-splitbar-handle`.
 
 ## Child Attributes
 
