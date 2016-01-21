@@ -828,22 +828,29 @@ angular.module('ui.layout', [])
         });
 
         element.on('mousedown touchstart', function(e) {
-          ctrl.movingSplitbar = scope.splitbar;
-          ctrl.processSplitbar(scope.splitbar);
+          if (e.button === 0 || e.type === 'touchstart') {
+            // only trigger when left mouse button is pressed:
+            ctrl.movingSplitbar = scope.splitbar;
+            ctrl.processSplitbar(scope.splitbar);
 
-          e.preventDefault();
-          e.stopPropagation();
+            e.preventDefault();
+            e.stopPropagation();
 
-          htmlElement.on('mousemove touchmove', function(event) {
-            scope.$apply(angular.bind(ctrl, ctrl.mouseMoveHandler, event));
-          });
-          return false;
+            htmlElement.on('mousemove touchmove', handleMouseMove);
+            return false;
+          }
         });
 
-        htmlElement.on('mouseup touchend', function(event) {
+        function handleMouseMove(event) {
+          scope.$apply(angular.bind(ctrl, ctrl.mouseMoveHandler, event));
+        }
+
+        function handleMouseUp(event) {
           scope.$apply(angular.bind(ctrl, ctrl.mouseUpHandler, event));
-          htmlElement.off('mousemove touchmove');
-        });
+          htmlElement.off('mousemove touchmove', handleMouseMove);
+        }
+
+        htmlElement.on('mouseup touchend', handleMouseUp);
 
         scope.$watch('splitbar.size', function(newValue) {
           element.css(ctrl.sizeProperties.sizeProperty, newValue + 'px');
@@ -853,15 +860,13 @@ angular.module('ui.layout', [])
           element.css(ctrl.sizeProperties.flowProperty, newValue + 'px');
         });
 
-        scope.$on('$destroy', function() {
-          htmlElement.off('mouseup touchend mousemove touchmove');
-        });
-
         //Add splitbar to layout container list
         ctrl.addContainer(scope.splitbar);
 
         element.on('$destroy', function() {
           ctrl.removeContainer(scope.splitbar);
+          htmlElement.off('mouseup touchend', handleMouseUp);
+          htmlElement.off('mousemove touchmove', handleMouseMove);
           scope.$evalAsync();
         });
       }
