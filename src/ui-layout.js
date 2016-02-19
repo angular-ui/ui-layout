@@ -86,7 +86,7 @@ angular.module('ui.layout', [])
           if(!beforeContainer.collapsed && !afterContainer.collapsed) {
             // calculate container positons
             var difference = ctrl.movingSplitbar[position] - lastPos;
-            var newPosition = ctrl.movingSplitbar[position] - difference; // TODO: this computation is unnecessary, newPosition === lastPos
+            var newPosition = ctrl.movingSplitbar[position] - difference;
 
             // Keep the bar in the window (no left/top 100%)
             newPosition = Math.min(elementSize-dividerSize, newPosition);
@@ -184,11 +184,10 @@ angular.module('ui.layout', [])
     /**
      * Updates the storage ids of all containers according to the id of this controller and the index of the container.
      */
-     function updateContainerStorageIds() {
-      for (var i = 0; i < ctrl.containers.length; ++i) {
-        var c = ctrl.containers[i];
+    function updateContainerStorageIds() {
+      ctrl.containers.forEach(function(c, i) {
         c.storageId = ctrl.id + ':' + i;
-      }
+      });
     }
 
     //================================================================================
