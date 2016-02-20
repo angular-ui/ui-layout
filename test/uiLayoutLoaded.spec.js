@@ -1,5 +1,6 @@
 'use strict';
 
+
 describe('Directive: uiLayoutLoaded', function () {
   var scope, element, $compile, $timeout,
     template = '<div ui-layout ui-layout-loaded><header ui-layout-container></header><footer ui-layout-container></footer></div>';
