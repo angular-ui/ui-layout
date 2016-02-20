@@ -729,6 +729,26 @@ angular.module('ui.layout', [])
 
   }])
 
+  .directive('uiLayoutLoaded', [function() {
+    // This is not needed any more, because toggling does not depend on the logic
+    // of prevButton and nextButton. It is only kept to simulate the previous
+    // behaviour and avoid a breaking change. It should be removed with the next
+    // major version upgrade.
+    return {
+      require: '^uiLayout',
+      restrict: 'A',
+      priority: -100,
+      link: function($scope, el, attrs){
+        // negation is safe here, because we are expecting non-empty string
+        if (!attrs['uiLayoutLoaded']) {
+          $scope.$broadcast('ui.layout.loaded', null);
+        } else {
+          $scope.$broadcast('ui.layout.loaded',  attrs['uiLayoutLoaded']);
+        }
+      }
+    };
+  }])
+
   .directive('uiLayoutContainer',
     ['LayoutContainer', '$compile',
       function(LayoutContainer, $compile) {

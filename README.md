@@ -145,7 +145,7 @@ $scope.layout {
 }
 ```
 
-Changing those values will toggle container. See also [`ui.layout.toggle`][event-toggle]. 
+Changing those values will toggle container. See also [`ui.layout.toggle`][event-toggle].
 
 ### size
 Type: `String`
@@ -203,7 +203,62 @@ percentage
 
 ## Events
 
-Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container. 
+Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container.
+
+### ui.layout.loaded
+Returns: `string` or `null`
+
+**Deprecated:** *This event is not needed any more because programmatic toggle works now as expected. It is only kept for compatibility reasons. The event will be triggered immediately, when the directive links.*
+
+Dispatched when the layout container finished loading. It returns the value of the attribute, e.g. `ui-layout-loaded="my-loaded-message"`, or `null`. The `null` also means that the layout has finished collapsing all the containers that should be collapsed (per application request when setting the [`collapsed`][collapsed] attribute).
+
+Collapsing container on application load currently goes through these steps:
+1. layout is first loaded with all containers uncollapsed (disregarding user set values), then
+2. containers are collapsed either:
+  - _automatically_: application has not set a string return value for the `ui.layout.loaded` event.
+  - _manually_: application sets collapsed flags in the callback passed to `ui.layout.loaded`
+
+All this means that the user will notice a flicker. If the flicker is not desirable, hide the layout behind an overlay, wait for the `ui.layout.loaded` event. In the "automatic" mode, all is done and the layout should be presentable. In the "manual" mode it is up to the application to count the `ui.layout.toggle` events.
+
+
+
+```xml
+<div id="main-container" ui-layout ui-layout-loaded>
+    <div ui-layout-container>
+      <div ui-layout ui-layout-loaded="child-container">
+          <div ui-layout-container>
+
+          </div>
+      </div>
+    </div>
+</div>
+```
+
+```javascript
+$scope.$on('ui.layout.loaded', function(evt, id) => {
+  switch (id) {
+    case 'main-container':
+      ...
+      break;
+    case 'child-container':
+      ...
+      break;
+    default:
+      break;
+  }
+});
+```
+
+Note: the value of the attribute is not evaluated, so:
+
+```
+$scope.layout = {
+  mySidebar: {someKey: 'some value'}
+}
+
+<div id='my-sidebar' ui-layout ui-layout-loaded="layout.mySidebar.someKey"></div>
+// $scope.$on will receive the string 'layout.mySidebar.someKey'
+```
 
 ### ui.layout.toggle [event-toggle]
 
@@ -217,8 +272,8 @@ $scope.$on('ui.layout.toggle', function(e, container){
 });
 ```
 
-Manually toggling (clicking the arrow button on the splitbar) will not update the `collapsed` attribute. 
-If the application is using the `collapsed` attribute of `ui-layout-container` to programmatically control the collapsed state, the application should update it's state when this event occurs to stay in sync with the UI. 
+Manually toggling (clicking the arrow button on the splitbar) will not update the `collapsed` attribute.
+If the application is using the `collapsed` attribute of `ui-layout-container` to programmatically control the collapsed state, the application should update it's state when this event occurs to stay in sync with the UI.
 
 ### ui.layout.resize
 

@@ -47,7 +47,7 @@ describe('Directive: uiLayoutContainer', function () {
 
     expect(bcScope.container.collapsed).toEqual(true);
     expect(bcScope.container.resizable).toEqual(false);
-    expect(bcScope.container.size).toEqual(0); // collapsed
+    expect(bcScope.container.size).toEqual(50); // collapsed: min size
     expect(bcScope.container.uncollapsedSize).toEqual('100px');
     expect(bcScope.container.minSize).toEqual(50);
     expect(bcScope.container.maxSize).toEqual(200);
