@@ -387,7 +387,7 @@ angular.module('ui.layout', [])
           }
         } else {
           // fix for potentially collapsed containers
-          ctrl.containers[index - 1].collapsed = false;
+          if (index) ctrl.containers[index - 1].collapsed = false;
           numOfSplitbars--;
         }
 
