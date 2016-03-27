@@ -9,6 +9,10 @@ angular.module('ui.layout', [])
 
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
+    if (opts.ctrl) {
+      $scope[opts.ctrl]=ctrl;
+    }
+
     var numOfSplitbars = 0;
     //var cache = {};
     var animationFrameRequested;
