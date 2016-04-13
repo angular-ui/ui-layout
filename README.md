@@ -100,6 +100,12 @@ Default: `false`
 
 Like `disableToggle` above but only removes the arrows on mobile devices (max-device-width: 480px).
 
+### hideCollapsedSplitbar
+
+Type: `Boolean`
+Default: `false`
+
+If set to `true`, the splitbar between two containers will not be visible when one of them is collapsed.
 
 ## Child Attributes
 
@@ -145,7 +151,7 @@ $scope.layout {
 }
 ```
 
-Changing those values will toggle container. See also [`ui.layout.toggle`][event-toggle]. 
+Changing those values will toggle container. See also [`ui.layout.toggle`][event-toggle].
 
 ### size
 Type: `String`
@@ -203,7 +209,7 @@ percentage
 
 ## Events
 
-Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container. 
+Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container.
 
 ### ui.layout.loaded
 Returns: `string` or `null`
@@ -227,7 +233,7 @@ All this means that the user will notice a flicker. If the flicker is not desira
     <div ui-layout-container>
       <div ui-layout ui-layout-loaded="child-container">
           <div ui-layout-container>
-          
+
           </div>
       </div>
     </div>
@@ -272,8 +278,8 @@ $scope.$on('ui.layout.toggle', function(e, container){
 });
 ```
 
-Manually toggling (clicking the arrow button on the splitbar) will not update the `collapsed` attribute. 
-If the application is using the `collapsed` attribute of `ui-layout-container` to programmatically control the collapsed state, the application should update it's state when this event occurs to stay in sync with the UI. 
+Manually toggling (clicking the arrow button on the splitbar) will not update the `collapsed` attribute.
+If the application is using the `collapsed` attribute of `ui-layout-container` to programmatically control the collapsed state, the application should update it's state when this event occurs to stay in sync with the UI.
 
 ### ui.layout.resize
 

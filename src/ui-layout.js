@@ -252,7 +252,13 @@ angular.module('ui.layout', [])
       var c, i;
       var dividerSize = parseInt(opts.dividerSize);
       var elementSize = $element[0].getBoundingClientRect()[ctrl.sizeProperties.sizeProperty];
-      var availableSize = elementSize - (dividerSize * numOfSplitbars);
+      var numOfVisibleSplitbars = numOfSplitbars;
+      if (opts.hideCollapsedSplitbar) {
+        numOfVisibleSplitbars = ctrl.containers.filter(function(c) {
+          return LayoutContainer.isSplitbar(c) && !c.collapsed;
+        }).length;
+      }
+      var availableSize = elementSize - (dividerSize * numOfVisibleSplitbars);
       var originalSize = availableSize;
       var usedSpace = 0;
       var numOfAutoContainers = 0;
@@ -335,7 +341,7 @@ angular.module('ui.layout', [])
 
             c.size = (newSize !== null) ? newSize : autoSize;
           } else {
-            c.size = dividerSize;
+            c.size = (c.collapsed && opts.hideCollapsedSplitbar) ? 0 : dividerSize;
           }
 
           usedSpace += c.size;
@@ -622,6 +628,7 @@ angular.module('ui.layout', [])
         afterIcon.addClass(afterIconClass);
 
         scope.splitbar.notifyToggleBefore = function(isCollapsed) {
+          scope.splitbar.collapsed = isCollapsed;
           if(isCollapsed) {
             afterButton.css('display', 'none');
 
@@ -646,6 +653,7 @@ angular.module('ui.layout', [])
         };
 
         scope.splitbar.notifyToggleAfter = function(isCollapsed) {
+          scope.splitbar.collapsed = isCollapsed;
           if(isCollapsed) {
             prevButton.css('display', 'none');
 
@@ -885,6 +893,7 @@ angular.module('ui.layout', [])
       this.left = 0;
       this.top = 0;
       this.element = null;
+      this.collapsed = false;
     }
 
     return {
