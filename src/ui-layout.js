@@ -339,7 +339,13 @@ angular.module('ui.layout', [])
               newSize = opts.sizes[i];
             }
 
-            c.size = (newSize !== null) ? newSize : autoSize;
+            newSize = (newSize !== null) ? newSize : autoSize;
+            if (c.size !== newSize) {
+              c.size = newSize;
+              if (i >= 2) {
+                $scope.$broadcast('ui.layout.resize', ctrl.containers[i], ctrl.containers[i-2]);
+              }
+            }
           } else {
             c.size = (c.collapsed && opts.hideCollapsedSplitbar) ? 0 : dividerSize;
           }
