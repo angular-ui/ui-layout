@@ -107,12 +107,12 @@ Default: `false`
 
 If set to `true`, the splitbar between two containers will not be visible when one of them is collapsed.
 
-### collapseToMinSize
+### hideCollapsedContainer
 
 Type: `Boolean`
 Default: `false`
 
-Whether to limit a collapsed container size to its minimum size, even when it is collapsed.
+Whether to completely hide a collapsed container, even if it has a minimum size set. If this option is set to `false` a collapsed container will have a size equal to the `min-size` property.
 
 ## Child Attributes
 
