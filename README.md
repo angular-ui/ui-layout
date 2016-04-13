@@ -107,6 +107,13 @@ Default: `false`
 
 If set to `true`, the splitbar between two containers will not be visible when one of them is collapsed.
 
+### collapseToMinSize
+
+Type: `Boolean`
+Default: `false`
+
+Whether to limit a collapsed container size to its minimum size, even when it is collapsed.
+
 ## Child Attributes
 
 ### uiLayoutContainer
