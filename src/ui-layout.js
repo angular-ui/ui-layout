@@ -171,14 +171,20 @@ angular.module('ui.layout', [])
       return event;
     };
 
+    ctrl.getMousePosition = function(mouseEvent){
+      return ctrl.sizeProperties.mouseProperty in mouseEvent ? mouseEvent[ctrl.sizeProperties.mouseProperty] 
+                      : mouseEvent.originalEvent && ctrl.sizeProperties.mouseProperty in mouseEvent.originalEvent ? mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]
+                      : mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty]
+                      : mouseEvent.originalEvent && mouseEvent.originalEvent.targetTouches ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty]
+                      : null;
+    };
+    
     ctrl.mouseMoveHandler = function(mouseEvent) {
-      var mousePos = mouseEvent[ctrl.sizeProperties.mouseProperty] ||
-        (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
-        // jQuery does touches weird, see #82
-        ($window.jQuery ?
-          (mouseEvent.originalEvent ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0) :
-          (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0));
 
+      var mousePos = ctrl.getMousePosition(mouseEvent);
+      
+      if(mousePos === null) return;
+      
       lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
 
       //Cancel previous rAF call
