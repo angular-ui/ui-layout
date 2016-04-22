@@ -128,7 +128,7 @@ angular.module('ui.layout', [])
             debounceEvent = $timeout(function() {
               $scope.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
               debounceEvent = null;
-            }, 50);
+            }, 50, false);
           }
         }
       }
@@ -835,13 +835,17 @@ angular.module('ui.layout', [])
           e.stopPropagation();
 
           htmlElement.on('mousemove touchmove', function(event) {
-            scope.$apply(angular.bind(ctrl, ctrl.mouseMoveHandler, event));
+            ctrl.mouseMoveHandler(event);
+            var splitbarIndex = ctrl.containers.indexOf(scope.splitbar);
+            ctrl.containers[splitbarIndex - 1].update();
+            ctrl.containers[splitbarIndex + 1].update();
+            scope.$digest();
           });
           return false;
         });
 
         htmlElement.on('mouseup touchend', function(event) {
-          scope.$apply(angular.bind(ctrl, ctrl.mouseUpHandler, event));
+          ctrl.mouseUpHandler(event);
           htmlElement.off('mousemove touchmove');
         });
 
@@ -929,8 +933,12 @@ angular.module('ui.layout', [])
                   }
                 });
 
+                scope.container.updateSize = function() {
+                  element.css(ctrl.sizeProperties.sizeProperty, scope.container.size + 'px');
+                }
+
                 scope.$watch('container.size', function(newValue) {
-                  element.css(ctrl.sizeProperties.sizeProperty, newValue + 'px');
+                  scope.container.updateSize();
                   if(newValue === 0) {
                     element.addClass('ui-layout-hidden');
                   } else {
@@ -938,8 +946,17 @@ angular.module('ui.layout', [])
                   }
                 });
 
+                scope.container.updatePosition = function() {
+                  element.css(ctrl.sizeProperties.flowProperty, scope.container[ctrl.sizeProperties.flowProperty] + 'px');
+                }
+
+                scope.container.update = function() {
+                  scope.container.updatePosition();
+                  scope.container.updateSize();
+                }
+
                 scope.$watch('container.' + ctrl.sizeProperties.flowProperty, function(newValue) {
-                  element.css(ctrl.sizeProperties.flowProperty, newValue + 'px');
+                  scope.container.updatePosition();
                 });
 
                 //TODO: add ability to disable auto-adding a splitbar after the container
