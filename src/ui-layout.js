@@ -123,6 +123,10 @@ angular.module('ui.layout', [])
             // move the splitbar
             ctrl.movingSplitbar[position] = newPosition;
 
+            ctrl.movingSplitbar.updatePosition();
+            beforeContainer.update();
+            afterContainer.update();
+
             // broadcast an event that resize happened (debounced to 50ms)
             if(debounceEvent) $timeout.cancel(debounceEvent);
             debounceEvent = $timeout(function() {
@@ -132,7 +136,6 @@ angular.module('ui.layout', [])
           }
         }
       }
-
       //Enable a new animation frame
       animationFrameRequested = null;
     }
@@ -836,10 +839,6 @@ angular.module('ui.layout', [])
 
           htmlElement.on('mousemove touchmove', function(event) {
             ctrl.mouseMoveHandler(event);
-            var splitbarIndex = ctrl.containers.indexOf(scope.splitbar);
-            ctrl.containers[splitbarIndex - 1].update();
-            ctrl.containers[splitbarIndex + 1].update();
-            scope.splitbar.updatePosition();
           });
           return false;
         });
