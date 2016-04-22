@@ -656,8 +656,9 @@ angular.module('ui.layout', [])
         });
 
         function onResize() {
-          scope.$evalAsync(function() {
-            ctrl.calculate();
+          ctrl.calculate();
+          ctrl.containers.forEach(function(c) {
+            c.update();
           });
         }
 
@@ -854,6 +855,10 @@ angular.module('ui.layout', [])
 
         scope.splitbar.updatePosition = function() {
           element.css(ctrl.sizeProperties.flowProperty, scope.splitbar[ctrl.sizeProperties.flowProperty] + 'px');
+        };
+
+        scope.splitbar.update = function() {
+          scope.splitbar.updatePosition();
         };
 
         scope.$watch('splitbar.' + ctrl.sizeProperties.flowProperty, scope.splitbar.updatePosition);
