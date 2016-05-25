@@ -130,6 +130,7 @@ angular.module('ui.layout', [])
             // broadcast an event that resize happened (debounced to 50ms)
             if(debounceEvent) $timeout.cancel(debounceEvent);
             debounceEvent = $timeout(function() {
+              $scope.$digest();
               $scope.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
               debounceEvent = null;
             }, 50, false);
