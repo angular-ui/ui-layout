@@ -123,16 +123,20 @@ angular.module('ui.layout', [])
             // move the splitbar
             ctrl.movingSplitbar[position] = newPosition;
 
+            ctrl.movingSplitbar.updatePosition();
+            beforeContainer.update();
+            afterContainer.update();
+
             // broadcast an event that resize happened (debounced to 50ms)
             if(debounceEvent) $timeout.cancel(debounceEvent);
             debounceEvent = $timeout(function() {
+              $scope.$digest();
               $scope.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
               debounceEvent = null;
-            }, 50);
+            }, 50, false);
           }
         }
       }
-
       //Enable a new animation frame
       animationFrameRequested = null;
     }
@@ -653,8 +657,9 @@ angular.module('ui.layout', [])
         });
 
         function onResize() {
-          scope.$evalAsync(function() {
-            ctrl.calculate();
+          ctrl.calculate();
+          ctrl.containers.forEach(function(c) {
+            c.update();
           });
         }
 
@@ -835,13 +840,13 @@ angular.module('ui.layout', [])
           e.stopPropagation();
 
           htmlElement.on('mousemove touchmove', function(event) {
-            scope.$apply(angular.bind(ctrl, ctrl.mouseMoveHandler, event));
+            ctrl.mouseMoveHandler(event);
           });
           return false;
         });
 
         htmlElement.on('mouseup touchend', function(event) {
-          scope.$apply(angular.bind(ctrl, ctrl.mouseUpHandler, event));
+          ctrl.mouseUpHandler(event);
           htmlElement.off('mousemove touchmove');
         });
 
@@ -849,9 +854,15 @@ angular.module('ui.layout', [])
           element.css(ctrl.sizeProperties.sizeProperty, newValue + 'px');
         });
 
-        scope.$watch('splitbar.' + ctrl.sizeProperties.flowProperty, function(newValue) {
-          element.css(ctrl.sizeProperties.flowProperty, newValue + 'px');
-        });
+        scope.splitbar.updatePosition = function() {
+          element.css(ctrl.sizeProperties.flowProperty, scope.splitbar[ctrl.sizeProperties.flowProperty] + 'px');
+        };
+
+        scope.splitbar.update = function() {
+          scope.splitbar.updatePosition();
+        };
+
+        scope.$watch('splitbar.' + ctrl.sizeProperties.flowProperty, scope.splitbar.updatePosition);
 
         scope.$on('$destroy', function() {
           htmlElement.off('mouseup touchend mousemove touchmove');
@@ -929,8 +940,12 @@ angular.module('ui.layout', [])
                   }
                 });
 
+                scope.container.updateSize = function() {
+                  element.css(ctrl.sizeProperties.sizeProperty, scope.container.size + 'px');
+                };
+
                 scope.$watch('container.size', function(newValue) {
-                  element.css(ctrl.sizeProperties.sizeProperty, newValue + 'px');
+                  scope.container.updateSize();
                   if(newValue === 0) {
                     element.addClass('ui-layout-hidden');
                   } else {
@@ -938,9 +953,16 @@ angular.module('ui.layout', [])
                   }
                 });
 
-                scope.$watch('container.' + ctrl.sizeProperties.flowProperty, function(newValue) {
-                  element.css(ctrl.sizeProperties.flowProperty, newValue + 'px');
-                });
+                scope.container.updatePosition = function() {
+                  element.css(ctrl.sizeProperties.flowProperty, scope.container[ctrl.sizeProperties.flowProperty] + 'px');
+                };
+
+                scope.container.update = function() {
+                  scope.container.updatePosition();
+                  scope.container.updateSize();
+                };
+
+                scope.$watch('container.' + ctrl.sizeProperties.flowProperty, scope.container.updatePosition);
 
                 //TODO: add ability to disable auto-adding a splitbar after the container
                 var parent = element.parent();
