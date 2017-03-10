@@ -73,9 +73,13 @@
   overflow-x: hidden;
 }
 
+.ui-layout-column > .ui-splitbar > a:not(.ui-splitbar-handle-container),
+.ui-layout-row > .ui-splitbar > a:not(.ui-splitbar-handle-container) {
+  cursor: pointer;
+}
+
 .ui-layout-column > .ui-splitbar > a,
 .ui-layout-row > .ui-splitbar > a {
-  cursor: pointer;
   text-align: center;
   font-size: 16px;
   color: #aaa;
@@ -127,8 +131,19 @@
   margin-top: 0.45em;
 }
 
+.ui-splitbar-handle {
+  width: 10px;
+  height: 2px;
+  box-shadow: inset 0 0 0 32px, 0 -6px, 0 6px;
+  margin: 12px 0;
+}
+
 /* Allow disabling of icons */
-.no-toggle .ui-splitbar-icon {
+.no-toggle .ui-splitbar-toggle {
+  display: none;
+}
+
+.no-handle .ui-splitbar-handle {
   display: none;
 }
 

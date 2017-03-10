@@ -52,6 +52,9 @@ angular.module('ui.layout', [])
     if (opts.disableMobileToggle) {
       $element.addClass('no-mobile-toggle');
     }
+    if (!opts.showHandle) {
+      $element.addClass('no-handle');
+    }
 
     // Initial global size definition
     opts.sizes = opts.sizes || [];
@@ -422,7 +425,7 @@ angular.module('ui.layout', [])
         el = splitter.element[0].children[0];
       } else {
         splitter = ctrl.containers[index - 1];
-        el = splitter.element[0].children[1];
+        el = splitter.element[0].children[2];
       }
 
       $timeout(function(){
@@ -688,7 +691,7 @@ angular.module('ui.layout', [])
 
         //icon <a> elements
         var prevButton = angular.element(element.children()[0]);
-        var afterButton = angular.element(element.children()[1]);
+        var afterButton = angular.element(element.children()[2]);
 
         //icon <span> elements
         var prevIcon = angular.element(prevButton.children()[0]);
@@ -714,7 +717,7 @@ angular.module('ui.layout', [])
 
           if(previousSplitbar !== null) {
             prevSplitbarBeforeButton = angular.element(previousSplitbar.element.children()[0]);
-            prevSplitbarAfterButton = angular.element(previousSplitbar.element.children()[1]);
+            prevSplitbarAfterButton = angular.element(previousSplitbar.element.children()[2]);
           }
 
           if(ctrl.isUsingColumnFlow) {
@@ -774,7 +777,7 @@ angular.module('ui.layout', [])
 
           if(nextSplitbar !== null) {
             nextSplitbarBeforeButton = angular.element(nextSplitbar.element.children()[0]);
-            nextSplitbarAfterButton = angular.element(nextSplitbar.element.children()[1]);
+            nextSplitbarAfterButton = angular.element(nextSplitbar.element.children()[2]);
           }
 
           if(ctrl.isUsingColumnFlow) {
@@ -952,8 +955,9 @@ angular.module('ui.layout', [])
                 var children = parent.children();
                 var index = ctrl.indexOfElement(element);
                 var splitbar = angular.element('<div ui-splitbar>' +
-                  '<a><span class="ui-splitbar-icon"></span></a>' +
-                  '<a><span class="ui-splitbar-icon"></span></a>' +
+                  '<a><span class="ui-splitbar-icon ui-splitbar-toggle"></span></a>' +
+                  '<a class="ui-splitbar-handle-container"><span class="ui-splitbar-icon ui-splitbar-handle"></span></a>' +
+                  '<a><span class="ui-splitbar-icon ui-splitbar-toggle"></span></a>' +
                   '</div>');
                 if(0 < index && !ctrl.hasSplitbarBefore(scope.container)) {
                   angular.element(children[index-1]).after(splitbar);
