@@ -40,7 +40,6 @@ describe('Directive: uiLayoutLoaded', function () {
   it('should broadcast ui.layout.loaded and return null', function () {
     spyOn(scope, '$broadcast');
     compileDirective(false, false, '<div ui-layout id="elID" ui-layout-loaded></div>');
-    $timeout.flush();
     expect(scope.$broadcast).toHaveBeenCalledWith('ui.layout.loaded',null);
   });
 

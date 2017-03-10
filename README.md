@@ -100,6 +100,19 @@ Default: `false`
 
 Like `disableToggle` above but only removes the arrows on mobile devices (max-device-width: 480px).
 
+### hideCollapsedSplitbar
+
+Type: `Boolean`
+Default: `false`
+
+If set to `true`, the splitbar between two containers will not be visible when one of them is collapsed.
+
+### hideCollapsedContainer
+
+Type: `Boolean`
+Default: `false`
+
+Whether to completely hide a collapsed container, even if it has a minimum size set. If this option is set to `false` a collapsed container will have a size equal to the `min-size` property.
 
 ## Child Attributes
 
@@ -145,7 +158,7 @@ $scope.layout {
 }
 ```
 
-Changing those values will toggle container. See also [`ui.layout.toggle`][event-toggle]. 
+Changing those values will toggle container. See also [`ui.layout.toggle`][event-toggle].
 
 ### size
 Type: `String`
@@ -203,11 +216,12 @@ percentage
 
 ## Events
 
-Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container. 
+Events are broadcast on the scope where ui-layout is attached. This means they are available to any controller inside of a ui-layout container.
 
 ### ui.layout.loaded
 Returns: `string` or `null`
 
+**Deprecated:** *This event is not needed any more because programmatic toggle works now as expected. It is only kept for compatibility reasons. The event will be triggered immediately, when the directive links.*
 
 Dispatched when the layout container finished loading. It returns the value of the attribute, e.g. `ui-layout-loaded="my-loaded-message"`, or `null`. The `null` also means that the layout has finished collapsing all the containers that should be collapsed (per application request when setting the [`collapsed`][collapsed] attribute).
 
@@ -226,7 +240,7 @@ All this means that the user will notice a flicker. If the flicker is not desira
     <div ui-layout-container>
       <div ui-layout ui-layout-loaded="child-container">
           <div ui-layout-container>
-          
+
           </div>
       </div>
     </div>
@@ -271,8 +285,8 @@ $scope.$on('ui.layout.toggle', function(e, container){
 });
 ```
 
-Manually toggling (clicking the arrow button on the splitbar) will not update the `collapsed` attribute. 
-If the application is using the `collapsed` attribute of `ui-layout-container` to programmatically control the collapsed state, the application should update it's state when this event occurs to stay in sync with the UI. 
+Manually toggling (clicking the arrow button on the splitbar) will not update the `collapsed` attribute.
+If the application is using the `collapsed` attribute of `ui-layout-container` to programmatically control the collapsed state, the application should update it's state when this event occurs to stay in sync with the UI.
 
 ### ui.layout.resize
 

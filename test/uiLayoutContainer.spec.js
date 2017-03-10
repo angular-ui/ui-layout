@@ -45,10 +45,9 @@ describe('Directive: uiLayoutContainer', function () {
       bcScope = angular.element(beforeContainer).isolateScope(),
       acScope = angular.element(afterContainer).isolateScope();
 
-    // you would expect true, but see explanation in uiLayoutLoaded
-    expect(bcScope.container.collapsed).toEqual(false);
+    expect(bcScope.container.collapsed).toEqual(true);
     expect(bcScope.container.resizable).toEqual(false);
-    expect(bcScope.container.size).toEqual(100);
+    expect(bcScope.container.size).toEqual(50); // collapsed: min size
     expect(bcScope.container.uncollapsedSize).toEqual('100px');
     expect(bcScope.container.minSize).toEqual(50);
     expect(bcScope.container.maxSize).toEqual(200);

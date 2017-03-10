@@ -158,12 +158,14 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
           expect($header.getBoundingClientRect().height).toEqual(expectedAutosized);
 
           browserTrigger(toggleBeforeButton, 'click');
+          scope.$digest();
 
           expect(parseInt($splitbar[0].style.top)).toEqual(0);
           expect($header.getBoundingClientRect().height).toEqual(0);
           expect(toggleAfterButton.style.display).toBe('none');
 
           browserTrigger(toggleBeforeButton, 'click');
+          scope.$digest();
 
           expect(parseInt($splitbar[0].style.top)).toEqual(expectedAutosized);
           expect($header.getBoundingClientRect().height).toEqual(expectedAutosized);
@@ -185,11 +187,13 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
           expect($footer.getBoundingClientRect().height).toEqual(expectedLastAutosized);
 
           browserTrigger(toggleAfterButton, 'click');
+          scope.$digest();
           expect(parseInt($splitbar[0].style.top)).toEqual(element_bb.height - defaultDividerSize);
           expect($footer.getBoundingClientRect().height).toEqual(0);
           expect(toggleBeforeButton.style.display).toBe('none');
 
           browserTrigger(toggleAfterButton, 'click');
+          scope.$digest();
           expect(parseInt($splitbar[0].style.top)).toEqual(expectedAutosized);
           expect($footer.getBoundingClientRect().height).toEqual(expectedLastAutosized);
           expect(toggleBeforeButton.style.display).toBe('inline');
@@ -234,18 +238,6 @@ describe('toggle programmatically', function() {
     return elm;
   }
 
-
-  it('should reset container to uncollapsed state when loaded', function() {
-    //@see explanation for uiLayoutLoaded
-    var elm = compileDirective(true, true);
-
-    var divs = elm.find('div'),
-      beforeContainer = divs[0],
-      afterContainer = divs[2];
-    expect(beforeContainer.style.width).toEqual('100px');
-    expect(afterContainer.style.width).toEqual('200px');
-  });
-
   it('should collapse and uncollapse beforeContainer', function() {
     var elm = compileDirective(false, false);
 
@@ -257,13 +249,11 @@ describe('toggle programmatically', function() {
 
     scope.layout.beforeContainer = true;
     scope.$apply();
-    $timeout.flush();
 
     expect(beforeContainer.style.width).toEqual('0px');
 
     scope.layout.beforeContainer = false;
     scope.$apply();
-    $timeout.flush();
 
     expect(beforeContainer.style.width).toEqual('100px');
   });
@@ -279,13 +269,11 @@ describe('toggle programmatically', function() {
 
     scope.layout.afterContainer = true;
     scope.$apply();
-    $timeout.flush();
 
     expect(afterContainer.style.width).toEqual('0px');
 
     scope.layout.afterContainer = false;
     scope.$apply();
-    $timeout.flush();
 
     expect(afterContainer.style.width).toEqual('200px');
   });
