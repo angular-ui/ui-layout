@@ -18,6 +18,9 @@ angular.module('ui.layout', [])
     var sizePattern = /\d+\s*(px|%)\s*$/i;
 
     Layout.addLayout(ctrl);
+    if ($attrs.layoutId) {
+      ctrl.id = $attrs.layoutId;
+    }
 
     ctrl.containers = [];
     ctrl.movingSplitbar = null;
@@ -120,6 +123,12 @@ angular.module('ui.layout', [])
               afterContainer.uncollapsedSize = afterContainer.size;
             }
 
+            // store the current value in local storage to preserve size also when reloading the window
+            if($window.localStorage !== undefined) {
+              $window.localStorage.setItem(beforeContainer.storageId, beforeContainer.uncollapsedSize + 'px');
+              $window.localStorage.setItem(afterContainer.storageId, afterContainer.uncollapsedSize + 'px');
+            }
+
             // move the splitbar
             ctrl.movingSplitbar[position] = newPosition;
 
@@ -159,6 +168,26 @@ angular.module('ui.layout', [])
       } else {
         return null;
       }
+    }
+
+    function loadContainerState(container) {
+      // load uncollapsedSize from local storage if available:
+      container.uncollapsedSize = null;
+      if($window.localStorage !== undefined) {
+        container.uncollapsedSize = $window.localStorage.getItem(container.storageId);
+      }
+      if(container.uncollapsedSize === null) {
+        container.uncollapsedSize = container.size;
+      }
+    }
+
+    /**
+     * Updates the storage ids of all containers according to the id of this controller and the index of the container.
+     */
+    function updateContainerStorageIds() {
+      ctrl.containers.forEach(function(c, i) {
+        c.storageId = ctrl.id + ':' + i;
+      });
     }
 
     //================================================================================
@@ -248,7 +277,7 @@ angular.module('ui.layout', [])
     };
 
     /**
-     * Sets the default size for each container.
+     * Sets the default size and position (left, top) for each container.
      */
     ctrl.calculate = function() {
       var c, i;
@@ -363,6 +392,9 @@ angular.module('ui.layout', [])
       container.index = index;
       ctrl.containers.splice(index, 0, container);
 
+      updateContainerStorageIds();
+      loadContainerState(container);
+
       ctrl.calculate();
     };
 
@@ -399,6 +431,7 @@ angular.module('ui.layout', [])
           ctrl.opts.minSizes.splice(newIndex, 1);
           ctrl.opts.sizes.splice(newIndex, 1);
         }
+        updateContainerStorageIds();
         ctrl.calculate();
       } else {
         console.error("removeContainer for container that did not exist!");
@@ -911,7 +944,6 @@ angular.module('ui.layout', [])
                   scope.container.resizable = scope.resizable;
                 }
                 scope.container.size = scope.size;
-                scope.container.uncollapsedSize = scope.size;
                 scope.container.minSize = scope.minSize;
                 scope.container.maxSize = scope.maxSize;
                 ctrl.addContainer(scope.container);

@@ -7,8 +7,8 @@ splitMoveTests('mouse', 'mousedown', 'mousemove', 'mouseup');
 
 // Wrapper to abstract over using touch events or mouse events.
 function splitMoveTests(description, startEvent, moveEvent, endEvent) {
-  return describe('Directive: uiLayout with ' + description + ' events', function () {
-    var element, scope, compile, $timeout,
+  return describe('Directive: uiLayout with ' + description + ' events', function() {
+    var element, scope, compile, $timeout, $window,
       validTemplate = '<div ui-layout><header ui-layout-container></header><footer ui-layout-container></footer></div>',
       defaultDividerSize = 10;
 
@@ -29,15 +29,23 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
       module('ui.layout');
 
-      inject(function ($rootScope, $compile, _$timeout_) {
+      inject(function($rootScope, $compile, _$timeout_, _$window_) {
         scope = $rootScope.$new();
         compile = $compile;
         $timeout = _$timeout_;
+        $window = _$window_;
       });
     });
 
+    beforeEach(function() {
+      // clear local storage:
+      if($window.localStorage !== undefined) {
+        $window.localStorage.clear();
+      }
+    });
+
     afterEach(function () {
-      if (element) element.remove();
+      if(element) element.remove();
     });
 
     describe('require', function () {
@@ -62,12 +70,13 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
     describe('the slider', function () {
 
-      var element_bb, $splitbar, splitbar_bb, splitbarLeftPos;
+      var element_bb, leftContainer, $splitbar, splitbar_bb, splitbarLeftPos;
 
       beforeEach(function () {
         element = createDirective();
 
         element_bb = element[0].getBoundingClientRect();
+        leftContainer = angular.element(_jQuery(element[0]).find('header')[0]).isolateScope();
         $splitbar = _jQuery(element[0]).find('.ui-splitbar');
         splitbar_bb = $splitbar[0].getBoundingClientRect();
 
@@ -83,7 +92,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
         expect(window.requestAnimationFrame).not.toHaveBeenCalled();
         expect(Math.ceil(splitbar_bb.left)).toEqual(splitbarLeftPos);
-
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
       it('should do nothing when moving around it', function () {
@@ -95,7 +104,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
 
         expect(window.requestAnimationFrame).not.toHaveBeenCalled();
         expect(Math.ceil(splitbar_bb.left)).toEqual(splitbarLeftPos);
-
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
       it('should follow the ' + description, function () {
@@ -103,8 +112,9 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         browserTrigger($splitbar, moveEvent, { y: element_bb.height / 4});
         expect(window.requestAnimationFrame).toHaveBeenCalled();
 
-        var expextedPos = Math.floor(element_bb.height / 4);
-        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expextedPos);
+        var expectedPos = Math.floor(element_bb.height / 4);
+        expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toEqual(expectedPos + 'px');
 
         browserTrigger(document.body, endEvent);
       });
@@ -119,6 +129,7 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         expect(window.requestAnimationFrame).not.toHaveBeenCalled();
 
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toBeNull();
       });
 
       it('should not follow the ' + description + ' after ' + startEvent, function () {
@@ -134,6 +145,46 @@ function splitMoveTests(description, startEvent, moveEvent, endEvent) {
         var expectedPos = Math.floor(element_bb.height / 4);
         expect(window.requestAnimationFrame.calls.count()).toEqual(1);
         expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+        expect($window.localStorage.getItem(leftContainer.container.storageId)).toEqual(expectedPos + 'px');
+      });
+
+      describe('persistent state', function() {
+
+        var leftContainerElement, rightContainerElement, $splitbar, splitbar_bb, splitbarLeftPos;
+
+        beforeEach(function() {
+          leftContainerElement = _jQuery(element[0]).find('header')[0];
+          rightContainerElement = _jQuery(element[0]).find('footer')[0];
+          $splitbar = _jQuery(element[0]).find('.ui-splitbar');
+          splitbar_bb = $splitbar[0].getBoundingClientRect();
+
+          splitbarLeftPos = Math.ceil(splitbar_bb.left);
+        });
+
+        it('should initially respect size from attributes', function() {
+          expect(leftContainerElement.style.width).toEqual('');
+          expect(rightContainerElement.style.width).toEqual('');
+        });
+
+        it('should save the saved splitbar position', function() {
+          browserTrigger($splitbar, 'mousedown', { y: splitbarLeftPos });
+          browserTrigger($splitbar, 'mousemove', { y: 150 });
+          expect(window.requestAnimationFrame).toHaveBeenCalled();
+
+          var expectedPos = Math.floor(150);
+          expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+          expect($window.localStorage.getItem(leftContainer.container.storageId)).toEqual(expectedPos + 'px');
+
+          browserTrigger(document.body, 'mouseup');
+
+          if(element) element.remove();
+          element = createDirective();
+
+          splitbar_bb = $splitbar[0].getBoundingClientRect();
+          splitbarLeftPos = Math.ceil(splitbar_bb.left);
+          expect(Math.ceil(parseFloat($splitbar[0].style.top))).toEqual(expectedPos);
+        });
+
       });
 
       describe('collapse buttons', function() {
