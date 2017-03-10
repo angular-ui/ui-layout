@@ -928,6 +928,19 @@ angular.module('ui.layout', [])
                 var animationClass = ctrl.isUsingColumnFlow ? 'animate-column' : 'animate-row';
                 element.addClass(animationClass);
 
+                scope.$watch('size', function(size) {
+                  scope.container.uncollapsedSize = size;
+                  ctrl.calculate();
+                });
+                scope.$watch('minSize', function(minSize) {
+                  scope.container.minSize = minSize;
+                  ctrl.calculate();
+                });
+                scope.$watch('maxSize', function(maxSize) {
+                  scope.container.maxSize = maxSize;
+                  ctrl.calculate();
+                });
+
                 scope.$watch('collapsed', function (val, old) {
                   if (angular.isDefined(old) && val !== old) {
                     ctrl.toggleContainer(scope.container.index);
