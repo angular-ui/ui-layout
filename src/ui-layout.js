@@ -525,7 +525,7 @@ angular.module('ui.layout', [])
           if(prevContainer) {
             prevContainer.size += (c.uncollapsedSize + endDiff);
           }
-
+          prevContainer.uncollapsedSize = null;
         } else {
           c.size = c.uncollapsedSize;
 
