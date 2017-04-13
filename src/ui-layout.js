@@ -524,6 +524,7 @@ angular.module('ui.layout', [])
           }
           if(prevContainer) {
             prevContainer.size += (c.uncollapsedSize + endDiff);
+            prevContainer.uncollapsedSize += c.uncollapsedSize;
           }
 
         } else {
@@ -538,6 +539,7 @@ angular.module('ui.layout', [])
           }
           if(prevContainer) {
             prevContainer.size -= (c.uncollapsedSize + endDiff);
+            prevContainer.uncollapsedSize -= c.uncollapsedSize;
           }
         }
       });
