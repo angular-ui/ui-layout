@@ -1,3 +1,4 @@
+
 'use strict';
 
 /**
@@ -694,7 +695,10 @@ angular.module('ui.layout', [])
 
         //icon <span> elements
         var prevIcon = angular.element(prevButton.children()[0]);
-        var afterIcon = angular.element(afterButton.children()[0]);
+        if(!!afterButton){
+          var afterIcon = angular.element(afterButton.children()[0]);
+        }
+
 
         //icon classes
         var iconLeft = 'ui-splitbar-icon-left';
@@ -706,7 +710,9 @@ angular.module('ui.layout', [])
         var afterIconClass = ctrl.isUsingColumnFlow ? iconRight : iconDown;
 
         prevIcon.addClass(prevIconClass);
-        afterIcon.addClass(afterIconClass);
+        if(!!afterButton){
+          afterIcon.addClass(afterIconClass);
+        }
 
 
         prevButton.on('click', function() {
@@ -721,7 +727,9 @@ angular.module('ui.layout', [])
 
           if(ctrl.isUsingColumnFlow) {
             if(result) {
-              afterButton.css('display', 'none');
+              if(!!afterButton){
+                afterButton.css('display', 'none');
+              }
               prevIcon.removeClass(iconLeft);
               prevIcon.addClass(iconRight);
 
@@ -731,7 +739,9 @@ angular.module('ui.layout', [])
                 prevSplitbarAfterButton.css('display', 'none');
               }
             } else {
-              afterButton.css('display', 'inline');
+              if(!!afterButton){
+                afterButton.css('display', 'inline');
+              }
               prevIcon.removeClass(iconRight);
               prevIcon.addClass(iconLeft);
 
@@ -743,7 +753,9 @@ angular.module('ui.layout', [])
             }
           } else {
             if(result) {
-              afterButton.css('display', 'none');
+              if(!!afterButton){
+                afterButton.css('display', 'none');
+              }
               prevIcon.removeClass(iconUp);
               prevIcon.addClass(iconDown);
 
@@ -753,7 +765,9 @@ angular.module('ui.layout', [])
                 prevSplitbarAfterButton.css('display', 'none');
               }
             } else {
-              afterButton.css('display', 'inline');
+              if(!!afterButton){
+                afterButton.css('display', 'inline');
+              }
               prevIcon.removeClass(iconDown);
               prevIcon.addClass(iconUp);
 
@@ -768,66 +782,67 @@ angular.module('ui.layout', [])
             ctrl.calculate();
           });
         });
+        if(!!afterButton){
+          afterButton.on('click', function() {
+            var nextSplitbarBeforeButton, nextSplitbarAfterButton;
+            var result = ctrl.toggleAfter(scope.splitbar);
+            var nextSplitbar = ctrl.getNextSplitbarContainer(scope.splitbar);
 
-        afterButton.on('click', function() {
-          var nextSplitbarBeforeButton, nextSplitbarAfterButton;
-          var result = ctrl.toggleAfter(scope.splitbar);
-          var nextSplitbar = ctrl.getNextSplitbarContainer(scope.splitbar);
+            if(nextSplitbar !== null) {
+              nextSplitbarBeforeButton = angular.element(nextSplitbar.element.children()[0]);
+              nextSplitbarAfterButton = angular.element(nextSplitbar.element.children()[1]);
+            }
 
-          if(nextSplitbar !== null) {
-            nextSplitbarBeforeButton = angular.element(nextSplitbar.element.children()[0]);
-            nextSplitbarAfterButton = angular.element(nextSplitbar.element.children()[1]);
-          }
+            if(ctrl.isUsingColumnFlow) {
+              if(result) {
+                prevButton.css('display', 'none');
+                afterIcon.removeClass(iconRight);
+                afterIcon.addClass(iconLeft);
 
-          if(ctrl.isUsingColumnFlow) {
-            if(result) {
-              prevButton.css('display', 'none');
-              afterIcon.removeClass(iconRight);
-              afterIcon.addClass(iconLeft);
+                // hide next splitbar buttons
+                if(nextSplitbar !== null) {
+                  nextSplitbarBeforeButton.css('display', 'none');
+                  nextSplitbarAfterButton.css('display', 'none');
+                }
+              } else {
+                prevButton.css('display', 'inline');
+                afterIcon.removeClass(iconLeft);
+                afterIcon.addClass(iconRight);
 
-              // hide next splitbar buttons
-              if(nextSplitbar !== null) {
-                nextSplitbarBeforeButton.css('display', 'none');
-                nextSplitbarAfterButton.css('display', 'none');
+                // show next splitbar buttons
+                if(nextSplitbar !== null) {
+                  nextSplitbarBeforeButton.css('display', 'inline');
+                  nextSplitbarAfterButton.css('display', 'inline');
+                }
               }
             } else {
-              prevButton.css('display', 'inline');
-              afterIcon.removeClass(iconLeft);
-              afterIcon.addClass(iconRight);
+              if(result) {
+                prevButton.css('display', 'none');
+                afterIcon.removeClass(iconDown);
+                afterIcon.addClass(iconUp);
 
-              // show next splitbar buttons
-              if(nextSplitbar !== null) {
-                nextSplitbarBeforeButton.css('display', 'inline');
-                nextSplitbarAfterButton.css('display', 'inline');
+                // hide next splitbar buttons
+                if(nextSplitbar !== null) {
+                  nextSplitbarBeforeButton.css('display', 'none');
+                  nextSplitbarAfterButton.css('display', 'none');
+                }
+              } else {
+                prevButton.css('display', 'inline');
+                afterIcon.removeClass(iconUp);
+                afterIcon.addClass(iconDown);
+
+                // show next splitbar buttons
+                if(nextSplitbar !== null) {
+                  nextSplitbarBeforeButton.css('display', 'inline');
+                  nextSplitbarAfterButton.css('display', 'inline');
+                }
               }
             }
-          } else {
-            if(result) {
-              prevButton.css('display', 'none');
-              afterIcon.removeClass(iconDown);
-              afterIcon.addClass(iconUp);
-
-              // hide next splitbar buttons
-              if(nextSplitbar !== null) {
-                nextSplitbarBeforeButton.css('display', 'none');
-                nextSplitbarAfterButton.css('display', 'none');
-              }
-            } else {
-              prevButton.css('display', 'inline');
-              afterIcon.removeClass(iconUp);
-              afterIcon.addClass(iconDown);
-
-              // show next splitbar buttons
-              if(nextSplitbar !== null) {
-                nextSplitbarBeforeButton.css('display', 'inline');
-                nextSplitbarAfterButton.css('display', 'inline');
-              }
-            }
-          }
-          scope.$evalAsync(function() {
-            ctrl.calculate();
+            scope.$evalAsync(function() {
+              ctrl.calculate();
+            });
           });
-        });
+        }
 
         element.on('mousedown touchstart', function(e) {
           if (e.button === 0 || e.type === 'touchstart') {
@@ -885,6 +900,7 @@ angular.module('ui.layout', [])
           scope: {
             collapsed: '=',
             resizable: '=',
+            hasAfterButton: '@',
             size: '@',
             minSize: '@',
             maxSize: '@'
@@ -953,10 +969,16 @@ angular.module('ui.layout', [])
                 var parent = element.parent();
                 var children = parent.children();
                 var index = ctrl.indexOfElement(element);
-                var splitbar = angular.element('<div ui-splitbar>' +
+                var splitbarEle = '<div ui-splitbar>' +
                   '<a><span class="ui-splitbar-icon"></span></a>' +
                   '<a><span class="ui-splitbar-icon"></span></a>' +
-                  '</div>');
+                  '</div>';
+                if("false" === scope.hasAfterButton){
+                  splitbarEle = '<div ui-splitbar>' +
+                    '<a><span class="ui-splitbar-icon"></span></a>' +
+                    '</div>';
+                }
+                var splitbar = angular.element(splitbarEle);
                 if(0 < index && !ctrl.hasSplitbarBefore(scope.container)) {
                   angular.element(children[index-1]).after(splitbar);
                   $compile(splitbar)(scope);
