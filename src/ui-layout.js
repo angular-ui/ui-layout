@@ -17,7 +17,7 @@ angular.module('ui.layout', [])
     // regex to verify size is properly set to pixels or percent
     var sizePattern = /\d+\s*(px|%)\s*$/i;
 
-    Layout.addLayout(ctrl);
+    var unsubscribeLayout = Layout.addLayout(ctrl);
 
     ctrl.containers = [];
     ctrl.movingSplitbar = null;
@@ -638,6 +638,10 @@ angular.module('ui.layout', [])
       return -1;
     };
 
+    ctrl.destroy = function() {
+      unsubscribeLayout();
+    };
+
     return ctrl;
   }])
 
@@ -662,6 +666,7 @@ angular.module('ui.layout', [])
 
         scope.$on('$destroy', function() {
           angular.element($window).unbind('resize', onResize);
+          ctrl.destroy();
         });
       }
     };
@@ -1002,7 +1007,8 @@ angular.module('ui.layout', [])
     var layouts = [],
       collapsing = [],
       toBeCollapsed = 0,
-      toggledDeffered =  null;
+      toggledDeffered =  null,
+      layoutId = 0;
 
     function toggleContainer(container) {
       try {
@@ -1015,8 +1021,12 @@ angular.module('ui.layout', [])
 
     return {
       addLayout: function (ctrl) {
-        ctrl.id = layouts.length;
+        ctrl.id = layoutId++;
         layouts.push(ctrl);
+
+        return function() {
+          layouts.splice(layouts.indexOf(ctrl), 1);
+        }
       },
       addCollapsed: function(container) {
         collapsing.push(container);
