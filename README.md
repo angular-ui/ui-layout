@@ -29,13 +29,11 @@ angular.module('myApp', [require('angular-ui-layout')]);
 ### [Bower](http://bower.io/)
 
 ```sh
-bower install angular-ui-layout\#bower
+bower install angular-ui-layout
 # or
 bower install angular-ui-layout\#v0.0.0
 # or
 bower install angular-ui-layout\#src0.0.0
-# or
-bower install angular-ui-layout
 ```
 
 This will copy the UI.Layout files into a `bower_components` folder, along with its dependencies. Load the script files in your application:
