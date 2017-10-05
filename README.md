@@ -34,6 +34,8 @@ bower install angular-ui-layout\#bower
 bower install angular-ui-layout\#v0.0.0
 # or
 bower install angular-ui-layout\#src0.0.0
+# or
+bower install angular-ui-layout
 ```
 
 This will copy the UI.Layout files into a `bower_components` folder, along with its dependencies. Load the script files in your application:
@@ -130,7 +132,7 @@ The `'central'` container takes up all the remaining space during resizing, rega
 Type: `boolean`
 
 ```xml
-<div ui-layout>
+<div ui-layout ui-layout-loaded>
     <div ui-layout-container collapsed="true"></div>    
     <div ui-layout-container collapsed="layout.mycontainer"></div>    
 </div>
