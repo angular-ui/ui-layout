@@ -29,7 +29,7 @@ angular.module('myApp', [require('angular-ui-layout')]);
 ### [Bower](http://bower.io/)
 
 ```sh
-bower install angular-ui-layout\#bower
+bower install angular-ui-layout
 # or
 bower install angular-ui-layout\#v0.0.0
 # or
@@ -130,7 +130,7 @@ The `'central'` container takes up all the remaining space during resizing, rega
 Type: `boolean`
 
 ```xml
-<div ui-layout>
+<div ui-layout ui-layout-loaded>
     <div ui-layout-container collapsed="true"></div>    
     <div ui-layout-container collapsed="layout.mycontainer"></div>    
 </div>
