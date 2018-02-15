@@ -176,7 +176,7 @@ angular.module('ui.layout', [])
         (mouseEvent.originalEvent && mouseEvent.originalEvent[ctrl.sizeProperties.mouseProperty]) ||
         // jQuery does touches weird, see #82
         ($window.jQuery ?
-          (mouseEvent.originalEvent ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0) :
+          ((mouseEvent.originalEvent && mouseEvent.originalEvent.targetTouches) ? mouseEvent.originalEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0) :
           (mouseEvent.targetTouches ? mouseEvent.targetTouches[0][ctrl.sizeProperties.mouseProperty] : 0));
 
       lastPos = mousePos - offset($element)[ctrl.sizeProperties.offsetPos];
